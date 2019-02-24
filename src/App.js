@@ -1,39 +1,44 @@
 import React, { Component } from 'react'
 import { Router, Route, Link } from 'react-router'
-import './App.css'
+import Framework from './components/Framework'
 import Toolbar from './components/Toolbar'
 import Menu from './components/Menu'
+import SnackBar from './SnackBar'
+import './App.css'
 
 class App extends Component {
-  menu = null;
-  content = null;
+  framework = null;
 
-  menuHandler = (instance) => {
-    this.menu = instance;
+  constructor (props) {
+    super(props);
+    this.framework = React.createRef();
   }
 
   componentDidMount() {
-    this.content = this.refs.content;
-    this.menu.setStepHook((posX) => {
-      this.content.style.width = document.body.offsetWidth - (posX + this.menu.menuWidth) + 1 + 'px';
-    });
+    this.framework = this.framework.current;
+    setTimeout(() => {
+      SnackBar.make(document.body, 'Welcome!!', SnackBar.LENGTH_SHORT).show();
+    }, 1000);
   }
 
-  handleMenuSwitch = () => {
-    if (this.menu.isOpen()) {
-      this.menu.closeMenu();
-    }else{
-      this.menu.openMenu();
-    }
+  handleSearch = s => {
+    SnackBar.make(document.body, 'search ' + s, SnackBar.LENGTH_LONG).show();
   }
-  
+
   render() {
     return (
-      <div className="App">
-        <Toolbar onMenuClick={this.handleMenuSwitch} />
-        <Menu handle={this.menuHandler} />
-        <div className="content" ref="content">{this.props.children || 'nothing'}</div>
-      </div>
+      <Framework className="App" ref={this.framework}>
+        <Toolbar onSearch={this.handleSearch} />
+        <Menu>
+          <li>Home</li>
+          <li onClick={() => SnackBar.make(null, 'test', -1).show()}>Test</li>
+          <li>About</li>
+          <li onClick={() => this.framework.closeMenu()}>x</li>
+        </Menu>
+        <div className="content">
+          {this.props.children || 'nothing'}
+        </div>
+      </Framework>
     );
   }
 }
