@@ -9,14 +9,11 @@ class Framework extends React.Component {
   spaceDOM = null;
   conDOM = null;
   bigScreen = false;
-  menuPosX = -316; //same as value in style
+  menuPosX = -316;
+  menuTempOpen = false;
   _children = null;
-
-  constructor(props) {
-    super(props);
-    this.spaceDOM = React.createRef();
-    this.conDOM = React.createRef();
-  }
+  _menuMoveMode = true ? 'transform':'left';
+  _menuMoving = false;
 
   componentWillMount() {
     this._children = React.Children.map(this.props.children, child => {
@@ -28,13 +25,13 @@ class Framework extends React.Component {
       if (child.type === Menu) {
         return React.cloneElement(child, {
           getDOM: dom => this.menuDOM = dom,
-          style: {transform: 'translate3d(-316px,0,0)'}
+          onMouseLeave: this.onMouseLeaveMenu
         });
       }
       if (child.props.className === 'content') {
         return React.cloneElement(child, {
           className: child.props.className ? (child.props.className + ' ' + styles.content) : styles.content,
-          ref: this.conDOM
+          ref: dom => this.conDOM = dom
         });
       }
       return child;
@@ -43,20 +40,25 @@ class Framework extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={this.props.xUI ? styles.x : ""}>
         {this._children}
-        <div className={styles.space} ref={this.spaceDOM} onTouchStart={() => this.closeMenu()}></div>
+        <div className={styles.space} ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></div>
       </div>
     )
   }
 
   componentDidMount() {
-    this.spaceDOM = this.spaceDOM.current;
-    this.conDOM = this.conDOM.current;
+    if (this._menuMoveMode === 'transform') {
+      this.menuDOM.style.transform = `translate3d(${this.menuPosX}px,0,0)`;
+    }else{
+      this.menuDOM.style.left = this.menuPosX + 'px';
+    }
     window.addEventListener('resize', this.handleResize);
     document.body.addEventListener('touchstart', this.handleTouchStart);
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
+    document.body.addEventListener('mousemove', this.handleMouseMove);
+    
     setTimeout(this.handleResize, 20);
   }
 
@@ -65,6 +67,7 @@ class Framework extends React.Component {
     document.body.removeEventListener('touchstart', this.handleTouchStart);
     document.body.removeEventListener('touchmove', this.handleTouchMove);
     document.body.removeTouchListener('touchend', this.handleTouchEnd);
+    document.body.removeEventListener('mousemove', this.handleMouseMove);
   }
   
   handleResize = () => {
@@ -127,31 +130,58 @@ class Framework extends React.Component {
       this.moveBack();
     }
   }
+  
+  handleMouseMove = event => {
+    if (event.pageX === 0) {
+      if (this.menuPosX !== 0 && !this._menuMoving) {
+        this.openMenu();
+        this.menuTempOpen = true;
+      }
+    }
+  }
+  
+  onMouseLeaveMenu = event => {
+    if (this.menuTempOpen) {
+      this.closeMenu();
+      this.menuTempOpen = false;
+    }
+  }
 
   /**
    * arg1: posX from -this.menuWidth to 0
    */
   stepTo = posX => {
     this.menuPosX = posX;
-    //this.menuDOM.style.left = posX + 'px';
-    this.menuDOM.style.transform = `translate3d(${posX}px,0,0)`;
+    if (this._menuMoveMode === 'transform') {
+      this.menuDOM.style.transform = `translate3d(${posX}px,0,0)`;
+    }else{
+      this.menuDOM.style.left = posX + 'px';
+    }
     this.spaceDOM.style.opacity = `${posX / this.menuWidth + 1}`;
-    this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';
+    if (this.bigScreen) {
+      this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';
+    }
   }
 
   slideTo = (posX, callback) => {
-    if (this.menuTouchFromX) return;  //stop sliding when touchstart
+    this._menuMoving = true;
+    if (this.menuTouchFromX) {
+      this._menuMoving = false;
+      if (callback) callback(false);
+      return;  //stop sliding when touchstart
+    }
     const step = this.menuWidth / 60 * 4;
     if (this.menuPosX < posX - step) {
       this.stepTo(this.menuPosX + step);
-      this.raf(this.slideTo.bind(this, posX, callback));
     }else if (this.menuPosX > posX + step) {
       this.stepTo(this.menuPosX - step);
-      this.raf(this.slideTo.bind(this, posX, callback));
     }else{
       this.stepTo(posX);
-      if (callback) callback();
+      this._menuMoving = false;
+      if (callback) callback(true);
+      return;
     }
+    this.raf(this.slideTo.bind(this, posX, callback));
   }
 
   moveBack = () => {
@@ -170,9 +200,9 @@ class Framework extends React.Component {
   }
 
   closeMenu = callback => {
-    this.slideTo(-this.menuWidth, () => {
-      this.spaceDOM.style.display = 'none';
-      if (callback) callback();
+    this.slideTo(-this.menuWidth, (isReach) => {
+      if (isReach) this.spaceDOM.style.display = 'none';
+      if (callback) callback(isReach);
     });
   }
 

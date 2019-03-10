@@ -1,39 +1,44 @@
 import React, { Component } from 'react'
-import { Router, Route, Link } from 'react-router'
+//import { Router, Route, Link } from 'react-router'
 import Framework from './components/Framework'
 import Toolbar from './components/Toolbar'
 import Menu from './components/Menu'
-import SnackBar from './SnackBar'
+import SnackBar from './common/SnackBar'
+import Toast from './common/Toast'
 import './App.css'
 
 class App extends Component {
   framework = null;
+  toast = (text, during=Toast.LENGTH_SHORT) => {
+    Toast.makeText(this, text, during).show();
+  };
 
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.framework = React.createRef();
+    this.state = {
+      xUI: false
+    };
   }
 
   componentDidMount() {
-    this.framework = this.framework.current;
     setTimeout(() => {
       SnackBar.make(document.body, 'Welcome!!', SnackBar.LENGTH_SHORT).show();
     }, 1000);
   }
 
   handleSearch = s => {
-    SnackBar.make(document.body, 'search ' + s, SnackBar.LENGTH_LONG).show();
+    this.toast('search ' + s);
   }
 
   render() {
     return (
-      <Framework className="App" ref={this.framework}>
+      <Framework xUI={this.state.xUI} ref={instance => this.framework = instance}>
         <Toolbar onSearch={this.handleSearch} />
         <Menu>
-          <li>Home</li>
-          <li onClick={() => SnackBar.make(null, 'test', -1).show()}>Test</li>
-          <li>About</li>
-          <li onClick={() => this.framework.closeMenu()}>x</li>
+          <li>item1</li>
+          <li onClick={() => SnackBar.make(null, 'test', -1).show()}>item2</li>
+          <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
+          <li onClick={() => this.framework.closeMenu()}>close</li>
         </Menu>
         <div className="content">
           {this.props.children || 'nothing'}
