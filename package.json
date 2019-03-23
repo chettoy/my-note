@@ -15,7 +15,7 @@
     "react-scripts": "2.1.8",
     "react-transition-group": "^2.6.0",
     "typescript": "^3.3.3333",
-    "velocity-animate": "^2.0.5"
+    "velocity-animate": "^1.5.2"
   },
   "scripts": {
     "start": "react-scripts start",

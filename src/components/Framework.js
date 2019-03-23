@@ -1,4 +1,5 @@
 import React from 'react'
+import Velocity from 'velocity-animate'
 import Toolbar from './Toolbar'
 import Menu from './Menu'
 import styles from './Framework.module.css'
@@ -53,12 +54,14 @@ class Framework extends React.Component {
     }else{
       this.menuDOM.style.left = this.menuPosX + 'px';
     }
+    this.menuDOM.classList.add(styles.menu);
+
     window.addEventListener('resize', this.handleResize);
     document.body.addEventListener('touchstart', this.handleTouchStart);
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
-    
+
     setTimeout(this.handleResize, 20);
   }
 
@@ -100,6 +103,8 @@ class Framework extends React.Component {
     if (touch.pageX < this.prevTouchMenuPosX + this.menuWidth + 20 && touch.pageY > 50) {
       this.menuTouchFromX = touch.pageX;
       this.menuDOM.classList.add(styles.touching);
+      this.spaceDOM.classList.add(styles.touching);
+      this.conDOM.classList.add(styles.touching);
       if (!this.bigScreen) {
         this.spaceDOM.style.display = 'block';
       }
@@ -122,11 +127,9 @@ class Framework extends React.Component {
       this.menuTouchFromX = null;
       this.menuTouchMoveX = null;
       this.prevTouchMenuX = null;
-      if (this.menuDOM.classList) {
-        this.menuDOM.classList.remove(styles.touching);
-      }else{
-        this.menuDOM.className = this.menuDOM.className.replace(new RegExp('(^|\\b)' + styles.touching.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-      }
+      this.menuDOM.classList.remove(styles.touching);
+      this.spaceDOM.classList.remove(styles.touching);
+      this.conDOM.classList.remove(styles.touching);
       this.moveBack();
     }
   }
@@ -163,6 +166,57 @@ class Framework extends React.Component {
     }
   }
 
+  animateTo = (posX, callback) => {
+    this._menuMoving = true;
+    Velocity(this.spaceDOM, "stop", true);
+    this.menuDOM.classList.add(styles.animating);
+    this.conDOM.classList.add(styles.animating);
+    const _complete = isReach => {
+      this.stepTo(this.menuPosX);
+      this.menuDOM.classList.remove(styles.animating);
+      this.conDOM.classList.remove(styles.animating);
+      this._menuMoving = false;
+      if (callback) callback(isReach);
+    }
+    const prevPosX = this.menuPosX;
+    const distance = posX - prevPosX;
+    Velocity(this.spaceDOM, {
+      opacity: `${posX / this.menuWidth + 1}`
+    }, {
+      duration: 400,
+      begin: () => {
+        //console.log("begin");
+        if (this._menuMoveMode === 'transform') {
+          this.menuDOM.style.transform = `translate3d(${posX}px,0,0)`;
+        }else{
+          this.menuDOM.style.left = posX + 'px';
+        }
+        if (this.bigScreen) {
+          this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';
+        }
+      },
+      progress: (spaceDOM, perc, remaining) => {
+        //console.log(perc);
+        this.menuPosX = prevPosX + distance * perc;
+        if (this.menuTouchFromX) {
+          Velocity(this.spaceDOM, "stop", true);
+          _complete(false);
+        }
+      }, 
+      complete: () => {
+        //console.log("complete");
+        this.menuPosX = posX;
+        Velocity(this.spaceDOM, "stop", true);
+        _complete(true);
+      }
+    });
+  }
+
+
+  /*
+   * slide menu to posX
+   * repleaced by animateTo
+   */
   slideTo = (posX, callback) => {
     this._menuMoving = true;
     if (this.menuTouchFromX) {
@@ -185,7 +239,7 @@ class Framework extends React.Component {
   }
 
   moveBack = () => {
-    this.slideTo(this.menuPosX > -this.menuWidth * 2/3 ? 0: -this.menuWidth);
+    this.animateTo(this.menuPosX > -this.menuWidth * 2/3 ? 0: -this.menuWidth);
   }
 
   isMenuOpen = () => {
@@ -195,12 +249,13 @@ class Framework extends React.Component {
   openMenu = callback => {
     if (!this.bigScreen) {
       this.spaceDOM.style.display = 'block';
+      this.spaceDOM.style.opacity = 0;
     }
-    this.slideTo(0, callback);
+    this.animateTo(0, callback);
   }
 
   closeMenu = callback => {
-    this.slideTo(-this.menuWidth, (isReach) => {
+    this.animateTo(-this.menuWidth, (isReach) => {
       if (isReach) this.spaceDOM.style.display = 'none';
       if (callback) callback(isReach);
     });

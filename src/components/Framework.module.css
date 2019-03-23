@@ -1,12 +1,20 @@
+.menu.animating {
+  transition: all .4s ease;
+}
+
+.content.animating {
+  transition: width .4s ease;
+}
+
+.touching {
+  transition-duration: 0s!important;
+}
+
 .content {
   width: 100%;
   position: absolute;
   top: 0;
   right: 0;
-}
-
-.menu.touching {
-  transition-duration: 0s;
 }
 
 .space {
@@ -21,7 +29,7 @@
 }
 
 .x * {
-  background:#000!important;
-  color:#0f0!important;
-  border:1px solid red!important;
+  background: #000!important;
+  color: #0f0!important;
+  border: 1px solid red!important;
 }

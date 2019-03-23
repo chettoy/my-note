@@ -126,7 +126,7 @@ class SnackBar {
           this.dismiss();
         });
       }else{
-        Velocity(view, {left: '0px'});
+        Velocity(view, {left: 0}, "ease");
         if (this.__timer === null) {
           this.setTimer(1500);
         }
