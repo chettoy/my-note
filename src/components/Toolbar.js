@@ -1,7 +1,7 @@
-import React from 'react';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import styles from './Toolbar.module.css';
+import React from 'react'
+import Icon from '@mdi/react'
+import {mdiMenu, mdiMagnify} from '@mdi/js'
+import styles from './Toolbar.module.css'
 
 class Toolbar extends React.Component {
   constructor(props) {
@@ -33,9 +33,19 @@ class Toolbar extends React.Component {
   render() {
     return (
       <div className={styles.toolbar}>
-        <span className={styles.menuIcon} onClick={this.handleMenuClick} onMouseEnter={()=>this.setState({menuIconHover:true})} onMouseLeave={()=>this.setState({menuIconHover:false})} style={{backgroundColor:this.state.menuIconHover? 'rgba(85,85,85,1)': 'rgba(0,0,0,0)'}}><MenuIcon /></span>
-        <span className={styles.title}><a href=".">my note</a></span>
-        <span className={styles.searchIcon} onClick={this.handleSearchClick}><SearchIcon /></span>
+        <span className={styles.menuIcon}
+          onClick={this.handleMenuClick}
+          onMouseEnter={() => this.setState({menuIconHover: true})}
+          onMouseLeave={() => this.setState({menuIconHover: false})}
+          style={{backgroundColor: this.state.menuIconHover? 'rgba(85,85,85,1)': 'rgba(0,0,0,0)'}}>
+            <Icon path={mdiMenu} />
+        </span>
+        <span className={styles.title}>
+          <a href=".">my note</a>
+        </span>
+        <span className={styles.searchIcon} onClick={this.handleSearchClick}>
+          <Icon path={mdiMagnify} />
+        </span>
         <div className={styles.search} style={{display: this.state.showSearch? 'block':'none'}}>
           <form action="#" method="get" onSubmit={this.handleSearch}>
             <input type="search" name="search" placeholder="search..." autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true"/>

@@ -10,11 +10,17 @@
   transition-duration: 0s!important;
 }
 
+.menu {
+  z-index: 116;
+  transform: translate3d(0,0,0);
+}
+
 .content {
   width: 100%;
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 100;
 }
 
 .space {
@@ -24,7 +30,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 119;
+  z-index: 115;
   display: none;
 }
 

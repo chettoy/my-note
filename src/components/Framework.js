@@ -16,7 +16,8 @@ class Framework extends React.Component {
   _menuMoveMode = true ? 'transform':'left';
   _menuMoving = false;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this._children = React.Children.map(this.props.children, child => {
       if (child.type === Toolbar) {
         return React.cloneElement(child, {

@@ -59,9 +59,9 @@ class SnackBar {
         const obj = SnackBar.affectedFAB[i];
         const fab = obj.view;
         if (obj.bottom !== 'auto') {
-          fab.style.bottom = obj.bottom;
+          Velocity(fab, {bottom: obj.bottom}, "fast");
         }else if (obj.top !== 'auto') {
-          fab.style.top =  obj.top;
+          Velocity(fab, {top: obj.top}, "fast");
         }
         SnackBar.affectedFAB.splice(i, 1);
       }
@@ -141,7 +141,7 @@ class SnackBar {
     }
     const fabs = document.querySelectorAll('.fab');
     Array.prototype.forEach.call(fabs, function(el, i){
-      if (el.style.position === 'fixed' && document.documentElement.clientHeight - el.getBoundingClientRect().top - el.offsetHeight < view.offsetHeight && el.getBoundingClientRect().left < view.getBoundingClientRect().left + view.offsetWidth) {
+      if (getComputedStyle(el)['position'] === 'fixed' && document.documentElement.clientHeight - el.getBoundingClientRect().top - el.offsetHeight < view.offsetHeight && el.getBoundingClientRect().left < view.getBoundingClientRect().left + view.offsetWidth) {
         const obj = {};
         obj.view = el;
         obj.top = getComputedStyle(el)['top'];
