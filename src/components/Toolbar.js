@@ -41,7 +41,7 @@ class Toolbar extends React.Component {
             <Icon path={mdiMenu} />
         </span>
         <span className={styles.title}>
-          <a href=".">my note</a>
+          <a href=".">MyNote</a>
         </span>
         <span className={styles.searchIcon} onClick={this.handleSearchClick}>
           <Icon path={mdiMagnify} />

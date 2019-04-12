@@ -25,8 +25,12 @@ class FloatActionButton extends React.Component {
 
   render() {
     return (
-      <div className={styles.fab + " fab"} onClick={this.onClickHandler}>
-        <Icon path={mdiClose} rotate={this.state.isOpen? 360: 315}/>
+      <div className="fab">
+        <div className={styles.fab} onClick={this.onClickHandler}>
+          <div className={styles.iconWrapper}>
+            <Icon path={mdiClose} rotate={this.state.isOpen? 360: 315}/>
+          </div>
+        </div>
         <div className={styles.fabMenu} ref={el => this.menuDOM = el}>
           {this.props.children}
         </div>

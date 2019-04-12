@@ -26,8 +26,7 @@ class Framework extends React.Component {
       }
       if (child.type === Menu) {
         return React.cloneElement(child, {
-          getDOM: dom => this.menuDOM = dom,
-          onMouseLeave: this.onMouseLeaveMenu
+          getDOM: dom => this.menuDOM = dom
         });
       }
       if (child.props.className === 'content') {
@@ -62,6 +61,7 @@ class Framework extends React.Component {
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
+    this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
 
     setTimeout(this.handleResize, 20);
   }
@@ -72,6 +72,7 @@ class Framework extends React.Component {
     document.body.removeEventListener('touchmove', this.handleTouchMove);
     document.body.removeTouchListener('touchend', this.handleTouchEnd);
     document.body.removeEventListener('mousemove', this.handleMouseMove);
+    this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
   }
   
   handleResize = () => {
@@ -84,8 +85,12 @@ class Framework extends React.Component {
   prevTouchMenuPosX = null;
   menuTouchFromX = null;
   menuTouchMoveX = null;
+  menuTouchPrevX = null;
+  menuPrevLoopTime = null;
+  menuDragSpeed = 0;
 
   touchMoveLoop = () => {
+    //move Menu
     if (this.menuTouchFromX == null) return;
     if (this.menuTouchMoveX == null) {
       this.raf(this.touchMoveLoop);
@@ -95,6 +100,12 @@ class Framework extends React.Component {
     if (targetPosX < -this.menuWidth) targetPosX = -this.menuWidth;
     if (targetPosX > 0) targetPosX = 0;
     this.stepTo(targetPosX);
+    
+    //calc speed
+    const now = Date.now();
+    this.menuDragSpeed = (this.menuTouchMoveX - this.menuTouchPrevX) / (now - this.menuPrevLoopTime);
+    this.menuTouchPrevX = this.menuTouchMoveX;
+    this.menuPrevLoopTime = now;
     this.raf(this.touchMoveLoop);
   }
 
@@ -103,12 +114,14 @@ class Framework extends React.Component {
     this.prevTouchMenuPosX = this.menuPosX;
     if (touch.pageX < this.prevTouchMenuPosX + this.menuWidth + 20 && touch.pageY > 50) {
       this.menuTouchFromX = touch.pageX;
+      this.menuTouchPrevX = this.menuTouchFromX;
       this.menuDOM.classList.add(styles.touching);
       this.spaceDOM.classList.add(styles.touching);
       this.conDOM.classList.add(styles.touching);
       if (!this.bigScreen) {
         this.spaceDOM.style.display = 'block';
       }
+      this.menuPrevLoopTime = Date.now();
       this.raf(this.touchMoveLoop);
     }
   }
@@ -127,11 +140,21 @@ class Framework extends React.Component {
       event.stopPropagation();
       this.menuTouchFromX = null;
       this.menuTouchMoveX = null;
+      this.menuTouchPrevX = null;
       this.prevTouchMenuX = null;
       this.menuDOM.classList.remove(styles.touching);
       this.spaceDOM.classList.remove(styles.touching);
       this.conDOM.classList.remove(styles.touching);
-      this.moveBack();
+      //console.log("drag speed: " + this.menuDragSpeed);
+      if (Math.abs(this.menuDragSpeed) > 0.5) {
+        const targetPos = this.menuDragSpeed > 0? 0: -this.menuWidth;
+        const duration = Math.abs((targetPos - this.menuPosX) / this.menuDragSpeed);
+        this.animateTo(targetPos, duration > 100? duration: 100);
+      }else{
+        this.moveBack();
+      }
+      this.menuPrevLoopTime = null;
+      this.menuDragSpeed = 0;
     }
   }
   
@@ -167,15 +190,25 @@ class Framework extends React.Component {
     }
   }
 
-  animateTo = (posX, callback) => {
+  animateTo = (posX, arg2, arg3) => {
+    let duration = 250;
+    let callback = null;
+    if (typeof(arg2) === "number") duration = arg2;
+    if (typeof(arg2) === "function") callback = arg2;
+    if (typeof(arg3) === "function") callback = arg3;
     this._menuMoving = true;
     Velocity(this.spaceDOM, "stop", true);
     this.menuDOM.classList.add(styles.animating);
     this.conDOM.classList.add(styles.animating);
+    this.menuDOM.style.transitionDuration = duration + "ms";
+    this.conDOM.style.transitionDuration = duration + "ms";
+    //console.log("animate duration: " + duration + "ms");
     const _complete = isReach => {
       this.stepTo(this.menuPosX);
       this.menuDOM.classList.remove(styles.animating);
       this.conDOM.classList.remove(styles.animating);
+      this.menuDOM.style.transitionDuration = "";
+      this.conDOM.style.transitionDuration = "";
       this._menuMoving = false;
       if (callback) callback(isReach);
     }
@@ -184,9 +217,9 @@ class Framework extends React.Component {
     Velocity(this.spaceDOM, {
       opacity: `${posX / this.menuWidth + 1}`
     }, {
-      duration: 400,
+      duration,
       begin: () => {
-        //console.log("begin");
+        //console.log("animate begin");
         if (this._menuMoveMode === 'transform') {
           this.menuDOM.style.transform = `translate3d(${posX}px,0,0)`;
         }else{
@@ -197,7 +230,7 @@ class Framework extends React.Component {
         }
       },
       progress: (spaceDOM, perc, remaining) => {
-        //console.log(perc);
+        //console.log("animate " + perc);
         this.menuPosX = prevPosX + distance * perc;
         if (this.menuTouchFromX) {
           Velocity(this.spaceDOM, "stop", true);
@@ -205,7 +238,7 @@ class Framework extends React.Component {
         }
       }, 
       complete: () => {
-        //console.log("complete");
+        //console.log("animate complete");
         this.menuPosX = posX;
         Velocity(this.spaceDOM, "stop", true);
         _complete(true);
@@ -240,7 +273,7 @@ class Framework extends React.Component {
   }
 
   moveBack = () => {
-    this.animateTo(this.menuPosX > -this.menuWidth * 2/3 ? 0: -this.menuWidth);
+    this.animateTo(this.menuPosX > -this.menuWidth * 1/2 ? 0: -this.menuWidth);
   }
 
   isMenuOpen = () => {

@@ -1,9 +1,9 @@
 .menu.animating {
-  transition: all .4s ease;
+  transition: all .25s ease;
 }
 
 .content.animating {
-  transition: width .4s ease;
+  transition: width .25s ease;
 }
 
 .touching {

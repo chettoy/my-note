@@ -1,8 +1,23 @@
 import React from 'react'
 import styles from './Menu.module.css'
 
-class Menu extends React.Component {
+export class Menu extends React.Component {
+  render() {
+    return (
+      <div className={styles.menu} ref={element => { if (this.props.getDOM) this.props.getDOM(element)}}>
+        <div className={styles.menuDrawer}>
+          <span>menu</span>
+        </div>
+        {this.props.children}
+        <div className={styles.menuFooter}>
+          <span className={styles.copyright}>&copy; me</span>
+        </div>
+      </div>
+    )
+  }
+}
 
+export class MenuList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {currentIndex: 0};
@@ -30,17 +45,7 @@ class Menu extends React.Component {
   }
 
   render() {
-    return (
-      <div className={styles.menu} ref={element => { if (this.props.getDOM) this.props.getDOM(element)}}>
-        <div className={styles.menuDrawer}>
-          <span>menu</span>
-        </div>
-        <ul>{this.getItemList()}</ul>
-        <div className={styles.menuFooter}>
-          <span className={styles.copyright}>&copy; me</span>
-        </div>
-      </div>
-    )
+    return <ul>{this.getItemList()}</ul>;
   }
 }
 

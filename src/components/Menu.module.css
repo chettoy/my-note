@@ -18,7 +18,7 @@
 
 @media screen and (max-width:549px) {
   .menu {
-    width: 60%;
+    width: 70%;
     box-shadow: 0.125rem 0 1rem rgba(0,0,0,0.5);
   }
 }
