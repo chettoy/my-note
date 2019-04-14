@@ -39,10 +39,20 @@ class FloatActionButton extends React.Component {
   }
 
   componentDidMount() {
+    // get DOM
     const fab = this.menuDOM.parentNode;
     const fabChild = [...this.menuDOM.childNodes];
+    this.fabChild = fabChild;
+    // recover offset (if already adjusted by server side)
+    this.menuDOM.style.left = 'auto';
+    this.menuDOM.style.top = 'auto';
+    fabChild.forEach((child, i) => {
+      child.style.left = 'auto';
+      child.style.top = 'auto';
+    });
+    // calc offset
     const fabOffset = fab.getBoundingClientRect();
-    fabChild[0].style.display = "block";//so we can get the offset
+    fabChild[0].style.display = "block"; //so we can get the offset
     const childOffset = fabChild[0].getBoundingClientRect();
     fabChild[0].style.display = "none";
     this.menuDOM.style.left = (fabOffset.left + fab.offsetWidth / 2) - (childOffset.left + childOffset.width / 2) + "px";
@@ -53,7 +63,6 @@ class FloatActionButton extends React.Component {
       child.style.left = - Math.cos((fabRange * i) * Math.PI / 180) * fabOffset.width * r + "px";
       child.style.top = - Math.sin((fabRange * i) * Math.PI / 180) * fabOffset.width * r + "px";
     });
-    this.fabChild = fabChild;
   }
 }
 

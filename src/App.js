@@ -1,27 +1,49 @@
-import React from 'react'
-import { Router, Route, Link } from 'react-router-dom'
-import { createHashHistory } from "history";
-import Framework from './components/Framework'
-import Toolbar from './components/Toolbar'
-import { Menu, MenuList } from './components/Menu'
-import FloatActionButton from './components/FloatActionButton'
-import MusicPlayer from './components/MusicPlayer'
-import SnackBar from './common/SnackBar'
-import Toast from './common/Toast'
-import './App.css'
+import React from 'react';
+import Helmet from 'react-helmet';
+import { Route, withRouter } from 'react-router-dom';
+import styled from 'styled-components';
+
+import Framework from './components/Framework';
+import Toolbar from './components/Toolbar';
+import { Menu, MenuList } from './components/Menu';
+import FloatActionButton from './components/FloatActionButton';
+import MusicPlayer from './components/MusicPlayer';
+import SnackBar from './common/SnackBar';
+import Toast from './common/Toast';
+
+const AppWrapper = styled.div`
+  .content {
+    background-color: #282c34;
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  .content .fab {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 1rem;
+  }
+  .App-link {
+    color: #61dafb;
+  }
+`;
+
+const toast = (text, during=Toast.LENGTH_SHORT) => {
+  Toast.makeText(null, text, during).show();
+};
 
 class App extends React.Component {
   view = null;
-  history = null;
   sessionStorageSupported = false;
-
-  toast = (text, during=Toast.LENGTH_SHORT) => {
-    Toast.makeText(this, text, during).show();
-  }
 
   constructor(props) {
     super(props);
-    this.history = createHashHistory();
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
@@ -31,6 +53,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    if (navigator.userAgent === "ReactSnap") return;
     if ((!this.sessionStorageSupported) || sessionStorage.show_welcome === undefined) {
       setTimeout(() => {
         if (this.sessionStorageSupported) {
@@ -47,13 +70,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router history={this.history}>
+      <AppWrapper>
+        <Helmet title="mynote" />
         <Framework xUI={this.state.xUI} ref={instance => this.view = instance}>
           <Toolbar onSearch={this.handleSearch} />
           <Menu>
             <MusicPlayer />
             <MenuList>
-              <li onClick={() => this.history.push("/")}>item1</li>
+              <li onClick={() => this.props.history.push("/")}>item1</li>
               <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
               <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
               <li onClick={() => this.view.closeMenu()}>close</li>
@@ -63,13 +87,13 @@ class App extends React.Component {
             <Route exact path="/" component={IndexPage} />
             <Route path="/test" component={TestPage} />
             <FloatActionButton>
-              <div onClick={() => this.toast("test")}>1</div>
-              <div onClick={() => this.history.push("/test")}>2</div>
+              <div onClick={() => toast("test")}>1</div>
+              <div onClick={() => this.props.history.push("/test")}>2</div>
               <div>3</div>
             </FloatActionButton>
           </div>
         </Framework>
-      </Router>
+      </AppWrapper>
     );
   }
 }
@@ -84,4 +108,4 @@ function TestPage() {
   return <p>test page</p>;
 }
 
-export default App;
+export default withRouter(App);
