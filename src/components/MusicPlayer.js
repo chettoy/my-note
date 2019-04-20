@@ -1,12 +1,19 @@
-import React from 'react'
-import styles from './MusicPlayer.module.css'
+import React from 'react';
+import styled from 'styled-components/macro';
+
+const MusicView = styled.div`
+  width: 100%;
+  .status{
+    font-family:'Source Sans Pro','Courier New','Courier',monospace;
+  }
+`;
 
 class MusicPlayer extends React.Component {
   render() {
     return (
-      <div className={styles.music}>
-        <span className={styles.status}>###</span>
-      </div>
+      <MusicView>
+        <span className='status'>###</span>
+      </MusicView>
     )
   }
 }

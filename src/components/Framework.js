@@ -1,8 +1,46 @@
-import React from 'react'
-import Velocity from 'velocity-animate'
-import Toolbar from './Toolbar'
-import Menu from './Menu'
-import styles from './Framework.module.css'
+import React from 'react';
+import Velocity from 'velocity-animate';
+import styled from 'styled-components/macro';
+import Toolbar from './Toolbar';
+import Menu from './Menu';
+
+const styles = {
+  menu: 'DrawerView_menu',
+  animating: 'animating',
+  touching: 'touching'
+};
+const DrawerView = styled.div`
+  .${styles.menu}.animating {
+    transition: all .25s ease;
+  }
+  .content.animating {
+    transition: width .25s ease;
+  }
+  .touching {
+    transition-duration: 0s!important;
+  }
+  .${styles.menu} {
+    z-index: 116;
+    transform: translate3d(0,0,0);
+  }
+  .content {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+  }
+`;
+const SpaceView = styled.div`
+  background: rgba(10,10,10,0.5);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 115;
+  display: none;
+`;
 
 class Framework extends React.Component {
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
@@ -31,7 +69,6 @@ class Framework extends React.Component {
       }
       if (child.props.className === 'content') {
         return React.cloneElement(child, {
-          className: child.props.className ? (child.props.className + ' ' + styles.content) : styles.content,
           ref: dom => this.conDOM = dom
         });
       }
@@ -41,10 +78,10 @@ class Framework extends React.Component {
 
   render() {
     return (
-      <div className={this.props.xUI ? styles.x : ""}>
+      <DrawerView>
         {this._children}
-        <div className={styles.space} ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></div>
-      </div>
+        <SpaceView ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></SpaceView>
+      </DrawerView>
     )
   }
 

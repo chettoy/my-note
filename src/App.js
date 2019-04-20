@@ -1,8 +1,11 @@
 import React from 'react';
 import Helmet from 'react-helmet';
+import Loadable from 'react-loadable';
 import { Route, withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
+import GlobalStyle from './GlobalStyle';
+import Loading from './components/Loading';
 import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
 import { Menu, MenuList } from './components/Menu';
@@ -32,11 +35,49 @@ const AppWrapper = styled.div`
   .App-link {
     color: #61dafb;
   }
+  &.x * {
+    background: #000!important;
+    color: #0f0!important;
+    border: 1px solid red!important;
+  }
 `;
+
+const isSnap = navigator.userAgent === "ReactSnap";
 
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
+
+/*
+const XXPage = Loadable({
+  loader: () => import('./components/XXPage'),
+  loading: Loading,
+});
+*/
+
+function TestPage() {
+  return <p>test page</p>;
+}
+
+class IndexPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {isLoading: true};
+  }
+
+  render() {
+    if (this.state.isLoading) {
+      return <Loading />;
+    }else{
+      return <p>nothing</p>;
+    }
+  }
+
+  componentDidMount() {
+    if (isSnap) return;
+    this.setState({isLoading: false});
+  }
+}
 
 class App extends React.Component {
   view = null;
@@ -47,13 +88,59 @@ class App extends React.Component {
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
-    this.state = {
-      xUI: false
-    };
+    this.state = {xUI: false};
+  }
+
+
+  handleSearch = s => {
+    this.toast('search ' + s);
+  }
+
+  render() {
+    return (
+      <AppWrapper className={this.state.xUI ? 'x' : ''}>
+        <Helmet>
+          <meta name='google' content='notranslate' />
+          <title>mynote</title>
+        </Helmet>
+        <GlobalStyle />
+        <Framework ref={instance => this.view = instance}>
+          <Toolbar onSearch={this.handleSearch} />
+          <Menu>
+            <MusicPlayer />
+            <MenuList>
+              <li onClick={() => this.props.history.push('/')}>item1</li>
+              <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
+              <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
+              <li onClick={() => this.view.closeMenu()}>close</li>
+            </MenuList>
+          </Menu>
+          <div className='content'>
+            <Route exact path='/' component={IndexPage} />
+            <Route path='/test' component={TestPage} />
+            <FloatActionButton>
+              <div onClick={() => toast('test')}>1</div>
+              <div onClick={() => this.props.history.push('/test')}>2</div>
+              <div>3</div>
+            </FloatActionButton>
+          </div>
+        </Framework>
+      </AppWrapper>
+    );
   }
 
   componentDidMount() {
-    if (navigator.userAgent === "ReactSnap") return;
+    if (isSnap) return;
+
+    //load eruda
+    (function () {
+      let script = document.createElement('script');
+      script.src = process.env.PUBLIC_URL + '/eruda.min.js';
+      document.body.appendChild(script);
+      script.onload = function () { window.eruda.init() }
+    })();
+
+    //show welcome
     if ((!this.sessionStorageSupported) || sessionStorage.show_welcome === undefined) {
       setTimeout(() => {
         if (this.sessionStorageSupported) {
@@ -63,49 +150,6 @@ class App extends React.Component {
       }, 1500);
     }
   }
-
-  handleSearch = s => {
-    this.toast('search ' + s);
-  }
-
-  render() {
-    return (
-      <AppWrapper>
-        <Helmet title="mynote" />
-        <Framework xUI={this.state.xUI} ref={instance => this.view = instance}>
-          <Toolbar onSearch={this.handleSearch} />
-          <Menu>
-            <MusicPlayer />
-            <MenuList>
-              <li onClick={() => this.props.history.push("/")}>item1</li>
-              <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
-              <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
-              <li onClick={() => this.view.closeMenu()}>close</li>
-            </MenuList>
-          </Menu>
-          <div className="content">
-            <Route exact path="/" component={IndexPage} />
-            <Route path="/test" component={TestPage} />
-            <FloatActionButton>
-              <div onClick={() => toast("test")}>1</div>
-              <div onClick={() => this.props.history.push("/test")}>2</div>
-              <div>3</div>
-            </FloatActionButton>
-          </div>
-        </Framework>
-      </AppWrapper>
-    );
-  }
-}
-
-function IndexPage() {
-  return (
-    <p>nothing</p>
-  );
-}
-
-function TestPage() {
-  return <p>test page</p>;
 }
 
 export default withRouter(App);
