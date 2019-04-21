@@ -133,11 +133,18 @@ class App extends React.Component {
     if (isSnap) return;
 
     //load eruda
-    (function () {
+    (() => {
+      if (window.eruda) return;
       let script = document.createElement('script');
       script.src = process.env.PUBLIC_URL + '/eruda.min.js';
       document.body.appendChild(script);
       script.onload = function () { window.eruda.init() }
+    })();
+
+    //delete the pre-rendered style
+    ((styleTag = document.querySelectorAll('style[data-styled]')) => {
+      if (styleTag.length === 2 && styleTag[0].innerHTML && !styleTag[1].innerHTML)
+        styleTag[0].parentNode.removeChild(styleTag[0]);
     })();
 
     //show welcome
