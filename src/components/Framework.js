@@ -1,46 +1,8 @@
 import React from 'react';
 import Velocity from 'velocity-animate';
-import styled from 'styled-components/macro';
 import Toolbar from './Toolbar';
 import Menu from './Menu';
-
-const styles = {
-  menu: 'DrawerView_menu',
-  animating: 'animating',
-  touching: 'touching'
-};
-const DrawerView = styled.div`
-  .${styles.menu}.animating {
-    transition: all .25s ease;
-  }
-  .content.animating {
-    transition: width .25s ease;
-  }
-  .touching {
-    transition-duration: 0s!important;
-  }
-  .${styles.menu} {
-    z-index: 116;
-    transform: translate3d(0,0,0);
-  }
-  .content {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 100;
-  }
-`;
-const SpaceView = styled.div`
-  background: rgba(10,10,10,0.5);
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 115;
-  display: none;
-`;
+import styles from './Framework.module.scss';
 
 class Framework extends React.Component {
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
@@ -78,10 +40,10 @@ class Framework extends React.Component {
 
   render() {
     return (
-      <DrawerView>
+      <div className={styles.DrawerView}>
         {this._children}
-        <SpaceView ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></SpaceView>
-      </DrawerView>
+        <div className={styles.SpaceView} ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></div>
+      </div>
     )
   }
 
@@ -92,6 +54,7 @@ class Framework extends React.Component {
       this.menuDOM.style.left = this.menuPosX + 'px';
     }
     this.menuDOM.classList.add(styles.menu);
+    this.conDOM.classList.add(styles.content);
 
     window.addEventListener('resize', this.handleResize);
     document.body.addEventListener('touchstart', this.handleTouchStart);

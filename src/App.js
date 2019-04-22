@@ -1,10 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import Loadable from 'react-loadable';
 import { Route, withRouter } from 'react-router-dom';
-import styled from 'styled-components/macro';
-
-import GlobalStyle from './GlobalStyle';
+import './App.scss';
 import Loading from './components/Loading';
 import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
@@ -14,46 +11,11 @@ import MusicPlayer from './components/MusicPlayer';
 import SnackBar from './common/SnackBar';
 import Toast from './common/Toast';
 
-const AppWrapper = styled.div`
-  .content {
-    background-color: #282c34;
-    min-height: 100vh;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  .content .fab {
-    position: fixed;
-    right: 1rem;
-    bottom: 1rem;
-    font-size: 1rem;
-  }
-  .App-link {
-    color: #61dafb;
-  }
-  &.x * {
-    background: #000!important;
-    color: #0f0!important;
-    border: 1px solid red!important;
-  }
-`;
-
 const isSnap = navigator.userAgent === "ReactSnap";
 
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
-
-/*
-const XXPage = Loadable({
-  loader: () => import('./components/XXPage'),
-  loading: Loading,
-});
-*/
 
 function TestPage() {
   return <p>test page</p>;
@@ -98,12 +60,11 @@ class App extends React.Component {
 
   render() {
     return (
-      <AppWrapper className={this.state.xUI ? 'x' : ''}>
+      <div className={'AppWrapper' + (this.state.xUI ? ' x' : '')}>
         <Helmet>
           <meta name='google' content='notranslate' />
           <title>mynote</title>
         </Helmet>
-        <GlobalStyle />
         <Framework ref={instance => this.view = instance}>
           <Toolbar onSearch={this.handleSearch} />
           <Menu>
@@ -125,7 +86,7 @@ class App extends React.Component {
             </FloatActionButton>
           </div>
         </Framework>
-      </AppWrapper>
+      </div>
     );
   }
 

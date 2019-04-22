@@ -1,75 +1,36 @@
 import React from 'react';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import Icon from '@mdi/react';
 import {mdiMenu, mdiMagnify} from '@mdi/js';
+import { c2s } from '../common/MyCommon';
+import styles from './Toolbar.module.scss';
 
-const toolbarShadow = css`
-  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.5);
-`;
-const ToolbarView = styled.div`
-  ${toolbarShadow};
+const ToolbarView = styled.div.attrs({
+  className: styles.ToolbarView
+})`
   background-color: #2196f3;
-  width: 100%;
-  height: 3.125rem;
-  position: fixed;
-  top: 0;
-  z-index: 104;
-`;
-const Title = styled.span`
-  color: white;
-  font-size: 1.25rem;
-  line-height: 3.125rem;
-  float: left;
-  a {
-    color: white;
+  
+  ${c2s(styles.MenuIcon)},
+  ${c2s(styles.SearchIcon)} {
+    svg { fill: white; }
   }
 `;
-const IconFather = styled.span`
-  display: block;
-  width: 3.125rem;
-  height: 3.125rem;
-  font-size: 1.25rem;
-  text-align: center;
-  line-height: 3.125rem;
-  svg {
-    fill: white;
-    width: 1.25rem;
-    height: 1.25rem;
-    vertical-align: middle;
-  }
+
+const Title = styled.span.attrs({
+  className: styles.Title
+})`
+  a { color: white; }
 `;
-const MenuIcon = styled(IconFather)`
-  float: left;
-`;
-const SearchIcon = styled(IconFather)`
-  float: right;
-`;
-const SearchView = styled.div`
-  ${toolbarShadow};
+
+const SearchView = styled.div.attrs({
+  className: styles.SearchView
+})`
   background: rgba(255,255,255,0.6);
-  border-radius: 0 0 0 1rem;
-  font-size: 1rem;
-  text-align: center;
-  height: 3.125rem;
-  width: 100%;
-  min-width: 15rem;
-  max-width: 20rem;
-  position: fixed;
-  top: 3.125rem;
-  right: 0;
-  z-index: 104;
-  display: none;
   input {
-    width: 85%;
-    height: 1.875rem;
-    margin: 0.625rem 1rem;
-    border: none;
-    background: transparent;
     box-shadow: 0 0.125rem grey;
   }
   input:focus {
     box-shadow: 0 0.125rem #FF4081;
-    outline: none;
   }
 `;
 
@@ -103,17 +64,18 @@ class Toolbar extends React.Component {
   render() {
     return (
       <ToolbarView>
-        <MenuIcon
+        <span className={styles.MenuIcon}
           onClick={this.handleMenuClick}
           onMouseEnter={() => this.setState({menuIconHover: true})}
           onMouseLeave={() => this.setState({menuIconHover: false})}
           style={{backgroundColor: this.state.menuIconHover? 'rgba(85,85,85,1)': 'rgba(0,0,0,0)'}}>
             <Icon path={mdiMenu} />
-        </MenuIcon>
+        </span>
         <Title><a href=".">MyNote</a></Title>
-        <SearchIcon onClick={this.handleSearchClick}>
+        <span className={styles.SearchIcon}
+          onClick={this.handleSearchClick}>
           <Icon path={mdiMagnify} />
-        </SearchIcon>
+        </span>
         <SearchView style={{display: this.state.showSearch? 'block':'none'}}>
           <form action="#" method="get" onSubmit={this.handleSearch}>
             <input type="search" name="search" placeholder="search..." autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true"/>

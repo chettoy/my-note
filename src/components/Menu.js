@@ -1,56 +1,19 @@
 import React from 'react';
 import styled from 'styled-components/macro';
+import { c2s } from '../common/MyCommon';
+import styles from './Menu.module.scss';
 
-const MenuContainer = styled.div`
+const MenuContainer = styled.div.attrs({
+  className: styles.MenuContainer
+})`
   background-color: rgba(255,255,255,0.87);
-  font-size: 1rem;
-  height: 100vh;
-  min-width: 10rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  box-sizing: border-box;
   
-  @media screen and (min-width:550px) {
-    width: 16rem;
-    max-width: 50%;
-  }
-  
-  @media screen and (max-width:549px) {
-    width: 70%;
-    box-shadow: 0.125rem 0 1rem rgba(0,0,0,0.5);
-  }
-  
-  .menuDrawer {
-    width: 100%;
-    height: 12rem;
-    max-height: 30%;
-    position: relative;
-    text-align: center;
-    background: linear-gradient(to left, #0066FF, #00FFBF, #B3FF19);
-  }
-  
-  .menuDrawer span {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    margin: 0.4rem;
+  ${c2s(styles.menuDrawer)} span {
     color: white;
   }
   
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0.5rem 0;
-    width: 100%;
-  }
-  
   ul li {
-    margin: 0;
-    padding: 0.5rem;
-    display: block;
     color: rgba(0,0,0,0.87);
-    background: transparent;
   }
   
   ul li.active {
@@ -58,16 +21,8 @@ const MenuContainer = styled.div`
     background: #ddd;
   }
   
-  .menuFooter {
-    padding: 0 0.5rem;
-    line-height: 1.2rem;
-    position: absolute;
-    bottom: 5rem;
-  }
-  
-  .copyright {
+  ${c2s(styles.copyright)} {
     color: rgba(0,0,0,0.87);
-    white-space: nowrap;
   }
 `;
 
@@ -75,12 +30,12 @@ export class Menu extends React.Component {
   render() {
     return (
       <MenuContainer ref={element => { if (this.props.getDOM) this.props.getDOM(element)}}>
-        <div className='menuDrawer'>
+        <div className={styles.menuDrawer}>
           <span>menu</span>
         </div>
         {this.props.children}
-        <div className='menuFooter'>
-          <span className='copyright'>&copy; me</span>
+        <div className={styles.menuFooter}>
+          <span className={styles.copyright}>&copy; me</span>
         </div>
       </MenuContainer>
     )

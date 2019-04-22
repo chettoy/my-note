@@ -3,51 +3,20 @@ import Icon from '@mdi/react';
 import {mdiClose} from '@mdi/js';
 import Velocity from 'velocity-animate';
 import styled from 'styled-components/macro';
+import { c2s } from '../common/MyCommon';
+import styles from './FloatActionButton.module.scss';
 
-const FabWrapper = styled.div`
-  z-index: 103;
-  transform: translate3d(0,0,0); //It prevents move when scrolling
-  
-  .fabView {
+const FabWrapper = styled.div.attrs({
+  className: styles.FabWrapper
+})`
+  ${c2s(styles.fabView)} {
     background: #FF4081;
-    width: 3.5rem;
-    height: 3.5rem;
-    text-align: center;
-    line-height: 3.5rem;
-    border-radius: 50%;
-    filter: drop-shadow(0.1rem 0.1rem 0.2rem rgba(112, 112, 112, 0.7));
   }
-  
-  .fabView .iconWrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  
-  .iconWrapper svg {
-    width: 1.5rem;
-    height: 1.5rem;
+  ${c2s(styles.iconWrapper)} svg {
     fill: white;
-    display: block;
-    margin: 0 auto;
-    transition: transform 1s;
   }
-  
-  .fabMenu {
-    position: absolute;
-  }
-  
-  .fabMenu div {
-    position: absolute;
+  ${c2s(styles.fabMenu)} div {
     background: #66ccff;
-    width: 2.5rem;
-    height: 2.5rem;
-    text-align: center;
-    line-height: 2.5rem;
-    border-radius: 50%;
-    filter: drop-shadow(0.1rem 0.1rem 0.1rem rgba(0, 0, 0, 0.5));
-    display: none;
    }
 `;
 
@@ -73,12 +42,12 @@ class FloatActionButton extends React.Component {
   render() {
     return (
       <FabWrapper className='fab'>
-        <div className='fabView' onClick={this.onClickHandler}>
-          <div className='iconWrapper'>
+        <div className={styles.fabView} onClick={this.onClickHandler}>
+          <div className={styles.iconWrapper}>
             <Icon path={mdiClose} rotate={this.state.isOpen? 360: 315}/>
           </div>
         </div>
-        <div className='fabMenu' ref={el => this.menuDOM = el}>
+        <div className={styles.fabMenu} ref={el => this.menuDOM = el}>
           {this.props.children}
         </div>
       </FabWrapper>
