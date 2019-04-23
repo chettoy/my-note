@@ -227,6 +227,8 @@ class Framework extends React.Component {
         }
         if (this.bigScreen) {
           this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';
+        }else{
+          this.conDOM.style.width = '100%';
         }
       },
       progress: (spaceDOM, perc, remaining) => {
@@ -272,8 +274,12 @@ class Framework extends React.Component {
     this.raf(this.slideTo.bind(this, posX, callback));
   }
 
-  moveBack = () => {
-    this.animateTo(this.menuPosX > -this.menuWidth * 1/2 ? 0: -this.menuWidth);
+  moveBack = (callback) => {
+    if (this.menuPosX > -this.menuWidth * 1/2) {
+      this.openMenu(callback);
+    }else{
+      this.closeMenu(callback);
+    }
   }
 
   isMenuOpen = () => {
@@ -283,7 +289,6 @@ class Framework extends React.Component {
   openMenu = callback => {
     if (!this.bigScreen) {
       this.spaceDOM.style.display = 'block';
-      this.spaceDOM.style.opacity = 0;
     }
     this.animateTo(0, callback);
   }
