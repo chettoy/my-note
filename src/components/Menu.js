@@ -21,6 +21,13 @@ const MenuContainer = styled.div.attrs({
     background: #ddd;
   }
   
+  ${c2s(styles.menuFooter)} {
+    a:link{color:rgba(0,0,0,0.54);}
+    a:visited{color:rgba(0,0,0,0.54);}
+    a:hover{color:#0a0;}
+    a:active{color:#0a0;}
+  }
+  
   ${c2s(styles.copyright)} {
     color: rgba(0,0,0,0.87);
   }

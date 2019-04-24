@@ -2,14 +2,15 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { Route, withRouter } from 'react-router-dom';
 import './App.scss';
+import SnackBar from './common/SnackBar';
+import Toast from './common/Toast';
 import Loading from './components/Loading';
 import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
 import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
 import MusicPlayer from './components/MusicPlayer';
-import SnackBar from './common/SnackBar';
-import Toast from './common/Toast';
+import CardView from './components/CardView';
 
 const isSnap = navigator.userAgent === "ReactSnap";
 
@@ -18,7 +19,11 @@ const toast = (text, during=Toast.LENGTH_SHORT) => {
 };
 
 function TestPage() {
-  return <p>test page</p>;
+  return (
+    <CardView>
+      <p>test page</p>
+    </CardView>
+  );
 }
 
 class IndexPage extends React.Component {
@@ -31,7 +36,11 @@ class IndexPage extends React.Component {
     if (this.state.isLoading) {
       return <Loading />;
     }else{
-      return <p>nothing</p>;
+      return (
+        <CardView>
+          <p>nothing</p>
+        </CardView>
+      );
     }
   }
 
@@ -53,9 +62,17 @@ class App extends React.Component {
     this.state = {xUI: false};
   }
 
-
   handleSearch = s => {
     this.toast('search ' + s);
+  }
+
+  goTo = path => {
+    if (path === this.props.location.pathname) return;
+    if (path === '/') {
+      this.props.history.goBack();
+    }else{
+      this.props.history.push(path);
+    }
   }
 
   render() {
@@ -70,7 +87,7 @@ class App extends React.Component {
           <Menu>
             <MusicPlayer />
             <MenuList>
-              <li onClick={() => this.props.history.push('/')}>item1</li>
+              <li onClick={() => this.goTo('/')}>item1</li>
               <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
               <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
               <li onClick={() => this.view.closeMenu()}>close</li>
@@ -81,7 +98,7 @@ class App extends React.Component {
             <Route path='/test' component={TestPage} />
             <FloatActionButton>
               <div onClick={() => toast('test')}>1</div>
-              <div onClick={() => this.props.history.push('/test')}>2</div>
+              <div onClick={() => this.goTo('/test')}>2</div>
               <div>3</div>
             </FloatActionButton>
           </div>

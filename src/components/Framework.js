@@ -198,17 +198,17 @@ class Framework extends React.Component {
     if (typeof(arg3) === "function") callback = arg3;
     this._menuMoving = true;
     Velocity(this.spaceDOM, "stop", true);
-    this.menuDOM.classList.add(styles.animating);
-    this.conDOM.classList.add(styles.animating);
-    this.menuDOM.style.transitionDuration = duration + "ms";
-    this.conDOM.style.transitionDuration = duration + "ms";
+    //this.menuDOM.classList.add(styles.animating);
+    //this.conDOM.classList.add(styles.animating);
+    //this.menuDOM.style.transitionDuration = duration + "ms";
+    //this.conDOM.style.transitionDuration = duration + "ms";
     //console.log("animate duration: " + duration + "ms");
     const _complete = isReach => {
       this.stepTo(this.menuPosX);
-      this.menuDOM.classList.remove(styles.animating);
-      this.conDOM.classList.remove(styles.animating);
-      this.menuDOM.style.transitionDuration = "";
-      this.conDOM.style.transitionDuration = "";
+      //this.menuDOM.classList.remove(styles.animating);
+      //this.conDOM.classList.remove(styles.animating);
+      //this.menuDOM.style.transitionDuration = "";
+      //this.conDOM.style.transitionDuration = "";
       this._menuMoving = false;
       if (callback) callback(isReach);
     }
@@ -237,6 +237,14 @@ class Framework extends React.Component {
         if (this.menuTouchFromX) {
           Velocity(this.spaceDOM, "stop", true);
           _complete(false);
+        }
+        if (this._menuMoveMode === 'transform') {
+          this.menuDOM.style.transform = `translate3d(${this.menuPosX}px,0,0)`;
+        }else{
+          this.menuDOM.style.left = this.menuPosX + 'px';
+        }
+        if (this.bigScreen) {
+          this.conDOM.style.width = document.body.offsetWidth - (this.menuPosX + this.menuWidth) + 1 + 'px';
         }
       }, 
       complete: () => {
