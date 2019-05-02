@@ -19,8 +19,8 @@ const ToolbarView = styled.div.attrs({
 
 const StatusBar = styled.div`
   background-color: #2196f3;
-  display: ${props => props.height? 'block': 'none'};
-  height: ${props => props.height}px;
+  display: ${props => props.statusBarHeight? 'block': 'none'};
+  height: ${props => props.statusBarHeight}px;
   width: 100%;
   position: fixed;
   top: 0;
@@ -46,8 +46,6 @@ const SearchView = styled.div.attrs({
 `;
 
 class Toolbar extends React.Component {
-  dom = null; //ToolbarView
-
   constructor(props) {
     super(props);
     this.state = {
@@ -77,7 +75,7 @@ class Toolbar extends React.Component {
   render() {
     return (
       <ToolbarView statusBarHeight={this.props.statusBarHeight}>
-        <StatusBar height={this.props.statusBarHeight} />
+        <StatusBar statusBarHeight={this.props.statusBarHeight} />
         <span className={styles.MenuIcon}
           onClick={this.handleMenuClick}
           onMouseEnter={() => this.setState({menuIconHover: true})}

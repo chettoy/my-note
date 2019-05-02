@@ -74,7 +74,10 @@ class App extends React.Component {
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
-    this.state = {xUI: false};
+    this.state = {
+      statusBarHeight,
+      xUI: false
+    };
   }
 
   handleSearch = s => {
@@ -98,7 +101,7 @@ class App extends React.Component {
           <title>mynote</title>
         </Helmet>
         <Framework ref={instance => this.view = instance}>
-          <Toolbar statusBarHeight={statusBarHeight} onSearch={this.handleSearch} />
+          <Toolbar statusBarHeight={this.state.statusBarHeight} onSearch={this.handleSearch} />
           <Menu>
             <MusicPlayer />
             <MenuList>
@@ -126,7 +129,7 @@ class App extends React.Component {
             <FloatActionButton>
               <div onClick={() => toast('test')}>1</div>
               <div onClick={() => this.goTo('/test')}>2</div>
-              <div onClick={() => ClientUtils.isClient() && ClientUtils.toggleMenu(true)}>3</div>
+              <div>3</div>
             </FloatActionButton>
           </div>
         </Framework>
