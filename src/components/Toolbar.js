@@ -9,11 +9,21 @@ const ToolbarView = styled.div.attrs({
   className: styles.ToolbarView
 })`
   background-color: #2196f3;
+  top: ${props => props.statusBarHeight}px;
   
   ${c2s(styles.MenuIcon)},
   ${c2s(styles.SearchIcon)} {
     svg { fill: white; }
   }
+`;
+
+const StatusBar = styled.div`
+  background-color: #2196f3;
+  display: ${props => props.height? 'block': 'none'};
+  height: ${props => props.height}px;
+  width: 100%;
+  position: fixed;
+  top: 0;
 `;
 
 const Title = styled.span.attrs({
@@ -25,6 +35,7 @@ const Title = styled.span.attrs({
 const SearchView = styled.div.attrs({
   className: styles.SearchView
 })`
+  top: calc(${props => props.statusBarHeight}px + 3.125rem);
   background: rgba(255,255,255,0.6);
   input {
     box-shadow: 0 0.125rem grey;
@@ -35,6 +46,8 @@ const SearchView = styled.div.attrs({
 `;
 
 class Toolbar extends React.Component {
+  dom = null; //ToolbarView
+
   constructor(props) {
     super(props);
     this.state = {
@@ -63,7 +76,8 @@ class Toolbar extends React.Component {
 
   render() {
     return (
-      <ToolbarView>
+      <ToolbarView statusBarHeight={this.props.statusBarHeight}>
+        <StatusBar height={this.props.statusBarHeight} />
         <span className={styles.MenuIcon}
           onClick={this.handleMenuClick}
           onMouseEnter={() => this.setState({menuIconHover: true})}
@@ -76,7 +90,9 @@ class Toolbar extends React.Component {
           onClick={this.handleSearchClick}>
           <Icon path={mdiMagnify} />
         </span>
-        <SearchView style={{display: this.state.showSearch? 'block':'none'}}>
+        <SearchView
+          statusBarHeight={this.props.statusBarHeight}
+          style={{display: this.state.showSearch? 'block':'none'}}>
           <form action="#" method="get" onSubmit={this.handleSearch}>
             <input type="search" name="search" placeholder="search..." autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true"/>
           </form>

@@ -1,6 +1,9 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Route, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import styled from 'styled-components/macro';
+import ClientUtils from './common/ClientUtils';
 import './App.scss';
 import SnackBar from './common/SnackBar';
 import Toast from './common/Toast';
@@ -12,17 +15,29 @@ import FloatActionButton from './components/FloatActionButton';
 import MusicPlayer from './components/MusicPlayer';
 import CardView from './components/CardView';
 
-const isSnap = navigator.userAgent === "ReactSnap";
+const isSnap = navigator.userAgent === 'ReactSnap';
+const statusBarHeight = ClientUtils.isClient()? ClientUtils.getStatusBarHeight(): 0;
 
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
 
+const Page = styled(CardView)`
+  position: absolute;
+  top: calc(${statusBarHeight}px + 3.125rem);
+  min-height: 50vh;
+  width: 40rem;
+  max-width: 100%;
+  @media screen and (min-width: 100rem) {
+    width: 50rem;
+  }
+`;
+
 function TestPage() {
   return (
-    <CardView>
+    <Page>
       <p>test page</p>
-    </CardView>
+    </Page>
   );
 }
 
@@ -37,9 +52,9 @@ class IndexPage extends React.Component {
       return <Loading />;
     }else{
       return (
-        <CardView>
+        <Page>
           <p>nothing</p>
-        </CardView>
+        </Page>
       );
     }
   }
@@ -63,7 +78,7 @@ class App extends React.Component {
   }
 
   handleSearch = s => {
-    this.toast('search ' + s);
+    toast('search ' + s);
   }
 
   goTo = path => {
@@ -83,23 +98,35 @@ class App extends React.Component {
           <title>mynote</title>
         </Helmet>
         <Framework ref={instance => this.view = instance}>
-          <Toolbar onSearch={this.handleSearch} />
+          <Toolbar statusBarHeight={statusBarHeight} onSearch={this.handleSearch} />
           <Menu>
             <MusicPlayer />
             <MenuList>
               <li onClick={() => this.goTo('/')}>item1</li>
               <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
               <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
+              {ClientUtils.isClient() && <li onClick={() => ClientUtils.exit()}>Exit</li>}
               <li onClick={() => this.view.closeMenu()}>close</li>
             </MenuList>
           </Menu>
           <div className='content'>
-            <Route exact path='/' component={IndexPage} />
-            <Route path='/test' component={TestPage} />
+            <Route
+              render={({ location }) => (
+                <TransitionGroup className='CardWrapper'>
+                  <CSSTransition key={location.pathname} classNames='router' timeout={500}>
+                    <Switch location={location}>
+                      <Route exact path='/' component={IndexPage} />
+                      <Route exact path='/test' component={TestPage} />
+                      <Route render={() => <div>Not Found</div>} />
+                    </Switch>
+                  </CSSTransition>
+                </TransitionGroup>
+              )}
+            />
             <FloatActionButton>
               <div onClick={() => toast('test')}>1</div>
               <div onClick={() => this.goTo('/test')}>2</div>
-              <div>3</div>
+              <div onClick={() => ClientUtils.isClient() && ClientUtils.toggleMenu(true)}>3</div>
             </FloatActionButton>
           </div>
         </Framework>

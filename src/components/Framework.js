@@ -149,7 +149,7 @@ class Framework extends React.Component {
       if (Math.abs(this.menuDragSpeed) > 0.5) {
         const targetPos = this.menuDragSpeed > 0? 0: -this.menuWidth;
         const duration = Math.abs((targetPos - this.menuPosX) / this.menuDragSpeed);
-        this.animateTo(targetPos, duration > 100? duration: 100);
+        this.animateTo(targetPos, duration > 50? duration: 50);
       }else{
         this.moveBack();
       }
@@ -191,7 +191,7 @@ class Framework extends React.Component {
   }
 
   animateTo = (posX, arg2, arg3) => {
-    let duration = 250;
+    let duration = 180;
     let callback = null;
     if (typeof(arg2) === "number") duration = arg2;
     if (typeof(arg2) === "function") callback = arg2;
@@ -218,6 +218,7 @@ class Framework extends React.Component {
       opacity: `${posX / this.menuWidth + 1}`
     }, {
       duration,
+      easing: 'swing',
       begin: () => {
         //console.log("animate begin");
         if (this._menuMoveMode === 'transform') {
@@ -254,32 +255,6 @@ class Framework extends React.Component {
         _complete(true);
       }
     });
-  }
-
-
-  /*
-   * slide menu to posX
-   * repleaced by animateTo
-   */
-  slideTo = (posX, callback) => {
-    this._menuMoving = true;
-    if (this.menuTouchFromX) {
-      this._menuMoving = false;
-      if (callback) callback(false);
-      return;  //stop sliding when touchstart
-    }
-    const step = this.menuWidth / 60 * 4;
-    if (this.menuPosX < posX - step) {
-      this.stepTo(this.menuPosX + step);
-    }else if (this.menuPosX > posX + step) {
-      this.stepTo(this.menuPosX - step);
-    }else{
-      this.stepTo(posX);
-      this._menuMoving = false;
-      if (callback) callback(true);
-      return;
-    }
-    this.raf(this.slideTo.bind(this, posX, callback));
   }
 
   moveBack = (callback) => {

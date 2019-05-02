@@ -58,6 +58,7 @@ export class MenuList extends React.Component {
   getItemList = () => {
     let i = 0;
     return React.Children.map(this.props.children, child => {
+      if (!child) return null;
       return React.cloneElement(child, {
         key: i,
         className: this.state.currentIndex === i ? 'active' : '',

@@ -2,22 +2,25 @@
 
 .AppWrapper {
   .content {
-    background-color: #282c34;
-    min-height: 100vh;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
-  }
-  
-  .content .fab {
-    position: fixed;
-    right: 1rem;
-    bottom: 1rem;
-    font-size: 1rem;
+    
+    .fab {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      font-size: 1rem;
+    }
+    
+    .CardWrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #282c34;
+    }
   }
   
   .App-link {
@@ -29,4 +32,19 @@
     color: #0f0!important;
     border: 1px solid red!important;
   }
+}
+
+.router-enter {
+  opacity: 0;
+}
+.router-enter-active {
+  transition: all .5s;
+  opacity: 1;
+}
+.router-exit {
+  opacity: 1;
+}
+.router-exit-active {
+  transition: all .5s;
+  opacity: 0;
 }
