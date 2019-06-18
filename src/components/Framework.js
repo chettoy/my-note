@@ -70,7 +70,7 @@ class Framework extends React.Component {
     window.removeEventListener('resize', this.handleResize);
     document.body.removeEventListener('touchstart', this.handleTouchStart);
     document.body.removeEventListener('touchmove', this.handleTouchMove);
-    document.body.removeTouchListener('touchend', this.handleTouchEnd);
+    document.body.removeEventListener('touchend', this.handleTouchEnd);
     document.body.removeEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
   }

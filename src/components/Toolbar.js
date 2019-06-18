@@ -8,7 +8,7 @@ import styles from './Toolbar.module.scss';
 const ToolbarView = styled.div.attrs({
   className: styles.ToolbarView
 })`
-  background-color: #2196f3;
+  background-color: transparent;//#2196f3;
   top: ${props => props.statusBarHeight}px;
   
   ${c2s(styles.MenuIcon)},

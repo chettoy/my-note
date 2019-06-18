@@ -4,9 +4,10 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
-import './App.scss';
+import MessageHandler from './common/MessageHandler';
+import MyCommon from './common/MyCommon';
 import SnackBar from './common/SnackBar';
-import Toast from './common/Toast';
+import Toast from './common/SuperToast';
 import Loading from './components/Loading';
 import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
@@ -14,9 +15,10 @@ import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
 import MusicPlayer from './components/MusicPlayer';
 import CardView from './components/CardView';
+import Banner from './components/Banner';
+import './App.scss';
 
-const isSnap = navigator.userAgent === 'ReactSnap';
-const statusBarHeight = ClientUtils.isClient()? ClientUtils.getStatusBarHeight(): 0;
+const statusBarHeight = ClientUtils.getStatusBarHeight();
 
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
@@ -60,7 +62,7 @@ class IndexPage extends React.Component {
   }
 
   componentDidMount() {
-    if (isSnap) return;
+    if (MyCommon.isSnap) return;
     this.setState({isLoading: false});
   }
 }
@@ -75,6 +77,14 @@ class App extends React.Component {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
     this.state = {xUI: false};
+    MessageHandler.init({
+      context: this,
+      log: (tag, msg) => {
+        const text = `[${tag}] ${msg}`;
+        console.log(text);
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+      }
+    });
   }
 
   handleSearch = s => {
@@ -105,11 +115,17 @@ class App extends React.Component {
               <li onClick={() => this.goTo('/')}>item1</li>
               <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
               <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
-              {ClientUtils.isClient() && <li onClick={() => ClientUtils.exit()}>Exit</li>}
+              {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
               <li onClick={() => this.view.closeMenu()}>close</li>
             </MenuList>
           </Menu>
-          <div className='content'>
+          <main className='content'>
+            <FloatActionButton>
+              <div onClick={() => toast('test')}>1</div>
+              <div onClick={() => this.goTo('/test')}>2</div>
+              <div>3</div>
+            </FloatActionButton>
+            <Banner />
             <Route
               render={({ location }) => (
                 <TransitionGroup className='CardWrapper'>
@@ -123,28 +139,14 @@ class App extends React.Component {
                 </TransitionGroup>
               )}
             />
-            <FloatActionButton>
-              <div onClick={() => toast('test')}>1</div>
-              <div onClick={() => this.goTo('/test')}>2</div>
-              <div>3</div>
-            </FloatActionButton>
-          </div>
+          </main>
         </Framework>
       </div>
     );
   }
 
   componentDidMount() {
-    if (isSnap) return;
-
-    //load eruda
-    (() => {
-      if (window.eruda) return;
-      let script = document.createElement('script');
-      script.src = process.env.PUBLIC_URL + '/eruda.min.js';
-      document.body.appendChild(script);
-      script.onload = function () { window.eruda.init() }
-    })();
+    if (MyCommon.isSnap) return;
 
     //delete the pre-rendered style
     ((styleTag = document.querySelectorAll('style[data-styled]')) => {
