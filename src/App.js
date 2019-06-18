@@ -1,8 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import styled from 'styled-components/macro';
+import { withRouter } from 'react-router-dom';
 import ClientUtils from './common/ClientUtils';
 import MessageHandler from './common/MessageHandler';
 import MyCommon from './common/MyCommon';
@@ -13,59 +11,17 @@ import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
 import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
-import MusicPlayer from './components/MusicPlayer';
-import CardView from './components/CardView';
 import Banner from './components/Banner';
+import CardRouter from './cards/CardRouter';
 import './App.scss';
+
+const MusicPlayer = React.lazy(() => import('./components/MusicPlayer'));
 
 const statusBarHeight = ClientUtils.getStatusBarHeight();
 
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
-
-const Page = styled(CardView)`
-  position: absolute;
-  top: calc(${statusBarHeight}px + 3.125rem);
-  min-height: 50vh;
-  width: 40rem;
-  max-width: 100%;
-  @media screen and (min-width: 100rem) {
-    width: 50rem;
-  }
-`;
-
-function TestPage() {
-  return (
-    <Page>
-      <p>test page</p>
-    </Page>
-  );
-}
-
-class IndexPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {isLoading: true};
-  }
-
-  render() {
-    if (this.state.isLoading) {
-      return <Loading />;
-    }else{
-      return (
-        <Page>
-          <p>nothing</p>
-        </Page>
-      );
-    }
-  }
-
-  componentDidMount() {
-    if (MyCommon.isSnap) return;
-    this.setState({isLoading: false});
-  }
-}
 
 class App extends React.Component {
   view = null;
@@ -76,7 +32,10 @@ class App extends React.Component {
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
-    this.state = {xUI: false};
+    this.state = {
+      isLoading: true,
+      xUI: false
+    };
     MessageHandler.init({
       context: this,
       log: (tag, msg) => {
@@ -110,7 +69,9 @@ class App extends React.Component {
         <Framework ref={instance => this.view = instance}>
           <Toolbar statusBarHeight={statusBarHeight} onSearch={this.handleSearch} />
           <Menu>
-            <MusicPlayer />
+            <React.Suspense fallback={<Loading />}>
+              {this.state.isLoading? null: <MusicPlayer />}
+            </React.Suspense>
             <MenuList>
               <li onClick={() => this.goTo('/')}>item1</li>
               <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
@@ -126,19 +87,7 @@ class App extends React.Component {
               <div>3</div>
             </FloatActionButton>
             <Banner />
-            <Route
-              render={({ location }) => (
-                <TransitionGroup className='CardWrapper'>
-                  <CSSTransition key={location.pathname} classNames='router' timeout={500}>
-                    <Switch location={location}>
-                      <Route exact path='/' component={IndexPage} />
-                      <Route exact path='/test' component={TestPage} />
-                      <Route render={() => <div>Not Found</div>} />
-                    </Switch>
-                  </CSSTransition>
-                </TransitionGroup>
-              )}
-            />
+            {this.state.isLoading || <CardRouter />}
           </main>
         </Framework>
       </div>
@@ -147,6 +96,7 @@ class App extends React.Component {
 
   componentDidMount() {
     if (MyCommon.isSnap) return;
+    this.setState({isLoading: false});
 
     //delete the pre-rendered style
     ((styleTag = document.querySelectorAll('style[data-styled]')) => {

@@ -15,16 +15,13 @@ class MusicPlayer extends React.Component {
   textSpace = 10;
   playlist = new Array("1599488");
   playingIndex = 0;
-  errCount = 0;
   waittingForPlay = false;
   recoveryProgressHandled = false;
-  _DEBUG = true;
+  _DEBUG = false;
 
   playerEvents = {
     error: () => {
       this.status.textContent = "bgm: error " + this.audio.error.code;
-      if ((this.errCount++) < 3)
-        setTimeout(this.playNext, 2000);
     },
     canplay: () => {
       if (this.waittingForPlay) this.callPlay();
@@ -190,7 +187,9 @@ class MusicPlayer extends React.Component {
       MessageHandler.log("bgm", "play started");
     })
     .catch(error => {
-      MessageHandler.log("bgm", "play interruped: " + error);
+      if (error.name !== "NotAllowedError") {
+        MessageHandler.log("bgm", "play interruped: " + error);
+      }
     });
   }
 

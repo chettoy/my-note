@@ -10,14 +10,13 @@
 
 @keyframes dotAnim {
   0% {bottom: 0em;}
-  25% {bottom: 0.5em;}
-  50% {bottom: 0.5em;}
+  25% {bottom: 0.25em;}
+  50% {bottom: 0.25em;}
   75% {bottom: 0em;}
 }
 
 .LoadingView {
   color: white;
-  font-size: 1rem;
   text-align: center;
   animation: delayFadeIn 0.4s;
   span {
@@ -25,7 +24,7 @@
     bottom: 0em;
   }
   span:nth-child(4) {
-    font-size: 2rem;
+    font-size: 1em;
     background: linear-gradient(to left, #00FFBF, #B3FF19, #F0F, #00FFBF);
     background-size: 200% auto;
     background-clip: text;

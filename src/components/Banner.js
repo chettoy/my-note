@@ -1,5 +1,6 @@
 import React from 'react';
 import MyCommon from '../common/MyCommon';
+import Loading from './Loading';
 import styles from './Banner.module.scss';
 
 class Banner extends React.Component {
@@ -16,6 +17,9 @@ class Banner extends React.Component {
           styles={{display: this.state.loaded? "block": "none"}}>
           <span>...</span><br />
           <i>under construction</i>
+        </span>
+        <span className={styles.bottom}>
+          {this.state.loaded || <Loading />}
         </span>
       </header>
     );

@@ -12,13 +12,11 @@ class Framework extends React.Component {
   bigScreen = false;
   menuPosX = -316;
   menuTempOpen = false;
-  _children = null;
   _menuMoveMode = true ? 'transform':'left';
   _menuMoving = false;
 
-  constructor(props) {
-    super(props);
-    this._children = React.Children.map(this.props.children, child => {
+  getChildren =
+    _ => React.Children.map(this.props.children, child => {
       if (child.type === Toolbar) {
         return React.cloneElement(child, {
           onMenuClick: this.toggleMenu
@@ -36,12 +34,11 @@ class Framework extends React.Component {
       }
       return child;
     });
-  }
 
   render() {
     return (
       <div className={styles.DrawerView}>
-        {this._children}
+        {this.getChildren()}
         <div className={styles.SpaceView} ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></div>
       </div>
     )
