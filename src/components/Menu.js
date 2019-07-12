@@ -3,12 +3,12 @@ import styled from 'styled-components/macro';
 import { c2s } from '../common/MyCommon';
 import styles from './Menu.module.scss';
 
-const MenuContainer = styled.div.attrs({
-  className: styles.MenuContainer
+const MrMenu = styled.div.attrs({
+  className: styles.MrMenu
 })`
   background-color: rgba(255,255,255,0.87);
   
-  ${c2s(styles.menuDrawer)} span {
+  ${c2s(styles.menuHeader)} span {
     color: white;
   }
   
@@ -36,15 +36,17 @@ const MenuContainer = styled.div.attrs({
 export class Menu extends React.Component {
   render() {
     return (
-      <MenuContainer ref={element => { if (this.props.getDOM) this.props.getDOM(element)}}>
-        <div className={styles.menuDrawer}>
+      <MrMenu ref={element => { if (this.props.getDOM) this.props.getDOM(element)}}>
+        <div className={styles.menuHeader}>
           <span>menu</span>
         </div>
-        {this.props.children}
+        <div className={styles.MenuContainer}>
+          {this.props.children}
+        </div>
         <div className={styles.menuFooter}>
           <span className={styles.copyright}>&copy; me</span>
         </div>
-      </MenuContainer>
+      </MrMenu>
     )
   }
 }

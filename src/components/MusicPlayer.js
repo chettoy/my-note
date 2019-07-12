@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
+import Config from '../Config';
 import MessageHandler from '../common/MessageHandler';
 
 const PlayerView = styled.div`
@@ -225,7 +226,7 @@ class MusicPlayer extends React.Component {
       if (window.sessionStorage && sessionStorage.music_playingIndex) {
         this.playByIndex(sessionStorage.music_playingIndex);
       }else{
-        this.playByIndex(0);
+        if (Config.autoplay) this.playByIndex(0);
       }
     });
   }

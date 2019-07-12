@@ -3,6 +3,34 @@ import Velocity from 'velocity-animate';
 import Toolbar from './Toolbar';
 import Menu from './Menu';
 import styles from './Framework.module.scss';
+//import MessageHandler from '../common/MessageHandler';
+
+class TopMask extends React.Component {
+  render() {
+    return <canvas className={styles.mask} ref={c => TopMask.container = c}></canvas>;
+  }
+  
+  componentDidMount() {
+    TopMask.ctx = TopMask.container.getContext('2d');
+  }
+  
+  static onResize(w, h) {
+    TopMask.container.width = w;
+    TopMask.container.height = h;
+  }
+  
+  static onMotionStart(e) {
+    
+  }
+  
+  static onMotionMove() {
+  
+  }
+  
+  static onMotionEnd() {
+  
+  }
+}
 
 class Framework extends React.Component {
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
@@ -38,6 +66,7 @@ class Framework extends React.Component {
   render() {
     return (
       <div className={styles.DrawerView}>
+        <TopMask />
         {this.getChildren()}
         <div className={styles.SpaceView} ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></div>
       </div>
@@ -73,8 +102,11 @@ class Framework extends React.Component {
   }
   
   handleResize = () => {
-    console.log(`resize(${document.documentElement.clientWidth}, ${document.documentElement.clientHeight})`);
-    this.bigScreen = document.documentElement.clientWidth > 550;
+    const windowWidth = document.documentElement.clientWidth;
+    const windowHeight = document.documentElement.clientHeight;
+    TopMask.onResize(windowWidth, windowHeight);
+    console.log(`resize(${windowWidth}, ${windowHeight})`);
+    this.bigScreen = windowWidth > 550;
     this.menuWidth = this.menuDOM.getBoundingClientRect().width;
     this.moveBack();
   }
@@ -87,12 +119,13 @@ class Framework extends React.Component {
   menuDragSpeed = 0;
 
   touchMoveLoop = () => {
-    //move Menu
     if (this.menuTouchFromX == null) return;
     if (this.menuTouchMoveX == null) {
       this.raf(this.touchMoveLoop);
       return;
     }
+    
+    //move Menu
     let targetPosX = this.prevTouchMenuPosX + this.menuTouchMoveX - this.menuTouchFromX;
     if (targetPosX < -this.menuWidth) targetPosX = -this.menuWidth;
     if (targetPosX > 0) targetPosX = 0;
@@ -103,10 +136,12 @@ class Framework extends React.Component {
     this.menuDragSpeed = (this.menuTouchMoveX - this.menuTouchPrevX) / (now - this.menuPrevLoopTime);
     this.menuTouchPrevX = this.menuTouchMoveX;
     this.menuPrevLoopTime = now;
+    
     this.raf(this.touchMoveLoop);
   }
 
   handleTouchStart = event => {
+    TopMask.onMotionStart(event);
     const touch = event.targetTouches[0];
     this.prevTouchMenuPosX = this.menuPosX;
     if (touch.pageX < this.prevTouchMenuPosX + this.menuWidth + 20 && touch.pageY > 50) {
@@ -124,6 +159,7 @@ class Framework extends React.Component {
   }
 
   handleTouchMove = event => {
+    TopMask.onMotionMove(event);
     const touch = event.targetTouches[0];
     if (this.menuTouchFromX != null) {
       event.stopPropagation();
@@ -133,6 +169,7 @@ class Framework extends React.Component {
   }
 
   handleTouchEnd = event => {
+    TopMask.onMotionEnd(event);
     if (this.menuTouchFromX != null) {
       event.stopPropagation();
       this.menuTouchFromX = null;

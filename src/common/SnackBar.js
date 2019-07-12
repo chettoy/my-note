@@ -13,7 +13,7 @@ class SnackBar {
 
   static getDefaultView() {
     let tmp = document.implementation.createHTMLDocument();
-    tmp.body.innerHTML = '<div id="SnackBar" style="width:100%;height:3rem;position:fixed;left:0px;bottom:-3rem;z-index:999;background:rgba(244,67,102,0.9);color:white;font-size:1rem;"><span style="line-height:3rem;margin-left:1.25rem;"></span></div>';
+    tmp.body.innerHTML = '<div id="SnackBar" style="width:100%;height:3rem;position:fixed;left:0px;bottom:-3rem;z-index:200;background:rgba(244,67,102,0.9);color:white;font-size:1rem;"><span style="line-height:3rem;margin-left:1.25rem;"></span></div>';
     return tmp.body.children[0];
   }
 

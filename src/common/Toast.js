@@ -10,7 +10,7 @@ class Toast {
 
   static getDefaultView() {
     let tmp = document.implementation.createHTMLDocument();
-    tmp.body.innerHTML = '<div id="Toast" style="opacity:0;position:fixed;bottom:3rem;z-index:999;background:rgba(244,67,102,0.9);color:white;font-size:1rem;"></div>';
+    tmp.body.innerHTML = '<div id="Toast" style="opacity:0;position:fixed;bottom:3rem;z-index:200;background:rgba(244,67,102,0.9);color:white;font-size:1rem;"></div>';
     return tmp.body.children[0];
   }
 

@@ -31,3 +31,11 @@
   z-index: 115;
   display: none;
 }
+
+.mask {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+}

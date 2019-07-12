@@ -27,7 +27,7 @@ body {
     color: #61dafb;
   }
   
-  &.x * {
+  &.x *:not(canvas) {
     background: #000!important;
     color: #0f0!important;
     border: 1px solid red!important;

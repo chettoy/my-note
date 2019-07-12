@@ -12,9 +12,7 @@ class Banner extends React.Component {
   render() {
     return (
       <header className={styles.BannerView}>
-        <span
-          className={styles.con}
-          styles={{display: this.state.loaded? "block": "none"}}>
+        <span className={styles.con}>
           <span>...</span><br />
           <i>under construction</i>
         </span>

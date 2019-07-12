@@ -11,7 +11,7 @@ class SuperToast {
 
   static getContainerView() {
     let tmp = document.implementation.createHTMLDocument();
-    tmp.body.innerHTML = '<div id="SuperToast" style="position:fixed;bottom:3rem;z-index:999;"></div>';
+    tmp.body.innerHTML = '<div id="SuperToast" style="position:fixed;bottom:3rem;z-index:200;"></div>';
     return tmp.body.children[0];
   }
 
