@@ -2,6 +2,9 @@
 
 body {
   background-color: #282c34;
+  
+  /* Disables pull-to-refresh but allows overscroll glow effects. */
+  overscroll-behavior-y: contain;
 }
 
 .AppWrapper {

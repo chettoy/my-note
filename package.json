@@ -4,9 +4,9 @@
   "private": true,
   "homepage": "https://chettoy.github.io/my-note",
   "dependencies": {
-    "@mdi/js": "^3.7.95",
+    "@mdi/js": "^3.8.95",
     "@mdi/react": "^1.2.1",
-    "eruda": "^1.5.6",
+    "eruda": "^1.5.7",
     "node-sass": "^4.12.0",
     "normalize.css": "^8.0.1",
     "react": "^16.8.6",

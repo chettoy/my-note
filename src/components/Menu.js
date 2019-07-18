@@ -36,7 +36,11 @@ const MrMenu = styled.div.attrs({
 export class Menu extends React.Component {
   render() {
     return (
-      <MrMenu ref={element => { if (this.props.getDOM) this.props.getDOM(element)}}>
+      <MrMenu
+        ref={element => {
+          if (this.props.getDOM)
+            this.props.getDOM(element);
+        }}>
         <div className={styles.menuHeader}>
           <span>menu</span>
         </div>
@@ -64,10 +68,7 @@ export class MenuList extends React.Component {
       return React.cloneElement(child, {
         key: i,
         className: this.state.currentIndex === i ? 'active' : '',
-        onClick: event => {
-          this.handleItemClick(event);
-          if (child.props.onClick) child.props.onClick(event);
-        },
+        onClickCapture: event => this.handleItemClick(event),
         index: i++
       });
     });

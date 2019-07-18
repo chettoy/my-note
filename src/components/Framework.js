@@ -88,7 +88,7 @@ class Framework extends React.Component {
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
-
+    
     setTimeout(this.handleResize, 20);
   }
 
@@ -150,9 +150,7 @@ class Framework extends React.Component {
       this.menuDOM.classList.add(styles.touching);
       this.spaceDOM.classList.add(styles.touching);
       this.conDOM.classList.add(styles.touching);
-      if (!this.bigScreen) {
-        this.spaceDOM.style.display = 'block';
-      }
+      this.beforeOpenMenu();
       this.menuPrevLoopTime = Date.now();
       this.raf(this.touchMoveLoop);
     }
@@ -183,7 +181,10 @@ class Framework extends React.Component {
       if (Math.abs(this.menuDragSpeed) > 0.5) {
         const targetPos = this.menuDragSpeed > 0? 0: -this.menuWidth;
         const duration = Math.abs((targetPos - this.menuPosX) / this.menuDragSpeed);
-        this.animateTo(targetPos, duration > 50? duration: 50);
+        this.animateTo(targetPos, duration > 50? duration: 50, isReach => {
+          if (targetPos === -this.menuWidth && isReach)
+            this.afterCloseMenu();
+        });
       }else{
         this.moveBack();
       }
@@ -224,6 +225,10 @@ class Framework extends React.Component {
     }
   }
 
+
+  /**
+   * animateTo(posX[, duration][, callback])
+   */
   animateTo = (posX, arg2, arg3) => {
     let duration = 180;
     let callback = null;
@@ -303,16 +308,25 @@ class Framework extends React.Component {
     return this.menuPosX === 0;
   }
 
+  beforeOpenMenu = () => {
+    if (this.bigScreen) return;
+    this.spaceDOM.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  afterCloseMenu = () => {
+    this.spaceDOM.style.display = 'none';
+    document.body.style.overflow = 'unset';
+  }
+
   openMenu = callback => {
-    if (!this.bigScreen) {
-      this.spaceDOM.style.display = 'block';
-    }
+    this.beforeOpenMenu();
     this.animateTo(0, callback);
   }
 
   closeMenu = callback => {
-    this.animateTo(-this.menuWidth, (isReach) => {
-      if (isReach) this.spaceDOM.style.display = 'none';
+    this.animateTo(-this.menuWidth, isReach => {
+      if (isReach) this.afterCloseMenu();
       if (callback) callback(isReach);
     });
   }
