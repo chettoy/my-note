@@ -1,40 +1,52 @@
 @import 'GlobalStyle.scss';
 
 body {
-  background-color: #282c34;
-  
   /* Disables pull-to-refresh but allows overscroll glow effects. */
   overscroll-behavior-y: contain;
-}
-
-.AppWrapper {
-  .content {
-    box-sizing: border-box;
-    font-size: calc(10px + 2vmin);
-    color: white;
-    
-    .fab {
-      position: fixed;
-      right: 1rem;
-      bottom: 1rem;
-      font-size: 1rem;
-    }
-    
-    .CardWrapper {
-      position: relative;
-      min-height: 100vh;
-    }
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
   
   &.x *:not(canvas) {
     background: #000!important;
     color: #0f0!important;
     border: 1px solid red!important;
   }
+}
+
+canvas.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  transition: height 1s;
+  @media all and (orientation: portrait) {
+    background-size: auto 100%;
+  }
+}
+
+.content {
+  box-sizing: border-box;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  
+  .fab {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  .CardWrapper {
+    position: relative;
+    min-height: 100vh;
+  }
+}
+
+.App-link {
+  color: #61dafb;
 }
 
 .router-enter {

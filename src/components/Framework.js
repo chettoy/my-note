@@ -160,7 +160,6 @@ class Framework extends React.Component {
     TopMask.onMotionMove(event);
     const touch = event.targetTouches[0];
     if (this.menuTouchFromX != null) {
-      event.stopPropagation();
       this.menuTouchMoveX = touch.pageX;
       return false;
     }
@@ -169,7 +168,6 @@ class Framework extends React.Component {
   handleTouchEnd = event => {
     TopMask.onMotionEnd(event);
     if (this.menuTouchFromX != null) {
-      event.stopPropagation();
       this.menuTouchFromX = null;
       this.menuTouchMoveX = null;
       this.menuTouchPrevX = null;
@@ -237,59 +235,33 @@ class Framework extends React.Component {
     if (typeof(arg3) === "function") callback = arg3;
     this._menuMoving = true;
     Velocity(this.spaceDOM, "stop", true);
-    //this.menuDOM.classList.add(styles.animating);
-    //this.conDOM.classList.add(styles.animating);
-    //this.menuDOM.style.transitionDuration = duration + "ms";
-    //this.conDOM.style.transitionDuration = duration + "ms";
-    //console.log("animate duration: " + duration + "ms");
     const _complete = isReach => {
-      this.stepTo(this.menuPosX);
-      //this.menuDOM.classList.remove(styles.animating);
-      //this.conDOM.classList.remove(styles.animating);
-      //this.menuDOM.style.transitionDuration = "";
-      //this.conDOM.style.transitionDuration = "";
       this._menuMoving = false;
       if (callback) callback(isReach);
     }
     const prevPosX = this.menuPosX;
     const distance = posX - prevPosX;
     Velocity(this.spaceDOM, {
-      opacity: `${posX / this.menuWidth + 1}`
+      tween: [1, 0]
     }, {
       duration,
-      easing: 'swing',
+      easing: "easeInOutQuad",
       begin: () => {
-        //console.log("animate begin");
-        if (this._menuMoveMode === 'transform') {
-          this.menuDOM.style.transform = `translate3d(${posX}px,0,0)`;
-        }else{
-          this.menuDOM.style.left = posX + 'px';
-        }
         if (this.bigScreen) {
           this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';
         }else{
           this.conDOM.style.width = '100%';
         }
       },
-      progress: (spaceDOM, perc, remaining) => {
-        //console.log("animate " + perc);
-        this.menuPosX = prevPosX + distance * perc;
+      progress: (theDOM, completePerc, remaining, startTime, tweenValue) => {
+        const stepPosX = prevPosX + distance * tweenValue;
+        this.stepTo(stepPosX);
         if (this.menuTouchFromX) {
           Velocity(this.spaceDOM, "stop", true);
           _complete(false);
         }
-        if (this._menuMoveMode === 'transform') {
-          this.menuDOM.style.transform = `translate3d(${this.menuPosX}px,0,0)`;
-        }else{
-          this.menuDOM.style.left = this.menuPosX + 'px';
-        }
-        if (this.bigScreen) {
-          this.conDOM.style.width = document.body.offsetWidth - (this.menuPosX + this.menuWidth) + 1 + 'px';
-        }
       }, 
       complete: () => {
-        //console.log("animate complete");
-        this.menuPosX = posX;
         Velocity(this.spaceDOM, "stop", true);
         _complete(true);
       }

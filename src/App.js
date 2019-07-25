@@ -1,6 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { withRouter } from 'react-router-dom';
+import styled, { ThemeProvider } from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
 import MessageHandler from './common/MessageHandler';
 import MyCommon from './common/MyCommon';
@@ -13,15 +14,18 @@ import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
 import Banner from './components/Banner';
 import CardRouter from './cards/CardRouter';
+import { default as DefaultTheme } from './themes/Light';
 import './App.scss';
 
 const MusicPlayer = React.lazy(() => import('./components/MusicPlayer'));
-
 const statusBarHeight = ClientUtils.getStatusBarHeight();
-
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
+const BackgroundCanvas = styled.canvas.attrs({className: "bg"})`
+  background: ${props => props.theme.AppBackground};
+`;
+BackgroundCanvas.defaultProps = {theme: {AppBackground: "#e0e0e0"}};
 
 class App extends React.Component {
   view = null;
@@ -32,10 +36,7 @@ class App extends React.Component {
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
-    this.state = {
-      isLoading: true,
-      xUI: false
-    };
+    this.state = {isLoading: true};
     MessageHandler.init({
       context: this,
       log: (tag, msg) => {
@@ -61,36 +62,48 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className={'AppWrapper' + (this.state.xUI ? ' x' : '')}>
+      <>
         <Helmet>
           <meta name='google' content='notranslate' />
           <title>mynote</title>
         </Helmet>
-        <Framework ref={instance => this.view = instance}>
-          <Toolbar statusBarHeight={statusBarHeight} onSearch={this.handleSearch} />
-          <Menu>
-            <React.Suspense fallback={<Loading />}>
-              {this.state.isLoading? null: <MusicPlayer />}
-            </React.Suspense>
-            <MenuList>
-              <li onClick={() => this.goTo('/')}>item1</li>
-              <li onClick={() => {SnackBar.make(null, 'test', -1).show(); this.view.closeMenu()}}>item2</li>
-              <li onClick={() => this.setState({xUI: !this.state.xUI})}>item3</li>
-              {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
-              <li onClick={() => this.view.closeMenu()}>close</li>
-            </MenuList>
-          </Menu>
-          <main className='content'>
-            <FloatActionButton>
-              <div onClick={() => toast('test')}>1</div>
-              <div onClick={() => this.goTo('/test')}>2</div>
-              <div>3</div>
-            </FloatActionButton>
-            <Banner />
-            {this.state.isLoading || <CardRouter />}
-          </main>
-        </Framework>
-      </div>
+        <ThemeProvider theme={DefaultTheme}>
+          <Framework ref={instance => this.view = instance}>
+            <BackgroundCanvas />
+            <Toolbar statusBarHeight={statusBarHeight} onSearch={this.handleSearch} />
+            <Menu>
+              <React.Suspense fallback={<Loading />}>
+                {this.state.isLoading? null: <MusicPlayer />}
+              </React.Suspense>
+              <MenuList>
+                <li onClick={() => this.goTo('/')}>item1</li>
+                <li onClick={() => {
+                  SnackBar.make(null, 'test', -1).show();
+                  this.view.closeMenu();
+                }}>item2</li>
+                <li onClick={() => {
+                  if (document.body.classList.contains("x")) {
+                    document.body.classList.remove("x");
+                  }else{
+                    document.body.classList.add("x");
+                  }
+                }}>item3</li>
+                {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
+                <li onClick={() => this.view.closeMenu()}>close</li>
+              </MenuList>
+            </Menu>
+            <main className='content'>
+              <FloatActionButton>
+                <div onClick={() => toast('test')}>1</div>
+                <div onClick={() => this.goTo('/test')}>2</div>
+                <div>3</div>
+              </FloatActionButton>
+              <Banner />
+              {this.state.isLoading || <CardRouter />}
+            </main>
+          </Framework>
+        </ThemeProvider>
+      </>
     );
   }
 

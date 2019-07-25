@@ -6,19 +6,19 @@ import styles from './Menu.module.scss';
 const MrMenu = styled.div.attrs({
   className: styles.MrMenu
 })`
-  background-color: rgba(255,255,255,0.87);
+  background: ${props => props.theme.MenuBackground};
   
   ${c2s(styles.menuHeader)} span {
-    color: white;
+    color: ${props => props.theme.MenuHeaderTextColor};
   }
   
   ul li {
-    color: rgba(0,0,0,0.87);
+    color: ${props => props.theme.MenuTextColor};
   }
   
   ul li.active {
-    color: #2196f3;
-    background: #ddd;
+    color: ${props => props.theme.ItemActiveTextColor};
+    background: ${props => props.theme.ItemActiveColor};
   }
   
   ${c2s(styles.menuFooter)} {
@@ -29,9 +29,19 @@ const MrMenu = styled.div.attrs({
   }
   
   ${c2s(styles.copyright)} {
-    color: rgba(0,0,0,0.87);
+    color: ${props => props.theme.MenuTextColor};
   }
 `;
+
+MrMenu.defaultProps = {
+  theme: {
+    MenuBackground: "rgba(255,255,255,0.87)",
+    MenuHeaderTextColor: "white",
+    MenuTextColor: "rgba(0,0,0,0.87)",
+    ItemActiveTextColor: "#2196f3",
+    ItemActiveColor: "#ddd"
+  }
+};
 
 export class Menu extends React.Component {
   render() {
@@ -68,7 +78,10 @@ export class MenuList extends React.Component {
       return React.cloneElement(child, {
         key: i,
         className: this.state.currentIndex === i ? 'active' : '',
-        onClickCapture: event => this.handleItemClick(event),
+        onClick: event => {
+          this.handleItemClick(event);
+          if (child.props.onClick) child.props.onClick(event);
+        },
         index: i++
       });
     });

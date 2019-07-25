@@ -10,15 +10,23 @@ const FabWrapper = styled.div.attrs({
   className: styles.FabWrapper
 })`
   ${c2s(styles.fabView)} {
-    background: #FF4081;
+    background: ${props => props.theme.FabColor};
   }
   ${c2s(styles.iconWrapper)} svg {
-    fill: white;
+    fill: ${props => props.theme.FabIconColor};
   }
   ${c2s(styles.fabMenu)} div {
-    background: #66ccff;
+    background: ${props => props.theme.FabMenuColor};
    }
 `;
+
+FabWrapper.defaultProps = {
+  theme: {
+    FabColor: "#FF4081",
+    FabIconColor: "white",
+    FabMenuColor: "#66ccff"
+  }
+};
 
 class FloatActionButton extends React.Component {
   menuDOM = null;
