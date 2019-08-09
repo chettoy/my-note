@@ -18,14 +18,16 @@ import { default as DefaultTheme } from './themes/Light';
 import './App.scss';
 
 const MusicPlayer = React.lazy(() => import('./components/MusicPlayer'));
-const statusBarHeight = ClientUtils.getStatusBarHeight();
+
 const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
+
 const BackgroundCanvas = styled.canvas.attrs({className: "bg"})`
   background: ${props => props.theme.AppBackground};
 `;
 BackgroundCanvas.defaultProps = {theme: {AppBackground: "#e0e0e0"}};
+
 
 class App extends React.Component {
   view = null;
@@ -70,7 +72,7 @@ class App extends React.Component {
         <ThemeProvider theme={DefaultTheme}>
           <Framework ref={instance => this.view = instance}>
             <BackgroundCanvas />
-            <Toolbar statusBarHeight={statusBarHeight} onSearch={this.handleSearch} />
+            <Toolbar statusBarHeight={ClientUtils.getStatusBarHeight()} onSearch={this.handleSearch} />
             <Menu>
               <React.Suspense fallback={<Loading />}>
                 {this.state.isLoading? null: <MusicPlayer />}

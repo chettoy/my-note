@@ -228,21 +228,21 @@ class Framework extends React.Component {
    * animateTo(posX[, duration][, callback])
    */
   animateTo = (posX, arg2, arg3) => {
-    let duration = 180;
+    let duration = 520;
     let callback = null;
     if (typeof(arg2) === "number") duration = arg2;
     if (typeof(arg2) === "function") callback = arg2;
     if (typeof(arg3) === "function") callback = arg3;
-    this._menuMoving = true;
-    Velocity(this.spaceDOM, "stop", true);
     const _complete = isReach => {
       this._menuMoving = false;
       if (callback) callback(isReach);
     }
     const prevPosX = this.menuPosX;
     const distance = posX - prevPosX;
+    this._menuMoving = true;
+    Velocity(this.spaceDOM, "stop", true);
     Velocity(this.spaceDOM, {
-      tween: [1, 0]
+      tween: [0, 1]
     }, {
       duration,
       easing: "easeInOutQuad",
@@ -254,7 +254,8 @@ class Framework extends React.Component {
         }
       },
       progress: (theDOM, completePerc, remaining, startTime, tweenValue) => {
-        const stepPosX = prevPosX + distance * tweenValue;
+        if (tweenValue === null) return;
+        const stepPosX = prevPosX + distance * (1 - tweenValue);
         this.stepTo(stepPosX);
         if (this.menuTouchFromX) {
           Velocity(this.spaceDOM, "stop", true);
@@ -262,7 +263,6 @@ class Framework extends React.Component {
         }
       }, 
       complete: () => {
-        Velocity(this.spaceDOM, "stop", true);
         _complete(true);
       }
     });
