@@ -9,6 +9,8 @@ class SnackBar {
     this._touchstart = null;
     this._touchmove = null;
     this._touchend = null;
+    this._onshowed = null;
+    this._ondismiss = null;
   }
 
   static getDefaultView() {
@@ -19,6 +21,15 @@ class SnackBar {
 
   setDuring(during) {
     this.__during = during;
+    return this;
+  }
+
+  setOnShowed(func) {
+    this._onshowed = func;
+    return this;
+  }
+  setOnDismiss(func) {
+    this._ondismiss = func;
     return this;
   }
 
@@ -80,6 +91,7 @@ class SnackBar {
         this._touchmove = null;
         this._touchend = null;
         view.parentNode.removeChild(view);
+        if (this._ondismiss) this._ondismiss();
         if (callback) callback();
       }
       if (getComputedStyle(view)['display'] !== 'none' && view.getBoundingClientRect().left < document.documentElement.clientWidth) {
@@ -164,7 +176,11 @@ class SnackBar {
         }
       }
     });
-    Velocity(view, {bottom: 0});
+    if (typeof this._onshowed === 'function') {
+      Velocity(view, {bottom: 0}, this._onshowed);
+    }else{
+      Velocity(view, {bottom: 0});
+    }
     this.setTimer();
   }
 

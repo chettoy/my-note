@@ -14,7 +14,8 @@ import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
 import Banner from './components/Banner';
 import CardRouter from './cards/CardRouter';
-import { default as DefaultTheme } from './themes/Light';
+import Dark from './themes/Dark';
+import Light from './themes/Light';
 import './App.scss';
 
 const MusicPlayer = React.lazy(() => import('./components/MusicPlayer'));
@@ -32,13 +33,17 @@ BackgroundCanvas.defaultProps = {theme: {AppBackground: "#e0e0e0"}};
 class App extends React.Component {
   view = null;
   sessionStorageSupported = false;
+  themeList = [Light, Dark];
 
   constructor(props) {
     super(props);
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
     } catch(e) {}
-    this.state = {isLoading: true};
+    this.state = {
+      isLoading: true,
+      currentTheme: 0
+    };
     MessageHandler.init({
       context: this,
       log: (tag, msg) => {
@@ -69,7 +74,7 @@ class App extends React.Component {
           <meta name='google' content='notranslate' />
           <title>mynote</title>
         </Helmet>
-        <ThemeProvider theme={DefaultTheme}>
+        <ThemeProvider theme={ this.themeList[this.state.currentTheme] }>
           <Framework ref={instance => this.view = instance}>
             <BackgroundCanvas />
             <Toolbar statusBarHeight={ClientUtils.getStatusBarHeight()} onSearch={this.handleSearch} />
@@ -80,8 +85,9 @@ class App extends React.Component {
               <MenuList>
                 <li onClick={() => this.goTo('/')}>item1</li>
                 <li onClick={() => {
-                  SnackBar.make(null, 'test', -1).show();
-                  this.view.closeMenu();
+                  SnackBar.make(null, 'test', -1)
+                    .setOnShowed(() => this.view.closeMenu())
+                    .show();
                 }}>item2</li>
                 <li onClick={() => {
                   if (document.body.classList.contains("x")) {
@@ -90,6 +96,13 @@ class App extends React.Component {
                     document.body.classList.add("x");
                   }
                 }}>item3</li>
+                <li onClick={() => {
+                  if (this.state.currentTheme < this.themeList.length - 1) {
+                    this.setState({currentTheme: this.state.currentTheme + 1});
+                  }else{
+                    this.setState({currentTheme: 0});
+                  }
+                }}>item4</li>
                 {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
                 <li onClick={() => this.view.closeMenu()}>close</li>
               </MenuList>

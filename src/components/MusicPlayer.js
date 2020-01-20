@@ -198,7 +198,11 @@ class MusicPlayer extends React.Component {
     if (this.audio.paused || this.audio.currentTime === 0) {
       if (window.sessionStorage)
         sessionStorage.music_paused = null;
-      if (this.audio.src) this.callPlay();
+      if (this.audio.src) {
+        this.callPlay();
+      }else{
+        this.playByIndex(0);
+      }
     }else{
       if (window.sessionStorage) {
         sessionStorage.music_paused = "paused";
