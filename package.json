@@ -4,11 +4,11 @@
   "private": true,
   "homepage": "https://chettoy.github.io/my-note",
   "dependencies": {
-    "@mdi/js": "^4.7.95",
+    "@mdi/js": "^4.8.95",
     "@mdi/react": "^1.2.1",
-    "axios": "^0.19.0",
-    "eruda": "^1.10.3",
-    "node-sass": "^4.13.0",
+    "axios": "^0.19.1",
+    "eruda": "^2.0.2",
+    "node-sass": "^4.13.1",
     "normalize.css": "^8.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -17,8 +17,8 @@
     "react-scripts": "3.3.0",
     "react-snap": "^1.23.0",
     "react-transition-group": "^4.3.0",
-    "styled-components": "^4.4.1",
-    "typescript": "^3.7.4",
+    "styled-components": "^5.0.0",
+    "typescript": "^3.7.5",
     "velocity-animate": "^1.5.2"
   },
   "scripts": {
@@ -36,7 +36,7 @@
     }
   },
   "reactSnap": {
-    "inlineCss": true
+    "inlineCss": false
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,6 +48,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "gh-pages": "^2.1.1"
+    "gh-pages": "^2.2.0"
   }
 }
