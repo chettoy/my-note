@@ -225,7 +225,7 @@ class MusicPlayer extends React.Component {
     for (const i in this.playerEvents)
       this.audio.addEventListener(i, this.playerEvents[i]);
     this.loadPlaylist().then(() => {
-      MessageHandler.log("bgm", "playlist loaded");
+      console.log("bgm", "playlist loaded");
       console.log(this.playlist);
       if (window.sessionStorage && sessionStorage.music_playingIndex) {
         this.playByIndex(sessionStorage.music_playingIndex);
