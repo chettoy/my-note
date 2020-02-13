@@ -126,69 +126,73 @@ class ConData {
 class ConLoader {
   conDataCache = new Map();
   path = window.location.pathname;
-  _itemCallback = null;
 
+  /*
+   * load a content by id
+   * callback: fun(statusCode, conData, isFromCache)
+   */
   loadContent(id, callback) {
     const key = `_id_${id}`;
-    if (this.conDataCache.has(key) && this.conDataCache.get(key) !== null) {
-      this.itemLoaded(this.conDataCache.get(key), true);
-      if (callback) callback(200);
-      return;
+    if (this.conDataCache.has(key)) {
+      const cachedData = this.conDataCache.get(key);
+      if(cachedData !== null) {
+        if (callback) callback(200, cachedData, true);
+        return;
+      }
     }
     axios.get(`${this.path}content/${id}.md`)
       .then(response => {
         const conData = new ConData(id, response.data);
         this.conDataCache.set(key, conData);
-        this.itemLoaded(conData, false);
-        if (callback) callback(response.status);
+        if (callback) callback(response.status, conData, false);
       })
       .catch(error => {
         if (error.response.status !== 404) {
           console.log(`load con[id=${id}]: ${error}`);
         }
-        if (callback) callback(error.response.status);
+        if (callback) callback(error.response.status, null, false);
       });
   }
 
-  loadList(callback) {
-    let itemId = 0;
-    const loadItem = () => {
-      this.loadContent(itemId, status => {
-        if (itemId >= 10) {
-          console.log("over 10 content");
-          if (callback) callback(false);
-          return;
-        }
-        if (status === 200) {
-          itemId++;
-          loadItem();
-        }else {
-          if (!callback) return;
-          if (status === 404 || status === 0) {
-            callback(true);
+  _loadItems(itemCallback) {
+    return new Promise((resolve, reject) => {
+      let itemId = 0;
+      const loadItem = () => {
+        this.loadContent(itemId, (status, data, isFromCache) => {
+          if (status === 200) {
+            itemCallback(status, data, isFromCache);
+            itemId++;
+            if (itemId > 10) {
+              reject("over 10 content");
+            }else{
+              loadItem();
+            }
+          }else if (status === 404 || status === 0) {
+            resolve();
           }else{
-            callback(false);
+            reject(status);
           }
-        }
+        });
+      };
+      this.loadContent("header", status => {
+        if (status === 200) loadItem();
       });
-    };
-    this.loadContent("header", status => {
-      if (status === 200) loadItem();
     });
   }
 
-  itemLoaded(itemData, isCache) {
-    if (this._itemCallback) {
-      this._itemCallback(itemData, isCache, [...this.conDataCache.values()]);
-    }
+  reqUpdate(onNewConLoaded) {
+    this._loadItems((statusCode, conData, isFromCache) => {
+      if (!isFromCache) onNewConLoaded(conData, [...this.conDataCache.values()]);
+    }).then(() => {
+      console.log('content loaded');
+      this.saveCache();
+    }).catch(reason => {
+      console.log('content load error: ' + reason);
+    });
   }
 
-  load(callback, done) {
-    this._itemCallback = callback;
-    this.loadList(isSuccess => {
-      console.log("content loaded");
-      if (done) done([...this.conDataCache.values()], isSuccess);
-    });
+  reqCache(callback) {
+    callback([...this.conDataCache.values()]);
   }
 
   saveCache() {
@@ -251,27 +255,19 @@ class ContentPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      conList: [],
-      loaded: false
+      conList: []
     };
     this.loader = new ConLoader();
     this.viewRef = React.createRef();
-    console.log("content init");
   }
 
   componentDidMount() {
-    if (this.state.loaded) return;
     this.loader.loadCache();
-    this.loader.load((item, isCache, list) => {
-      //Only rerender when a new item is loaded
-      if (!isCache) this.setState({conList: list});
-    }, (list) => {
-      this.loader.saveCache();
-      //Render all data at once if all are cached
-      if (this.state.conList.length !== list.length) {
-        this.setState({conList: list});
-      }
-      this.setState({loaded: true});
+    this.loader.reqCache(list => {
+      this.setState({conList: list});
+    });
+    this.loader.reqUpdate((item, list) => {
+      this.setState({conList: list});
     });
   }
 

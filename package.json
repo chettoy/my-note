@@ -4,11 +4,11 @@
   "private": true,
   "homepage": "https://chettoy.github.io/my-note",
   "dependencies": {
-    "@mdi/js": "^4.8.95",
+    "@mdi/js": "^4.9.95",
     "@mdi/react": "^1.2.1",
     "axios": "^0.19.2",
-    "dompurify": "^2.0.7",
-    "eruda": "^2.0.2",
+    "dompurify": "^2.0.8",
+    "eruda": "^2.2.0",
     "marked": "^0.8.0",
     "node-sass": "^4.13.1",
     "normalize.css": "^8.0.1",
@@ -19,7 +19,7 @@
     "react-scripts": "3.3.1",
     "react-snap": "^1.23.0",
     "react-transition-group": "^4.3.0",
-    "styled-components": "^5.0.0",
+    "styled-components": "^5.0.1",
     "typescript": "^3.7.5",
     "velocity-animate": "^1.5.2"
   },
