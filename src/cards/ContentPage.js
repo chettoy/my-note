@@ -4,17 +4,19 @@ import axios from 'axios';
 import DOMPurify from 'dompurify';
 import marked from 'marked';
 import CardView from '../components/CardView';
+import Card from './Card';
 
-const ConView = styled.div`
-  margin-top: 3.125rem;
-  padding: 1rem 0;
-  
+const ConView = styled(Card)`
+  background: transparent;
+  box-shadow: none;
+  font-size: 1rem;
+  line-height: 1.5rem;
   h1 {
-    font-size: 1.5em;
+    font-size: 1.5rem;
   }
   a.con-preview {
     color: #2196f3;
-    font-size: 1.5em;
+    font-size: 1.5rem;
   }
   blockquote {
     margin: 0;

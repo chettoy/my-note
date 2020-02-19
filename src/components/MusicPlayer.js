@@ -7,14 +7,14 @@ const PlayerView = styled.div`
   width: 100%;
   padding: 0.5rem;
   box-sizing: border-box;
-  font-family:'Source Sans Pro','Courier New','Courier',monospace;
+  font-family: 'Source Sans Pro', 'Courier New', 'Courier', monospace;
 `;
 
 class MusicPlayer extends React.Component {
   audio = new Audio();
   status = null;
   textSpace = 10;
-  playlist = new Array("1599488");
+  playlist = [];
   playingIndex = 0;
   waittingForPlay = false;
   recoveryProgressHandled = false;
