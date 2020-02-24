@@ -11,6 +11,7 @@
   .menu {
     z-index: 116;
     transform: translate3d(0,0,0);
+    filter: blur(var(--m-motion-blur, 0px));
   }
   .content {
     width: 100%;

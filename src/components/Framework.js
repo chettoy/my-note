@@ -88,7 +88,7 @@ class Framework extends React.Component {
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
-    
+
     setTimeout(this.handleResize, 20);
   }
 
@@ -211,7 +211,9 @@ class Framework extends React.Component {
    * arg1: posX from -this.menuWidth to 0
    */
   stepTo = posX => {
+    //const motionBlur = Math.abs(posX - this.menuPosX) * 0.2;
     this.menuPosX = posX;
+    //document.body.style.setProperty('--m-motion-blur', (motionBlur > 5? motionBlur: 0) + 'px');
     if (this._menuMoveMode === 'transform') {
       this.menuDOM.style.transform = `translate3d(${posX}px,0,0)`;
     }else{
@@ -234,6 +236,7 @@ class Framework extends React.Component {
     if (typeof(arg2) === "function") callback = arg2;
     if (typeof(arg3) === "function") callback = arg3;
     const _complete = isReach => {
+      //document.body.style.setProperty('--m-motion-blur', '0px');
       this._menuMoving = false;
       if (callback) callback(isReach);
     }
@@ -253,7 +256,8 @@ class Framework extends React.Component {
           this.conDOM.style.width = '100%';
         }
       },
-      progress: (theDOM, completePerc, remaining, startTime, tweenValue) => {
+      progress: (theDOM, percentComplete, remaining, startTime, tweenValue) => { //velocityjs v1
+      //progress: (elements, percentComplete, remaining, tweenValue, activeCall) => { //velocityjs v2
         if (tweenValue === null) return;
         const stepPosX = prevPosX + distance * (1 - tweenValue);
         this.stepTo(stepPosX);

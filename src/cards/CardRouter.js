@@ -13,9 +13,9 @@ class CardRouter extends React.Component {
           <TransitionGroup className='CardWrapper'>
             <CSSTransition key={location.pathname} classNames='router' timeout={500}>
               <Switch location={location}>
-                <Route exact path='/' component={ContentPage} />
                 <Route exact path='/test' component={TestPage} />
-                <Route render={() => <div>Not Found</div>} />
+                <Route exact path='/404' render={() => <div>Not Found</div>} />
+                <Route path='/' component={ContentPage} />
               </Switch>
             </CSSTransition>
           </TransitionGroup>
