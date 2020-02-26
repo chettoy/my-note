@@ -1,7 +1,6 @@
-import React from 'react';
 import styled from 'styled-components/macro';
 
-const Card = styled.div`
+const CardView = styled.div`
   background: ${props => props.theme.CardColor};
   color: ${props => props.theme.TextColor};
   box-shadow: 0 0.2rem 0.2rem rgba(0,0,0,0.54);
@@ -10,17 +9,11 @@ const Card = styled.div`
   box-sizing: border-box;
 `;
 
-Card.defaultProps = {
+CardView.defaultProps = {
   theme: {
     CardColor: "white",
     TextColor: "black"
   }
 };
-
-class CardView extends React.Component {
-  render() {
-    return <Card {...this.props} />;
-  }
-}
 
 export default CardView;

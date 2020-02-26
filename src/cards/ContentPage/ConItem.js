@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import ConCard from './ConCard';
@@ -25,7 +25,7 @@ class ConItem extends React.Component
       return (
         <ConCard {...this.props}>
           <Link className="con-preview"
-            to={`${window.location.pathname}id/${data.getId()}`}
+            to={`${this.props.match.url}id/${data.getId()}`}
             onClick={this.onPreviewClick}>{title}</Link>
           <p className="con-preview">{text}</p>
         </ConCard>
@@ -37,4 +37,4 @@ class ConItem extends React.Component
   }
 }
 
-export default ConItem;
+export default withRouter(ConItem);
