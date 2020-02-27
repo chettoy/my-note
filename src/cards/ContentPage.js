@@ -1,6 +1,6 @@
 import React from 'react';
 import { matchPath, withRouter } from 'react-router';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import Velocity from 'velocity-animate';
 import Card from './Card';
@@ -48,15 +48,15 @@ class ContentPage extends React.Component {
     this.loader = new ConLoader();
     this.viewRef = React.createRef();
     this.routes = {
-      list: props.match.url,
-      detail: props.match.url + 'id/:id'
+      list: {name: 'list', path: '/'},
+      detail: {name: 'detail', path: '/id/:id'}
     };
     this.currentView = (() => {
       const { pathname } = props.location;
-      if (matchPath(pathname, {path: this.routes.detail})) {
-        return 'detail';
-      }else if (matchPath(pathname, {path: this.routes.list, exact: true})) {
-        return 'list';
+      if (matchPath(pathname, {path: this.routes.detail.path})) {
+        return this.routes.detail.name;
+      }else if (matchPath(pathname, {path: this.routes.list.path, exact: true})) {
+        return this.routes.list.name;
       }else{
         return '';
       }
@@ -85,12 +85,12 @@ class ContentPage extends React.Component {
     this._scrollRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = 'manual';
     this.unlistenHistory = this.props.history.listen((location, action) => {
-      if (matchPath(location.pathname, {path: this.routes.detail})) {
+      if (matchPath(location.pathname, {path: this.routes.detail.path})) {
         this.saveScroll();
-        this.currentView = 'detail';
+        this.currentView = this.routes.detail.name;
         Velocity(this.viewRef.current.parentNode, 'scroll');
-      }else if (matchPath(location.pathname, {path: this.routes.list, exact: true})) {
-        this.currentView = 'list';
+      }else if (matchPath(location.pathname, {path: this.routes.list.path, exact: true})) {
+        this.currentView = this.routes.list.name;
         this.recoverScroll();
       }
     });
@@ -108,12 +108,15 @@ class ContentPage extends React.Component {
       <ConContainer ref={this.viewRef}>
         <Switch>
           <Route
-            path={this.routes.list} exact
+            path={this.routes.list.path} exact
             render={(props) => <ConList {...props} conLoader={this.loader} />} />
           <Route
-            path={this.routes.detail}
+            path={this.routes.detail.path}
             render={(props) => <ConDetail {...props} conLoader={this.loader} />} />
-          <Redirect from='*' to='/' />
+          <Route
+            render={() => {
+              console.log(`ConPage: pathname=${this.props.location.pathname}, match.url=${this.props.match.url}`);
+            }} />
         </Switch>
       </ConContainer>
     );

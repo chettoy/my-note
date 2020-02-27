@@ -1,35 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
+import React from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import TestPage from './TestPage';
 import ContentPage from './ContentPage';
 
-function Test() {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    setShow(true);
-  }, []);
-  return (
-    <CSSTransition
-      in={show}
-      timeout={500}
-      classNames='router'
-      unmountOnExit>
-      <TestPage />
-    </CSSTransition>
-  );
+const getKey = location => {
+  const path = location.pathname;
+  if (path === '/' || path.startsWith('/id/')) {
+    return 'con';
+  }
+  return path;
 }
 
 class CardRouter extends React.Component {
   render() {
     return (
-      <div className='CardWrapper'>
-        <Switch>
-          <Route path='/test' exact component={Test} />
-          <Route path='/404' exact render={() => <div>Not Found</div>} />
-          <Route path='/' render={ContentPage} />
-        </Switch>
-      </div>
+      <Route
+        render={({ location }) => (
+          <TransitionGroup className='CardWrapper'>
+            <CSSTransition key={getKey(location)} classNames='router' timeout={500}>
+              <Switch location={location}>
+                <Route exact path='/' render={ContentPage} />
+                <Route path='/id/' render={ContentPage} />
+                <Route exact path='/test' render={TestPage} />
+                <Route exact path='/404' render={() => <div>Not Found</div>} />
+                <Redirect from='*' to='/' />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )}
+      />
     );
   }
 }
