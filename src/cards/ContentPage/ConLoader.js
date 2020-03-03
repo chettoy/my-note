@@ -3,7 +3,7 @@ import ConData from './ConData';
 
 class ConLoader {
   conDataCache = null;
-  path = window.location.pathname;
+  path = /.*\//.exec(window.location.pathname);
 
   /*
    * load a content by id

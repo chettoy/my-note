@@ -7,6 +7,7 @@ import MessageHandler from './common/MessageHandler';
 import MyCommon from './common/MyCommon';
 import SnackBar from './common/SnackBar';
 import Toast from './common/SuperToast';
+import NProgress from './components/nprogress';
 import Loading from './components/Loading';
 import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
@@ -76,6 +77,7 @@ class App extends React.Component {
         </Helmet>
         <ThemeProvider theme={ this.themeList[this.state.currentTheme] }>
           <Framework ref={instance => this.view = instance}>
+            <NProgress isAnimating={this.state.isLoading} />
             <BackgroundCanvas />
             <Toolbar statusBarHeight={ClientUtils.getStatusBarHeight()} onSearch={this.handleSearch} />
             <Menu>

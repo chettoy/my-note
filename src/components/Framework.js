@@ -89,7 +89,7 @@ class Framework extends React.Component {
     document.body.addEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
 
-    setTimeout(this.handleResize, 20);
+    setTimeout(this.handleResize.bind(this, true), 20);
   }
 
   componentWillUnmount() {
@@ -101,14 +101,18 @@ class Framework extends React.Component {
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
   }
   
-  handleResize = () => {
+  handleResize = (init = false) => {
     const windowWidth = document.documentElement.clientWidth;
     const windowHeight = document.documentElement.clientHeight;
     TopMask.onResize(windowWidth, windowHeight);
     console.log(`resize(${windowWidth}, ${windowHeight})`);
     this.bigScreen = windowWidth > 550;
     this.menuWidth = this.menuDOM.getBoundingClientRect().width;
-    this.moveBack();
+    if (init) {
+      this.stepTo(-this.menuWidth);
+    }else{
+      this.moveBack();
+    }
   }
 
   prevTouchMenuPosX = null;
@@ -201,7 +205,7 @@ class Framework extends React.Component {
   }
   
   onMouseLeaveMenu = event => {
-    if (this.menuTempOpen) {
+    if (this.menuTempOpen && this._menuMoving !== 'close') {
       this.closeMenu();
       this.menuTempOpen = false;
     }
@@ -227,9 +231,10 @@ class Framework extends React.Component {
 
 
   /**
-   * animateTo(posX[, duration][, callback])
+   * animateTo(target[, duration][, callback])
+   * target: 'open', 'close' or position
    */
-  animateTo = (posX, arg2, arg3) => {
+  animateTo = (target, arg2, arg3) => {
     let duration = 520;
     let callback = null;
     if (typeof(arg2) === "number") duration = arg2;
@@ -237,12 +242,20 @@ class Framework extends React.Component {
     if (typeof(arg3) === "function") callback = arg3;
     const _complete = isReach => {
       //document.body.style.setProperty('--m-motion-blur', '0px');
-      this._menuMoving = false;
+      this._menuMoving = null;
       if (callback) callback(isReach);
+    }
+    let posX;
+    if (target === 'open') {
+      posX = 0;
+    }else if (target === 'close') {
+      posX = -this.menuWidth;
+    }else{
+      posX = target;
     }
     const prevPosX = this.menuPosX;
     const distance = posX - prevPosX;
-    this._menuMoving = true;
+    this._menuMoving = target;
     Velocity(this.spaceDOM, "stop", true);
     Velocity(this.spaceDOM, {
       tween: [0, 1]
@@ -297,11 +310,11 @@ class Framework extends React.Component {
 
   openMenu = callback => {
     this.beforeOpenMenu();
-    this.animateTo(0, callback);
+    this.animateTo('open', callback);
   }
 
   closeMenu = callback => {
-    this.animateTo(-this.menuWidth, isReach => {
+    this.animateTo('close', isReach => {
       if (isReach) this.afterCloseMenu();
       if (callback) callback(isReach);
     });
