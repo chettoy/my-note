@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/my-note/static/css/main.45e93d85.chunk.css",
-    "main.js": "/my-note/static/js/main.f07bba9d.chunk.js",
-    "main.js.map": "/my-note/static/js/main.f07bba9d.chunk.js.map",
+    "main.js": "/my-note/static/js/main.dc6198a1.chunk.js",
+    "main.js.map": "/my-note/static/js/main.dc6198a1.chunk.js.map",
     "runtime-main.js": "/my-note/static/js/runtime-main.308570ce.js",
     "runtime-main.js.map": "/my-note/static/js/runtime-main.308570ce.js.map",
     "static/js/2.248a9c02.chunk.js": "/my-note/static/js/2.248a9c02.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.2875162c.chunk.js": "/my-note/static/js/3.2875162c.chunk.js",
     "static/js/3.2875162c.chunk.js.map": "/my-note/static/js/3.2875162c.chunk.js.map",
     "index.html": "/my-note/index.html",
-    "precache-manifest.20e13b3a454148353e0eeb5b996f84f1.js": "/my-note/precache-manifest.20e13b3a454148353e0eeb5b996f84f1.js",
+    "precache-manifest.64c71046787d5379047e360290c9cfc5.js": "/my-note/precache-manifest.64c71046787d5379047e360290c9cfc5.js",
     "service-worker.js": "/my-note/service-worker.js",
     "static/css/main.45e93d85.chunk.css.map": "/my-note/static/css/main.45e93d85.chunk.css.map",
     "static/js/2.248a9c02.chunk.js.LICENSE.txt": "/my-note/static/js/2.248a9c02.chunk.js.LICENSE.txt"
@@ -19,6 +19,6 @@
     "static/js/runtime-main.308570ce.js",
     "static/js/2.248a9c02.chunk.js",
     "static/css/main.45e93d85.chunk.css",
-    "static/js/main.f07bba9d.chunk.js"
+    "static/js/main.dc6198a1.chunk.js"
   ]
 }
