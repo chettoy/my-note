@@ -25,10 +25,10 @@ const toast = (text, during=Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
 
-const BackgroundCanvas = styled.canvas.attrs({className: "bg"})`
+const BackgroundCanvas = styled.canvas.attrs({className: 'bg'})`
   background: ${props => props.theme.AppBackground};
 `;
-BackgroundCanvas.defaultProps = {theme: {AppBackground: "#e0e0e0"}};
+BackgroundCanvas.defaultProps = {theme: {AppBackground: '#e0e0e0'}};
 
 
 class App extends React.Component {

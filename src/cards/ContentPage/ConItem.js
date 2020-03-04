@@ -24,7 +24,7 @@ class ConItem extends React.Component
       }
       return (
         <ConCard {...this.props}>
-          <Link className="con-preview"
+          <Link className="con-preview post-title-link"
             to={`${this.props.match.url}id/${data.getId()}`}
             onClick={this.onPreviewClick}>{title}</Link>
           <p className="con-preview">{text}</p>
