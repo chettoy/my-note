@@ -20,6 +20,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>my-note</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
   </head>
   <body>
     <noscript>
@@ -36,10 +37,10 @@
       To begin the development, run `npm start`.
       To create a production bundle, use `npm run build`.
     -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"
-      rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"
+      onload="navigator.userAgent==='ReactSnap'||NProgress.start()"></script>
     <script src="%PUBLIC_URL%/eruda.js" async
       onload="navigator.userAgent==='ReactSnap'||eruda.init()"></script>
     <script>window.live2d_path="%PUBLIC_URL%/live2d-widget/"</script>

@@ -51,8 +51,7 @@ class ContentPage extends React.Component {
       list: {name: 'list', path: '/'},
       detail: {name: 'detail', path: '/id/:id'}
     };
-    this.currentView = (() => {
-      const { pathname } = props.location;
+    this.currentView = (({ pathname }) => {
       if (matchPath(pathname, {path: this.routes.detail.path})) {
         return this.routes.detail.name;
       }else if (matchPath(pathname, {path: this.routes.list.path, exact: true})) {
@@ -60,12 +59,12 @@ class ContentPage extends React.Component {
       }else{
         return '';
       }
-    })();
+    })(props.location);
   }
 
-  getTop() {
+  getTop(dom) {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-    return this.viewRef.current.parentNode.getBoundingClientRect().top + scrollTop;
+    return dom.parentNode.getBoundingClientRect().top + scrollTop;
   }
 
   saveScroll() {

@@ -7,7 +7,6 @@ import MessageHandler from './common/MessageHandler';
 import MyCommon from './common/MyCommon';
 import SnackBar from './common/SnackBar';
 import Toast from './common/SuperToast';
-import NProgress from './components/nprogress';
 import Loading from './components/Loading';
 import Framework from './components/Framework';
 import Toolbar from './components/Toolbar';
@@ -35,6 +34,7 @@ class App extends React.Component {
   view = null;
   sessionStorageSupported = false;
   themeList = [Light, Dark];
+  loadSet = new Set(['app', 'bg']);
 
   constructor(props) {
     super(props);
@@ -53,6 +53,23 @@ class App extends React.Component {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
       }
     });
+  }
+
+  getTheme = () => this.themeList[this.state.currentTheme];
+
+  updateProgress = item => {
+    if (!this.loadSet.has(item)) return;
+    this.loadSet.delete(item);
+    const progress = window.NProgress; // imported in index.html
+    if (!progress) {
+      console.log('NProgress not found');
+      return;
+    }
+    if (this.loadSet.size > 0) {
+      progress.inc();
+    }else{
+      progress.done();
+    }
   }
 
   handleSearch = s => {
@@ -75,9 +92,8 @@ class App extends React.Component {
           <meta name='google' content='notranslate' />
           <title>mynote</title>
         </Helmet>
-        <ThemeProvider theme={ this.themeList[this.state.currentTheme] }>
+        <ThemeProvider theme={this.getTheme()}>
           <Framework ref={instance => this.view = instance}>
-            <NProgress isAnimating={this.state.isLoading} />
             <BackgroundCanvas />
             <Toolbar statusBarHeight={ClientUtils.getStatusBarHeight()} onSearch={this.handleSearch} />
             <Menu>
@@ -127,6 +143,23 @@ class App extends React.Component {
   componentDidMount() {
     if (MyCommon.isSnap) return;
     this.setState({isLoading: false});
+    this.updateProgress('app');
+    
+    //check background load state
+    (() => {
+      const bgMatch = this.getTheme().AppBackground.match(/url\((['"])(.+)\1\)/);
+      if (!bgMatch) return;
+      const url = bgMatch[2];
+      const img = new Image();
+      img.src = url;
+      if (img.complete) {
+        this.updateProgress('bg');
+      }else{
+        img.onload = () => {
+          this.updateProgress('bg');
+        }
+      }
+    })();
 
     //delete the pre-rendered style
     ((styleTag = document.querySelectorAll('style[data-styled]')) => {

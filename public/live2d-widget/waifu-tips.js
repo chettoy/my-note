@@ -37,22 +37,27 @@ function loadWidget(config) {
 		return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
 	}
 	// 检测用户活动状态，并在空闲时显示消息
-	let userAction = false,
+	let noActionSeconds = 0,
+	    userAction = false,
 		userActionTimer,
 		messageTimer,
 		messageArray = ["好久不见，日子过得好快呢……", "大坏蛋！你都多久没理人家了呀，嘤嘤嘤～", "嗨～快来逗我玩吧！", "奇变偶不变，符号看象限"];
 	window.addEventListener("mousemove", () => userAction = true);
 	window.addEventListener("keydown", () => userAction = true);
 	setInterval(() => {
-		if (userAction) {
-			userAction = false;
-			clearInterval(userActionTimer);
-			userActionTimer = null;
-		} else if (!userActionTimer) {
-			userActionTimer = setInterval(() => {
-				showMessage(randomSelection(messageArray), 6000, 9);
-			}, 20000);
+	    if (userAction) {
+	    	clearInterval(userActionTimer);
+		    userActionTimer = null;
+		    noActionSeconds = 0;
+		    userAction = false;
+	    } else if (!userActionTimer && noActionSeconds > 60) {
+		    const show = () => {
+			    showMessage(randomSelection(messageArray), 6000, 9);
+		    }
+		    show();
+		    userActionTimer = setInterval(show, 20000);
 		}
+		noActionSeconds++;
 	}, 1000);
 
 	(function registerEventListener() {
