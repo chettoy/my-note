@@ -26,8 +26,14 @@ class ConList extends React.Component {
     loader.reqCache(list => {
       if (this.mounted) this.setState({conList: list});
     });
+    const prevUpdateTime = window['sessionStorage']?.getItem('conListUpdateTime') ?? 0;
+    console.log('lastUpdateTime: ' + prevUpdateTime);
+    if (Math.abs(Date.now() - prevUpdateTime) < 2 * 60 * 1000) return;
+    console.log('updating content...');
     loader.reqUpdate((item, list) => {
       if (this.mounted) this.setState({conList: list});
+    }).then(() => {
+      window['sessionStorage'] && sessionStorage.setItem('conListUpdateTime', Date.now());
     });
   }
 

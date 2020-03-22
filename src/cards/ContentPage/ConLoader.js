@@ -3,7 +3,8 @@ import ConData from './ConData';
 
 class ConLoader {
   conDataCache = null;
-  path = /.*\//.exec(window.location.pathname);
+  //path = /.*\//.exec(window.location.pathname) + 'content';
+  path = 'https://cdn.jsdelivr.net/gh/chettoy/my-note@gh-pages/content';
 
   /*
    * load a content by id
@@ -19,7 +20,7 @@ class ConLoader {
         return;
       }
     }
-    axios.get(`${this.path}content/${id}.md`)
+    axios.get(`${this.path}/${id}.md`)
       .then(response => {
         const conData = new ConData(id, response.data);
         this.conDataCache.set(key, conData);
@@ -60,13 +61,17 @@ class ConLoader {
   }
 
   reqUpdate(onNewConLoaded) {
-    this._loadItems((statusCode, conData, isFromCache) => {
-      if (!isFromCache) onNewConLoaded(conData, [...this.conDataCache.values()]);
-    }).then(() => {
-      console.log('content loaded');
-      this._saveCache();
-    }).catch(reason => {
-      console.log('content load error: ' + reason);
+    return new Promise((resolve, reject) => {
+      this._loadItems((statusCode, conData, isFromCache) => {
+        if (!isFromCache) onNewConLoaded(conData, [...this.conDataCache.values()]);
+      }).then(() => {
+        console.log('content loaded');
+        this._saveCache();
+        resolve();
+      }).catch(reason => {
+        console.log('content load error: ' + reason);
+        reject(reason);
+      });
     });
   }
 
