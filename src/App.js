@@ -1,5 +1,5 @@
 import React from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
@@ -13,6 +13,7 @@ import Toolbar from './components/Toolbar';
 import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
 import Banner from './components/Banner';
+import Live2dWidget from './components/live2d-widget';
 import CardRouter from './cards/CardRouter';
 import Dark from './themes/Dark';
 import Light from './themes/Light';
@@ -145,7 +146,7 @@ class App extends React.Component {
     this.setState({isLoading: false});
     this.updateProgress('app');
     
-    //check background load state
+    //check background image load state
     (() => {
       const bgMatch = this.getTheme().AppBackground.match(/url\((['"])(.+)\1\)/);
       if (!bgMatch) return;
@@ -166,6 +167,9 @@ class App extends React.Component {
       if (styleTag.length === 2 && styleTag[0].innerHTML && !styleTag[1].innerHTML)
         styleTag[0].parentNode.removeChild(styleTag[0]);
     })();
+
+    //init live2d
+    Live2dWidget.load();
 
     //show welcome
     if ((!this.sessionStorageSupported) || sessionStorage.show_welcome === undefined) {

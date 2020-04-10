@@ -11,7 +11,7 @@ const Theme = {
   ItemActiveTextColor: "#2196f3",
   ItemActiveColor: "#ddd",
   StatusBarColor: "#2196f3",
-  ToolbarIconColor: "white",
+  ToolbarIconColor: "black",
   TitleColor: "white"
 };
 

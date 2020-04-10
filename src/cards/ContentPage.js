@@ -1,6 +1,7 @@
 import React from 'react';
 import { matchPath, withRouter } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import Velocity from 'velocity-animate';
 import Card from './Card';
@@ -62,6 +63,10 @@ class ContentPage extends React.Component {
     })(props.location);
   }
 
+  getWrapperDOM() {
+    return this.viewRef.current.parentNode;
+  }
+
   getTop(dom) {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
     return dom.parentNode.getBoundingClientRect().top + scrollTop;
@@ -69,14 +74,14 @@ class ContentPage extends React.Component {
 
   saveScroll() {
     const key = 'conPageScroll_' + this.currentView;
-    const cardWrapper = this.viewRef.current.parentNode;
+    const cardWrapper = this.getWrapperDOM();
     window.sessionStorage[key] = - cardWrapper.getBoundingClientRect().top;
   }
   
   recoverScroll() {
     const key = 'conPageScroll_' + this.currentView;
     if (!(key in window.sessionStorage)) return;
-    const cardWrapper = this.viewRef.current.parentNode;
+    const cardWrapper = this.getWrapperDOM();
     Velocity(cardWrapper, 'scroll', {offset: window.sessionStorage[key]});
   }
 
@@ -87,7 +92,7 @@ class ContentPage extends React.Component {
       if (matchPath(location.pathname, {path: this.routes.detail.path})) {
         this.saveScroll();
         this.currentView = this.routes.detail.name;
-        Velocity(this.viewRef.current.parentNode, 'scroll');
+        Velocity(this.getWrapperDOM(), 'scroll');
       }else if (matchPath(location.pathname, {path: this.routes.list.path, exact: true})) {
         this.currentView = this.routes.list.name;
         this.recoverScroll();
@@ -104,20 +109,29 @@ class ContentPage extends React.Component {
 
   render() {
     return (
-      <ConContainer ref={this.viewRef}>
-        <Switch>
-          <Route
-            path={this.routes.list.path} exact
-            render={(props) => <ConList {...props} conLoader={this.loader} />} />
-          <Route
-            path={this.routes.detail.path}
-            render={(props) => <ConDetail {...props} conLoader={this.loader} />} />
-          <Route
-            render={() => {
-              console.log(`ConPage: pathname=${this.props.location.pathname}, match.url=${this.props.match.url}`);
-            }} />
-        </Switch>
-      </ConContainer>
+      <div ref={this.viewRef}>
+        <Route
+          render={({ location, match }) => (
+          <TransitionGroup>
+            <CSSTransition key={location.pathname} classNames='router' timeout={500}>
+              <ConContainer>
+                <Switch location={location}>
+                  <Route
+                    path={this.routes.list.path} exact
+                    render={(props) => <ConList {...props} conLoader={this.loader} />} />
+                  <Route
+                    path={this.routes.detail.path}
+                    render={(props) => <ConDetail {...props} conLoader={this.loader} />} />
+                  <Route
+                    render={() => {
+                      console.log(`ConPage: pathname=${location.pathname}, match.url=${match.url}`);
+                    }} />
+                </Switch>
+              </ConContainer>
+            </CSSTransition>
+          </TransitionGroup>
+        )} />
+      </div>
     );
   }
 }

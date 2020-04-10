@@ -14,7 +14,7 @@ const ToolbarView = styled.div.attrs({
   
   ${c2s(styles.MenuIcon)},
   ${c2s(styles.SearchIcon)} {
-    svg { fill: ${props => props.theme.ToolbarIconColor}; }
+    color: ${props => props.theme.ToolbarIconColor};
   }
   
   ${c2s(styles.Title)} {

@@ -89,7 +89,7 @@ class Framework extends React.Component {
     document.body.addEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
 
-    setTimeout(this.handleResize.bind(this, true), 20);
+    setTimeout(this.handleResize, 20);
   }
 
   componentWillUnmount() {
@@ -101,16 +101,18 @@ class Framework extends React.Component {
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
   }
   
-  handleResize = (init = false) => {
+  handleResize = resizeEvent => {
     const windowWidth = document.documentElement.clientWidth;
     const windowHeight = document.documentElement.clientHeight;
     TopMask.onResize(windowWidth, windowHeight);
     console.log(`resize(${windowWidth}, ${windowHeight})`);
     this.bigScreen = windowWidth > 550;
     this.menuWidth = this.menuDOM.getBoundingClientRect().width;
-    if (init) {
+    if (!resizeEvent) { // if not called by resize event
+      //init view state
       this.stepTo(-this.menuWidth);
     }else{
+      //adjust view state
       this.moveBack();
     }
   }
@@ -285,7 +287,7 @@ class Framework extends React.Component {
     });
   }
 
-  moveBack = (callback) => {
+  moveBack = callback => {
     if (this.menuPosX > -this.menuWidth * 1/2) {
       this.openMenu(callback);
     }else{
