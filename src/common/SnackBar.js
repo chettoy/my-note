@@ -66,7 +66,7 @@ class SnackBar {
     this.clearTimer();
     let callback;
     if (!(arg1 === false)) {
-      for (const i in SnackBar.affectedFAB) {
+      for (let i = 0; i < SnackBar.affectedFAB.length; i++) {
         const obj = SnackBar.affectedFAB[i];
         const fab = obj.view;
         if (obj.bottom !== 'auto') {
@@ -75,7 +75,9 @@ class SnackBar {
           Velocity(fab, {top: obj.top}, "fast");
         }
         SnackBar.affectedFAB.splice(i, 1);
+        i--;
       }
+      
       if (!(arg1 === true)) {
         callback = arg1;
       }

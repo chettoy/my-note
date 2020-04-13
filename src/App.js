@@ -17,6 +17,7 @@ import Live2dWidget from './components/live2d-widget';
 import CardRouter from './cards/CardRouter';
 import Dark from './themes/Dark';
 import Light from './themes/Light';
+import Config from './Config';
 import './App.scss';
 
 const MusicPlayer = React.lazy(() => import('./components/MusicPlayer'));
@@ -169,7 +170,7 @@ class App extends React.Component {
     })();
 
     //init live2d
-    Live2dWidget.load();
+    if (Config.loadLive2d) Live2dWidget.load();
 
     //show welcome
     if ((!this.sessionStorageSupported) || sessionStorage.show_welcome === undefined) {

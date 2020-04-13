@@ -1,5 +1,6 @@
 const Config = {
-  autoplay: false
+  autoplay: false,
+  loadLive2d: true
 };
 
 export default Config;
