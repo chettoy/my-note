@@ -1,16 +1,21 @@
-import Velocity from 'velocity-animate'
+import Velocity from 'velocity-animate';
 
 class SnackBar {
+  static LENGTH_SHORT = 1500;
+  static LENGTH_LONG = 3000;
+  static LENGTH_IMMEDIATE = -1;
+
   constructor() {
-    this.__during = 1500;
-    this.__timer = null;
-    this.__parent = document.body;
-    this.__view = SnackBar.getDefaultView();
-    this._touchstart = null;
-    this._touchmove = null;
-    this._touchend = null;
-    this._onshowed = null;
-    this._ondismiss = null;
+    this.#affectedFAB = new Set();
+    this.#during = 1500;
+    this.#timer = null;
+    this.#parent = document.body;
+    this.#view = SnackBar.getDefaultView();
+    this.#touchstart = null;
+    this.#touchmove = null;
+    this.#touchend = null;
+    this.#onshowed = null;
+    this.#ondismiss = null;
   }
 
   static getDefaultView() {
@@ -20,63 +25,61 @@ class SnackBar {
   }
 
   setDuring(during) {
-    this.__during = during;
+    this.#during = during;
     return this;
   }
 
   setOnShowed(func) {
-    this._onshowed = func;
+    this.#onshowed = func;
     return this;
   }
   setOnDismiss(func) {
-    this._ondismiss = func;
+    this.#ondismiss = func;
     return this;
   }
 
   setParent(view) {
-    if (view) this.__parent = view;
+    if (view) this.#parent = view;
     return this;
   }
 
   setText(text) {
-    this.__view.childNodes[0].textContent = text;
+    this.#view.childNodes[0].textContent = text;
     return this;
   }
 
-  setTimer(during) {
-    if (this.__during > 0) {
+  #setTimer(during) {
+    if (this.#during > 0) {
       if (!during) {
-        during = this.__during;
+        during = this.#during;
       }
-      this.__timer = setTimeout(() => {
+      this.#timer = setTimeout(() => {
         this.dismiss();
       }, during);
     }
   }
 
-  clearTimer() {
-    if (this.__timer){
-      clearTimeout(this.__timer);
-      this.__timer = null;
+  #clearTimer() {
+    if (this.#timer){
+      clearTimeout(this.#timer);
+      this.#timer = null;
     }
   }
 
   /* dismiss([shouldRecoverFAB], [callbackFunc]) */
   dismiss(arg1, arg2) {
-    this.clearTimer();
+    this.#clearTimer();
     let callback;
     if (!(arg1 === false)) {
-      for (let i = 0; i < SnackBar.affectedFAB.length; i++) {
-        const obj = SnackBar.affectedFAB[i];
+      this.#affectedFAB.forEach(obj => {
         const fab = obj.view;
         if (obj.bottom !== 'auto') {
-          Velocity(fab, {bottom: obj.bottom}, "fast");
+          Velocity(fab, {bottom: obj.bottom}, 'fast');
         }else if (obj.top !== 'auto') {
-          Velocity(fab, {top: obj.top}, "fast");
+          Velocity(fab, {top: obj.top}, 'fast');
         }
-        SnackBar.affectedFAB.splice(i, 1);
-        i--;
-      }
+        this.#affectedFAB.delete(obj);
+      });
       
       if (!(arg1 === true)) {
         callback = arg1;
@@ -86,14 +89,14 @@ class SnackBar {
     const view = document.querySelector('#SnackBar');
     if (view) {
       const _remove = () => {
-        view.removeEventListener('touchstart', this._touchstart);
-        view.removeEventListener('touchmove', this._touchmove);
-        view.removeEventListener('touchend', this._touchend);
-        this._touchstart = null;
-        this._touchmove = null;
-        this._touchend = null;
+        view.removeEventListener('touchstart', this.#touchstart);
+        view.removeEventListener('touchmove', this.#touchmove);
+        view.removeEventListener('touchend', this.#touchend);
+        this.#touchstart = null;
+        this.#touchmove = null;
+        this.#touchend = null;
         view.parentNode.removeChild(view);
-        if (this._ondismiss) this._ondismiss();
+        if (this.#ondismiss) this.#ondismiss();
         if (callback) callback();
       }
       if (getComputedStyle(view)['display'] !== 'none' && view.getBoundingClientRect().left < document.documentElement.clientWidth) {
@@ -106,12 +109,10 @@ class SnackBar {
 
   show() {
     if (document.querySelector('#SnackBar') !== null) {
-      this.dismiss(false, () => {
-        this.show();
-      });
+      this.dismiss(false, this.show);
       return;
     }else{
-      this.__parent.appendChild(this.__view);
+      this.#parent.appendChild(this.#view);
     }
     const view = document.querySelector('#SnackBar');
     if (document.documentElement.clientWidth > 800) {
@@ -121,35 +122,35 @@ class SnackBar {
     let left;
     let touchX;
     let moveX;
-    view.addEventListener('touchstart', this._touchstart = e => {
-      this.clearTimer();
+    view.addEventListener('touchstart', this.#touchstart = e => {
+      this.#clearTimer();
       left = parseInt(getComputedStyle(view)['left']);
       touchX = e.targetTouches[0].pageX;
       return false;
     });
-    view.addEventListener('touchmove', this._touchmove = e => {
+    view.addEventListener('touchmove', this.#touchmove = e => {
       moveX = e.targetTouches[0].pageX;
       if (moveX > touchX) {
         view.style.left = (left + moveX - touchX) + 'px';
       }
       return false;
     });
-    view.addEventListener('touchend', this._touchend = e => {
+    view.addEventListener('touchend', this.#touchend = e => {
       if (parseInt(getComputedStyle(view)['left']) > document.documentElement.clientWidth / 3) {
         Velocity(view, {left: document.documentElement.clientWidth + 'px'}, () => {
           this.dismiss();
         });
       }else{
-        Velocity(view, {left: 0}, "ease");
-        if (this.__timer === null) {
-          this.setTimer(1500);
+        Velocity(view, {left: 0}, 'ease');
+        if (this.#timer === null) {
+          this.#setTimer(1500);
         }
       }
       return false;
     });
     if (document.documentElement.clientWidth > 800 || !('ontouchstart' in window)) {
       view.onclick = () => {
-        this.clearTimer();
+        this.#clearTimer();
         Velocity(view, {opacity: 0}, () => this.dismiss());
       };
     }
@@ -167,35 +168,22 @@ class SnackBar {
         }else{
           Velocity(el, {bottom: view.offsetHeight + 'px'});
         }
-        let has = false;
-        for (const i in SnackBar.affectedFAB) {
-          if (SnackBar.affectedFAB[i].view === obj.view) {
-            has = true;
-          }
-        }
-        if (!has) {
-          SnackBar.affectedFAB.push(obj);
-        }
+        this.#affectedFAB.add(obj);
       }
     });
-    if (typeof this._onshowed === 'function') {
+    if (typeof this.#onshowed === 'function') {
       Velocity(view, {bottom: 0}, () => {
-        setTimeout(this._onshowed, 0);
+        setTimeout(this.#onshowed, 0);
       });
     }else{
       Velocity(view, {bottom: 0});
     }
-    this.setTimer();
+    this.#setTimer();
   }
 
   static make(view, text, during) {
     return new SnackBar().setParent(view).setText(text).setDuring(during);
   }
 }
-
-SnackBar.affectedFAB = [];
-SnackBar.LENGTH_SHORT = 1500;
-SnackBar.LENGTH_LONG = 3000;
-SnackBar.LENGTH_IMMEDIATE = -1;
 
 export default SnackBar;

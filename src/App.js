@@ -106,8 +106,9 @@ class App extends React.Component {
                 <li onClick={() => this.goTo('/')}>item1</li>
                 <li onClick={() => {
                   SnackBar.make(null, 'test', -1)
-                    .setOnShowed(() => this.view.closeMenu())
+                    .setOnShowed(this.view.closeMenu)
                     .show();
+                  setTimeout(this.view.closeMenu, 2000);
                 }}>item2</li>
                 <li onClick={() => {
                   if (document.body.classList.contains("x")) {
