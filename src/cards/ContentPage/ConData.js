@@ -1,4 +1,5 @@
 import marked from 'marked';
+import katex from 'katex';
 
 class ConData {
   constructor(arg1, arg2) {
@@ -31,9 +32,9 @@ class ConData {
       if (map.has("title")) {
         this.__title = map.get("title");
       }
-      this.__html = marked(con.substr(r1[0].length));
+      this.__html = this.__process(con.substr(r1[0].length));
     }else{
-      this.__html = marked(con);
+      this.__html = this.__process(con);
       const r = /<h1[\s\S]*>([\s\S]*)<\/h1>/.exec(this.__html);
       if (r != null && r.length > 1) {
         this.__title = r[1];
@@ -53,6 +54,26 @@ class ConData {
     this.__content = data.con;
     this.__html = data.html;
     if (data.title) this.__title = data.title;
+  }
+
+  __process(source) {
+    const tokenizer = new marked.Tokenizer();
+    const originalCodespan = tokenizer.codespan;
+    tokenizer.codespan = function(src) {
+      const match = src.match(/(\$+)([^\$\n]+?)\1/);
+      if (match) {
+        return {
+          type: 'html',
+          raw: match[0],
+          text: katex.renderToString(match[2].trim(), {
+            displayMode: match[1] === '$$',
+            throwOnError: false
+          })
+        };
+      }
+      return originalCodespan.apply(this, arguments);
+    };
+    return marked(source, { tokenizer });
   }
 
   getState() {

@@ -24,7 +24,13 @@ class ConDetail extends React.Component {
         if (this.mounted) this.setState({html: `<p>Failed to load (${statusCode})</p>`});
         return;
       }
-      if (this.mounted) this.setState({html: DOMPurify.sanitize(conData.getHtml())});
+      if (this.mounted) {
+        this.setState({
+          html: DOMPurify.sanitize(conData.getHtml(), {
+            ADD_TAGS: ['semantics', 'annotation'] // for KaTeX mathMl
+          })
+        });
+      }
       if (!isFromCache) loader._saveCache();
     });
   }

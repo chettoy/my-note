@@ -27,6 +27,9 @@ class ConLoader {
         if (callback) callback(response.status, conData, false);
       })
       .catch(error => {
+        if (!error.response) {
+          throw error;
+        }
         if (error.response.status !== 404) {
           console.log(`load con[id=${id}]: ${error}`);
         }

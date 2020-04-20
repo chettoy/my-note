@@ -9,6 +9,10 @@ import ConLoader from './ContentPage/ConLoader';
 import ConList from './ContentPage/ConList';
 import ConDetail from './ContentPage/ConDetail';
 
+import 'katex/contrib/copy-tex/copy-tex.js';
+import 'katex/contrib/copy-tex/copy-tex.css';
+import 'katex/contrib/mhchem/mhchem.js';
+
 const ConContainer = styled(Card)`
   background: transparent;
   box-shadow: none;
