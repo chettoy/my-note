@@ -237,7 +237,7 @@ class Framework extends React.Component {
    * target: 'open', 'close' or position
    */
   animateTo = (target, arg2, arg3) => {
-    let duration = 520;
+    let duration = 300;
     let callback = null;
     if (typeof(arg2) === "number") duration = arg2;
     if (typeof(arg2) === "function") callback = arg2;
@@ -263,7 +263,7 @@ class Framework extends React.Component {
       tween: [0, 1]
     }, {
       duration,
-      easing: "easeInOutQuad",
+      easing: [0.4, 0.0, 0.2, 1], //FastOutSlowInInterpolator
       begin: () => {
         if (this.bigScreen) {
           this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';

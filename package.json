@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "https://chettoy.github.io/my-note",
   "dependencies": {
-    "@mdi/js": "^5.3.45",
+    "@mdi/js": "^5.4.55",
     "@mdi/react": "^1.4.0",
     "axios": "^0.19.2",
     "dompurify": "^2.0.12",
@@ -19,7 +19,7 @@
     "react-scripts": "3.4.1",
     "react-transition-group": "^4.4.1",
     "styled-components": "^5.1.1",
-    "typescript": "^3.9.6",
+    "typescript": "^3.9.7",
     "velocity-animate": "^1.5.2"
   },
   "scripts": {
