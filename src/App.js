@@ -34,7 +34,6 @@ BackgroundCanvas.defaultProps = {theme: {AppBackground: '#e0e0e0'}};
 
 class App extends React.Component {
   view = null;
-  sessionStorageSupported = false;
   themeList = [Light, Dark];
   loadSet = new Set(['app', 'bg']);
 
@@ -74,8 +73,24 @@ class App extends React.Component {
     }
   }
 
-  handleSearch = s => {
-    toast('search ' + s);
+  handleSearch = str => {
+    const r = /#([\w\-.]+)=(.+)/.exec(str);
+    if (r != null && r.length > 2) {
+      const key = r[1];
+      const value = r[2];
+      switch (key) {
+        case 'href':
+          if (!ClientUtils.open(value))
+            window.location.href = value;
+          break;
+        case 'id':
+          this.goTo('/id/' + value);
+          break;
+        default:
+          break;
+      }
+    }
+    toast('search ' + str);
   }
 
   goTo = path => {
@@ -174,9 +189,10 @@ class App extends React.Component {
     if (Config.loadLive2d) Live2dWidget.load();
 
     //show welcome
-    if ((!this.sessionStorageSupported) || sessionStorage.show_welcome === undefined) {
+    const sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
+    if ((!sessionStorageSupported) || sessionStorage.show_welcome === undefined) {
       setTimeout(() => {
-        if (this.sessionStorageSupported) {
+        if (sessionStorageSupported) {
           sessionStorage.show_welcome = true;
         }
         SnackBar.make(this.view.conDOM, "Welcome", SnackBar.LENGTH_LONG).show();

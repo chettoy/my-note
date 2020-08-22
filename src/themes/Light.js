@@ -1,5 +1,5 @@
 const Theme = {
-  AppBackground: "url('https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302')",
+  AppBackground: "url('https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302'),#e0e0e0",
   CardColor: "rgba(255,255,255,0.92)",
   TextColor: "rgba(0,0,0,0.87)",
   FabColor: "#ff4081",

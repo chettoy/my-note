@@ -60,7 +60,7 @@ class ConData {
     const tokenizer = new marked.Tokenizer();
     const originalCodespan = tokenizer.codespan;
     tokenizer.codespan = function(src) {
-      const match = src.match(/(\$+)([^\$\n]+?)\1/);
+      const match = src.match(/(\$+)([^$\n]+?)\1/);
       if (match) {
         return {
           type: 'html',
