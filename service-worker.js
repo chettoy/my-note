@@ -1,4 +1,4 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.3/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.4/workbox-sw.js');
 /* global workbox */
 if (workbox) {
   console.log('Workbox is loaded');
@@ -12,7 +12,7 @@ if (workbox) {
   workbox.core.clientsClaim();
 
   /* injection point for manifest files.  */
-  workbox.precaching.precacheAndRoute([{"revision":"c1c28f553095fdddb4d2c13a11bd4cb9","url":"live2d-widget/live2d.min.js"},{"revision":"1ab8aaf74cb0cafc3257c6ffbd027570","url":"live2d-widget/waifu-tips.json"},{"revision":"1165b1888975a8d6ee01539b6ddefeb6","url":"static/css/2.8c4379df.chunk.css"},{"revision":"cc51ebd73f341dcaf8f7fa5ebd38def7","url":"static/css/3.bbfc64cf.chunk.css"},{"revision":"15db525a3e5ffd6b378b57022c5f7cfd","url":"static/css/main.b4dd0116.chunk.css"},{"revision":"f7e779e78755f3e3c4f92d9c5781a9bf","url":"static/js/2.bb4a3fbf.chunk.js"},{"revision":"fc3e5c1e902d5abd100f20d0878018c9","url":"static/js/3.d47ab01a.chunk.js"},{"revision":"1a06a7c4eb93a26c8bc9771ab3092534","url":"static/js/4.2d8e2951.chunk.js"},{"revision":"2a949e77b44e5da063fcba1e44d943b8","url":"static/js/main.f6e28900.chunk.js"},{"revision":"0384e11aedee9b00f0395de7c03a0ec5","url":"static/js/runtime-main.24f56593.js"},{"revision":"09f1b972d5199c8178c6a906b2367ac5","url":"index.html"}]);
+  workbox.precaching.precacheAndRoute([{"revision":"c1c28f553095fdddb4d2c13a11bd4cb9","url":"live2d-widget/live2d.min.js"},{"revision":"1ab8aaf74cb0cafc3257c6ffbd027570","url":"live2d-widget/waifu-tips.json"},{"revision":"1165b1888975a8d6ee01539b6ddefeb6","url":"static/css/2.8c4379df.chunk.css"},{"revision":"cc51ebd73f341dcaf8f7fa5ebd38def7","url":"static/css/3.bbfc64cf.chunk.css"},{"revision":"15db525a3e5ffd6b378b57022c5f7cfd","url":"static/css/main.b4dd0116.chunk.css"},{"revision":"b6ce4a1d8a619e09494c121e86d8e240","url":"static/js/2.1d7bfd14.chunk.js"},{"revision":"a38dd7d92c1659f32fec513c37b52968","url":"static/js/3.2036d261.chunk.js"},{"revision":"e3165fc4645770c7dc444211acea22ee","url":"static/js/4.fab92389.chunk.js"},{"revision":"8396c3cd6843456f2e9303156530597f","url":"static/js/main.68e38fd8.chunk.js"},{"revision":"f9d4b33acabd09910bf67c7b788bd35b","url":"static/js/runtime-main.e31018df.js"},{"revision":"e4c286a64b72d659f87d19750ef4468d","url":"index.html"}]);
 
   /* custom cache rules */
   workbox.routing.registerRoute(
