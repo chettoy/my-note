@@ -39,11 +39,11 @@ class FloatActionButton extends React.Component {
 
   onClickHandler = () => {
     const nextState = !this.state.isOpen;
-    const delay = 500 / this.fabChild.length;
+    const delay = 200 / this.fabChild.length;
     this.setState({isOpen: nextState});
     this.fabChild.forEach((child, i) => {
       Velocity(child, "stop", true);
-      Velocity(child, nextState? "fadeIn": "fadeOut", {duration: 300, delay: delay * i});
+      Velocity(child, nextState? "fadeIn": "fadeOut", {duration: 200, delay: delay * i});
     });
   }
 

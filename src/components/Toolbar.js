@@ -75,7 +75,6 @@ class Toolbar extends React.Component {
   handleSearchClick = () => {
     if (this.state.atTop) {
       MessageHandler.log("(｡>﹏<｡)", "看不见我看不见我~");
-      return;
     }
     this.setState({showSearch: !this.state.showSearch});
   }
@@ -153,6 +152,7 @@ class ToolbarCanvas
   headerHeight = 0;
   prevScroll = 0;
   drawLoopLock = 0;
+  staticTime = 0;
   
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
   
@@ -179,10 +179,16 @@ class ToolbarCanvas
     }
   }
   
+  fill = (color) => {
+    this.ctx.fillStyle = color;
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillRect(0, 0, this.width, this.height);
+  }
+  
   draw = () => {
     if (document.body.classList.contains("x")) {
-      this.ctx.fillStyle = "#000";
-    }else{   
+      this.fill('#000');
+    }else{
       const scrollTop = this.scrollTop();
       let a = 1.0;
       if (this.headerHeight) {
@@ -190,15 +196,19 @@ class ToolbarCanvas
         a = a.toFixed(2);
         if (a > 1.0) a = 1.0;
       }
-      this.ctx.fillStyle = `rgba(69, 157, 245, ${a})`;
+      this.fill(`rgba(69, 157, 245, ${a})`);
     }
-    this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.fillRect(0, 0, this.width, this.height);
   }
   
   drawLoop = () => {
     const scroll = this.scrollTop();
-    if (this.prevScroll !== scroll) {
+    if (this.prevScroll === scroll) {
+      this.staticTime++;
+      if (this.staticTime === 100) {
+        this.fill('transparent');
+      }
+    }else{
+      this.staticTime = 0;
       this.draw();
       this.prevScroll = scroll;
     }
