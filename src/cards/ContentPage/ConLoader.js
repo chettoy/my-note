@@ -15,7 +15,7 @@ class ConLoader {
     this._checkCache();
     if (this.conDataCache.has(key)) {
       const cachedData = this.conDataCache.get(key);
-      if(cachedData !== null) {
+      if (cachedData !== null) {
         if (callback) callback(200, cachedData, true);
         return;
       }
@@ -47,12 +47,12 @@ class ConLoader {
             itemId++;
             if (itemId > 10) {
               reject("over 10 content");
-            }else{
+            } else {
               loadItem();
             }
-          }else if (status === 404 || status === 0) {
+          } else if (status === 404 || status === 0) {
             resolve();
-          }else{
+          } else {
             reject(status);
           }
         });
@@ -92,7 +92,7 @@ class ConLoader {
     }
     sessionStorage.setItem('con_cache', JSON.stringify(cacheArr));
   }
-  
+
   _checkCache() {
     if (this.conDataCache !== null) return;
     this.conDataCache = new Map();

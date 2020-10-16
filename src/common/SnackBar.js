@@ -55,7 +55,7 @@ class SnackBar {
   }
 
   clearTimer() {
-    if (this.__timer){
+    if (this.__timer) {
       clearTimeout(this.__timer);
       this.__timer = null;
     }
@@ -70,14 +70,14 @@ class SnackBar {
         const obj = SnackBar.affectedFAB[i];
         const fab = obj.view;
         if (obj.bottom !== 'auto') {
-          Velocity(fab, {bottom: obj.bottom}, "fast");
-        }else if (obj.top !== 'auto') {
-          Velocity(fab, {top: obj.top}, "fast");
+          Velocity(fab, { bottom: obj.bottom }, "fast");
+        } else if (obj.top !== 'auto') {
+          Velocity(fab, { top: obj.top }, "fast");
         }
         SnackBar.affectedFAB.splice(i, 1);
         i--;
       }
-      
+
       if (!(arg1 === true)) {
         callback = arg1;
       }
@@ -97,8 +97,8 @@ class SnackBar {
         if (callback) callback();
       }
       if (getComputedStyle(view)['display'] !== 'none' && view.getBoundingClientRect().left < document.documentElement.clientWidth) {
-        Velocity(view, {bottom: -view.offsetHeight + 'px'}, 'fast', _remove);
-      }else{
+        Velocity(view, { bottom: -view.offsetHeight + 'px' }, 'fast', _remove);
+      } else {
         _remove();
       }
     }
@@ -110,7 +110,7 @@ class SnackBar {
         this.show();
       });
       return;
-    }else{
+    } else {
       this.__parent.appendChild(this.__view);
     }
     const view = document.querySelector('#SnackBar');
@@ -136,11 +136,11 @@ class SnackBar {
     });
     view.addEventListener('touchend', this._touchend = e => {
       if (parseInt(getComputedStyle(view)['left']) > document.documentElement.clientWidth / 3) {
-        Velocity(view, {left: document.documentElement.clientWidth + 'px'}, () => {
+        Velocity(view, { left: document.documentElement.clientWidth + 'px' }, () => {
           this.dismiss();
         });
-      }else{
-        Velocity(view, {left: 0}, "ease");
+      } else {
+        Velocity(view, { left: 0 }, "ease");
         if (this.__timer === null) {
           this.setTimer(1500);
         }
@@ -150,22 +150,22 @@ class SnackBar {
     if (document.documentElement.clientWidth > 800 || !('ontouchstart' in window)) {
       view.onclick = () => {
         this.clearTimer();
-        Velocity(view, {opacity: 0}, () => this.dismiss());
+        Velocity(view, { opacity: 0 }, () => this.dismiss());
       };
     }
     const fabs = document.querySelectorAll('.fab');
-    Array.prototype.forEach.call(fabs, function(el, i){
+    Array.prototype.forEach.call(fabs, function (el, i) {
       if (getComputedStyle(el)['position'] === 'fixed' && document.documentElement.clientHeight - el.getBoundingClientRect().top - el.offsetHeight < view.offsetHeight && el.getBoundingClientRect().left < view.getBoundingClientRect().left + view.offsetWidth) {
         const obj = {};
         obj.view = el;
         obj.top = getComputedStyle(el)['top'];
         obj.bottom = getComputedStyle(el)['bottom'];
         if (obj.bottom !== 'auto') {
-          Velocity(el, {bottom: parseInt(obj.bottom) + view.offsetHeight + 'px'});
-        }else if(obj.top !== 'auto'){
-          Velocity(el, {top: parseInt(obj.top) - view.offsetHeight + 'px'});
-        }else{
-          Velocity(el, {bottom: view.offsetHeight + 'px'});
+          Velocity(el, { bottom: parseInt(obj.bottom) + view.offsetHeight + 'px' });
+        } else if (obj.top !== 'auto') {
+          Velocity(el, { top: parseInt(obj.top) - view.offsetHeight + 'px' });
+        } else {
+          Velocity(el, { bottom: view.offsetHeight + 'px' });
         }
         let has = false;
         for (const i in SnackBar.affectedFAB) {
@@ -179,11 +179,11 @@ class SnackBar {
       }
     });
     if (typeof this._onshowed === 'function') {
-      Velocity(view, {bottom: 0}, () => {
+      Velocity(view, { bottom: 0 }, () => {
         setTimeout(this._onshowed, 0);
       });
-    }else{
-      Velocity(view, {bottom: 0});
+    } else {
+      Velocity(view, { bottom: 0 });
     }
     this.setTimer();
   }

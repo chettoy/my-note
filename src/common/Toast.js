@@ -19,11 +19,11 @@ class Toast {
     if (Toast._queue.length < 1) return;
     const instance = Toast._queue[0];
     instance._parent.appendChild(instance._view);
-    Velocity(document.querySelector('#Toast'), {opacity: 1});
+    Velocity(document.querySelector('#Toast'), { opacity: 1 });
     Toast._timer = setTimeout(() => {
       const view = document.querySelector('#Toast');
       if (view) {
-        Velocity(view, {opacity: 0}, () => {
+        Velocity(view, { opacity: 0 }, () => {
           view.parentNode.removeChild(view);
           Toast._timer = null;
           Toast._queue.splice(0, 1);

@@ -20,18 +20,18 @@ class ConList extends React.Component {
 
   componentDidMount() {
     this.mounted = true;
-    this.setState({loading: false});
+    this.setState({ loading: false });
     const loader = this.props.conLoader;
     //If you have just loaded a content, it will be displayed on top
     loader.reqCache(list => {
-      if (this.mounted) this.setState({conList: list});
+      if (this.mounted) this.setState({ conList: list });
     });
     const prevUpdateTime = window['sessionStorage']?.getItem('conListUpdateTime') ?? 0;
     console.log('lastUpdateTime: ' + prevUpdateTime);
     if (Math.abs(Date.now() - prevUpdateTime) < 2 * 60 * 1000) return;
     console.log('updating content...');
     loader.reqUpdate((item, list) => {
-      if (this.mounted) this.setState({conList: list});
+      if (this.mounted) this.setState({ conList: list });
     }).then(() => {
       window['sessionStorage'] && sessionStorage.setItem('conListUpdateTime', Date.now());
     });
@@ -42,7 +42,7 @@ class ConList extends React.Component {
   }
 
   render() {
-    return this.state.loading? <Loading />:
+    return this.state.loading ? <Loading /> :
       this.state.conList.map((conData, i) =>
         <ConItem key={conData.getId()} data={conData} />);
   }

@@ -6,7 +6,7 @@ import styles from './Banner.module.scss';
 class Banner extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {loaded: false};
+    this.state = { loaded: false };
   }
 
   render() {
@@ -25,7 +25,7 @@ class Banner extends React.Component {
 
   componentDidMount() {
     if (MyCommon.isSnap) return;
-    this.setState({loaded: true});
+    this.setState({ loaded: true });
   }
 }
 

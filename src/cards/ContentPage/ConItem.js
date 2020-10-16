@@ -5,8 +5,7 @@ import DOMPurify from 'dompurify';
 import ConCard from './ConCard';
 import ConData from './ConData';
 
-class ConItem extends React.Component
-{
+class ConItem extends React.Component {
   static propTypes = {
     data: PropTypes.instanceOf(ConData).isRequired
   }
@@ -15,7 +14,7 @@ class ConItem extends React.Component
     const { data } = this.props;
     const title = data.getTitle();
     if (title) {
-      let text = DOMPurify.sanitize(data.getHtml(), {ALLOWED_TAGS: [], KEEP_CONTENT: true});
+      let text = DOMPurify.sanitize(data.getHtml(), { ALLOWED_TAGS: [], KEEP_CONTENT: true });
       if (text.substr(0, title.length) === title) {
         text = text.substr(title.length, text.length);
       }
@@ -30,9 +29,9 @@ class ConItem extends React.Component
           <p className="con-preview">{text}</p>
         </ConCard>
       );
-    }else{
+    } else {
       const clean = DOMPurify.sanitize(data.getHtml());
-      return <ConCard {...this.props} dangerouslySetInnerHTML={{__html: clean}} />;
+      return <ConCard {...this.props} dangerouslySetInnerHTML={{ __html: clean }} />;
     }
   }
 }

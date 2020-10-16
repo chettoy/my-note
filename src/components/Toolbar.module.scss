@@ -1,5 +1,5 @@
 .toolbarShadow {
-  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.5);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
 }
 
 .ToolbarView {
@@ -10,7 +10,7 @@
   position: fixed;
   //top: 0;
   z-index: 104;
-  
+
   canvas {
     position: absolute;
     left: 0;
@@ -24,6 +24,7 @@
   font-size: 1.25rem;
   line-height: 3.125rem;
   float: left;
+
   a {
     //color: white;
   }
@@ -37,6 +38,7 @@
   text-align: center;
   line-height: 3.125rem;
   transition: all .5s;
+
   svg {
     width: 1.25rem;
     height: 1.25rem;
@@ -72,6 +74,7 @@
   right: 0;
   z-index: 104;
   display: none;
+
   input {
     width: 85%;
     height: 1.875rem;
@@ -80,6 +83,7 @@
     background: transparent;
     //box-shadow: 0 0.125rem grey;
   }
+
   input:focus {
     //box-shadow: 0 0.125rem #FF4081;
     outline: none;

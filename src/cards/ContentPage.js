@@ -53,15 +53,15 @@ class ContentPage extends React.Component {
     this.loader = new ConLoader();
     this.viewRef = React.createRef();
     this.routes = {
-      list: {name: 'list', path: '/'},
-      detail: {name: 'detail', path: '/id/:id'}
+      list: { name: 'list', path: '/' },
+      detail: { name: 'detail', path: '/id/:id' }
     };
     this.currentView = (({ pathname }) => {
-      if (matchPath(pathname, {path: this.routes.detail.path})) {
+      if (matchPath(pathname, { path: this.routes.detail.path })) {
         return this.routes.detail.name;
-      }else if (matchPath(pathname, {path: this.routes.list.path, exact: true})) {
+      } else if (matchPath(pathname, { path: this.routes.list.path, exact: true })) {
         return this.routes.list.name;
-      }else{
+      } else {
         return '';
       }
     })(props.location);
@@ -81,23 +81,23 @@ class ContentPage extends React.Component {
     const cardWrapper = this.getWrapperDOM();
     window.sessionStorage[key] = - cardWrapper.getBoundingClientRect().top;
   }
-  
+
   recoverScroll() {
     const key = 'conPageScroll_' + this.currentView;
     if (!(key in window.sessionStorage)) return;
     const cardWrapper = this.getWrapperDOM();
-    Velocity(cardWrapper, 'scroll', {offset: window.sessionStorage[key]});
+    Velocity(cardWrapper, 'scroll', { offset: window.sessionStorage[key] });
   }
 
   componentDidMount() {
     this._scrollRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = 'manual';
     this.unlistenHistory = this.props.history.listen((location, action) => {
-      if (matchPath(location.pathname, {path: this.routes.detail.path})) {
+      if (matchPath(location.pathname, { path: this.routes.detail.path })) {
         this.saveScroll();
         this.currentView = this.routes.detail.name;
         Velocity(this.getWrapperDOM(), 'scroll');
-      }else if (matchPath(location.pathname, {path: this.routes.list.path, exact: true})) {
+      } else if (matchPath(location.pathname, { path: this.routes.list.path, exact: true })) {
         this.currentView = this.routes.list.name;
         this.recoverScroll();
       }
@@ -116,25 +116,25 @@ class ContentPage extends React.Component {
       <div ref={this.viewRef}>
         <Route
           render={({ location, match }) => (
-          <TransitionGroup>
-            <CSSTransition key={location.pathname} classNames='router' timeout={500}>
-              <ConContainer>
-                <Switch location={location}>
-                  <Route
-                    path={this.routes.list.path} exact
-                    render={(props) => <ConList {...props} conLoader={this.loader} />} />
-                  <Route
-                    path={this.routes.detail.path}
-                    render={(props) => <ConDetail {...props} conLoader={this.loader} />} />
-                  <Route
-                    render={() => {
-                      console.log(`ConPage: pathname=${location.pathname}, match.url=${match.url}`);
-                    }} />
-                </Switch>
-              </ConContainer>
-            </CSSTransition>
-          </TransitionGroup>
-        )} />
+            <TransitionGroup>
+              <CSSTransition key={location.pathname} classNames='router' timeout={500}>
+                <ConContainer>
+                  <Switch location={location}>
+                    <Route
+                      path={this.routes.list.path} exact
+                      render={(props) => <ConList {...props} conLoader={this.loader} />} />
+                    <Route
+                      path={this.routes.detail.path}
+                      render={(props) => <ConDetail {...props} conLoader={this.loader} />} />
+                    <Route
+                      render={() => {
+                        console.log(`ConPage: pathname=${location.pathname}, match.url=${match.url}`);
+                      }} />
+                  </Switch>
+                </ConContainer>
+              </CSSTransition>
+            </TransitionGroup>
+          )} />
       </div>
     );
   }

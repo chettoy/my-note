@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from '@mdi/react';
-import {mdiClose} from '@mdi/js';
+import { mdiClose } from '@mdi/js';
 import Velocity from 'velocity-animate';
 import styled from 'styled-components/macro';
 import { c2s } from '../common/MyCommon';
@@ -34,16 +34,16 @@ class FloatActionButton extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {isOpen: false};
+    this.state = { isOpen: false };
   }
 
   onClickHandler = () => {
     const nextState = !this.state.isOpen;
     const delay = 200 / this.fabChild.length;
-    this.setState({isOpen: nextState});
+    this.setState({ isOpen: nextState });
     this.fabChild.forEach((child, i) => {
       Velocity(child, "stop", true);
-      Velocity(child, nextState? "fadeIn": "fadeOut", {duration: 200, delay: delay * i});
+      Velocity(child, nextState ? "fadeIn" : "fadeOut", { duration: 200, delay: delay * i });
     });
   }
 
@@ -52,7 +52,7 @@ class FloatActionButton extends React.Component {
       <FabWrapper className='fab'>
         <div className={styles.fabView} onClick={this.onClickHandler}>
           <div className={styles.iconWrapper}>
-            <Icon path={mdiClose} rotate={this.state.isOpen? 360: 315}/>
+            <Icon path={mdiClose} rotate={this.state.isOpen ? 360 : 315} />
           </div>
         </div>
         <div className={styles.fabMenu} ref={el => this.menuDOM = el}>

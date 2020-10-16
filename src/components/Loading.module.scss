@@ -1,28 +1,51 @@
 @keyframes delayFadeIn {
-  0% {opacity: 0;}
-  50% {opacity: 0;}
-  100% {opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes shine {
-  to {background-position: -200% center;}
+  to {
+    background-position: -200% center;
+  }
 }
 
 @keyframes dotAnim {
-  0% {bottom: 0em;}
-  25% {bottom: 0.25em;}
-  50% {bottom: 0.25em;}
-  75% {bottom: 0em;}
+  0% {
+    bottom: 0em;
+  }
+
+  25% {
+    bottom: 0.25em;
+  }
+
+  50% {
+    bottom: 0.25em;
+  }
+
+  75% {
+    bottom: 0em;
+  }
 }
 
 .LoadingView {
   color: white;
   text-align: center;
   animation: delayFadeIn 0.4s;
+
   span {
     position: relative;
     bottom: 0em;
   }
+
   span:nth-child(4) {
     font-size: 1em;
     background: linear-gradient(to left, #00FFBF, #B3FF19, #F0F, #00FFBF);
@@ -33,13 +56,19 @@
     -webkit-text-fill-color: transparent;
     animation: shine 4s linear infinite;
   }
-  span:nth-child(1), span:nth-child(5) {
+
+  span:nth-child(1),
+  span:nth-child(5) {
     animation: dotAnim 1.2s linear infinite;
   }
-  span:nth-child(2), span:nth-child(6) {
+
+  span:nth-child(2),
+  span:nth-child(6) {
     animation: dotAnim 1.2s linear 0.3s infinite;
   }
-  span:nth-child(3), span:nth-child(7) {
+
+  span:nth-child(3),
+  span:nth-child(7) {
     animation: dotAnim 1.2s linear 0.6s infinite;
   }
 }

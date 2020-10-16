@@ -3,11 +3,11 @@
 body {
   /* Disables pull-to-refresh but allows overscroll glow effects. */
   overscroll-behavior-y: contain;
-  
+
   &.x *:not(canvas) {
-    background: #000!important;
-    color: #0f0!important;
-    border: 1px solid red!important;
+    background: #000 !important;
+    color: #0f0 !important;
+    border: 1px solid red !important;
   }
 }
 
@@ -22,6 +22,7 @@ canvas.bg {
   background-position: center;
   background-size: 100%;
   transition: height 1s;
+
   @media all and (orientation: portrait) {
     background-size: auto 100%;
   }
@@ -31,14 +32,14 @@ canvas.bg {
   box-sizing: border-box;
   font-size: calc(10px + 2vmin);
   color: white;
-  
+
   .fab {
     position: fixed;
     right: 1rem;
     bottom: 1rem;
     font-size: 1rem;
   }
-  
+
   .CardWrapper {
     position: relative;
     min-height: 100vh;
@@ -52,13 +53,16 @@ canvas.bg {
 .router-enter {
   opacity: 0;
 }
+
 .router-enter-active {
   transition: all .5s;
   opacity: 1;
 }
+
 .router-exit {
   opacity: 1;
 }
+
 .router-exit-active {
   transition: all .5s;
   opacity: 0;

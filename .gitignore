@@ -22,6 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+/.vscode
+
 # test data
 /public/content
 /public/playlist.json

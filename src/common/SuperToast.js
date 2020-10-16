@@ -28,7 +28,7 @@ class SuperToast {
       const deadtime = SuperToast._queue[i]._deadtime;
       if (time >= deadtime) {
         const view = SuperToast._queue[i]._domPtr;
-        Velocity(view, {opacity: 0}, () => {
+        Velocity(view, { opacity: 0 }, () => {
           const container = document.querySelector('#SuperToast');
           container.removeChild(view);
           if (container.children[0] === null) {
@@ -37,15 +37,15 @@ class SuperToast {
         });
         SuperToast._queue.splice(i, 1);
         i--;
-      }else{
+      } else {
         if (deadtime < nextHandleTime || !nextHandleTime)
-         nextHandleTime = deadtime;
+          nextHandleTime = deadtime;
       }
     }
     if (nextHandleTime !== 0) {
       SuperToast._timer = setTimeout(SuperToast._handle, nextHandleTime - time);
       SuperToast._nextHandleTime = nextHandleTime;
-    }else{
+    } else {
       SuperToast._timer = null;
       SuperToast._nextHandleTime = 0;
     }
@@ -73,17 +73,17 @@ class SuperToast {
     const container = document.querySelector('#SuperToast');
     if (container.children[0]) {
       container.insertBefore(this._view, container.children[0]);
-    }else{
+    } else {
       container.appendChild(this._view);
     }
     this._deadtime = Date.now() + this._duration;
     this._domPtr = container.children[0];
     SuperToast._queue.push(this);
-    Velocity(this._domPtr, {opacity: 1});
+    Velocity(this._domPtr, { opacity: 1 });
     if (SuperToast._timer) {
       if (this._deadtime < SuperToast._nextHandleTime) {
         clearTimeout(SuperToast._timer)
-      }else{
+      } else {
         return;
       }
     }

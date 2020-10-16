@@ -32,10 +32,10 @@ class Live2dWidget {
     }))
     .then(instance => {
       Live2dWidget.proxy = instance;
-    }); 
-    // initWidget 第一个参数为 waifu-tips.json 的路径，第二个参数为 API 地址
-    // API 后端可自行搭建，参考 https://github.com/fghrsh/live2d_api
-    // 初始化看板娘会自动加载指定目录下的 waifu-tips.json
+    });
+  // initWidget 第一个参数为 waifu-tips.json 的路径，第二个参数为 API 地址
+  // API 后端可自行搭建，参考 https://github.com/fghrsh/live2d_api
+  // 初始化看板娘会自动加载指定目录下的 waifu-tips.json
 
   static showMessage = msg => { // the widget may be hid
     Live2dWidget.proxy.showMessage(msg, 5000, 8);

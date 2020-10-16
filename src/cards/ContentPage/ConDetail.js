@@ -13,7 +13,7 @@ class ConDetail extends React.Component {
   constructor(props) {
     super(props);
     this.mounted = false;
-    this.state = {html: null};
+    this.state = { html: null };
   }
 
   componentDidMount() {
@@ -21,7 +21,7 @@ class ConDetail extends React.Component {
     const loader = this.props.conLoader;
     loader.loadContent(this.props.match.params.id, (statusCode, conData, isFromCache) => {
       if (statusCode !== 200 || !conData) {
-        if (this.mounted) this.setState({html: `<p>Failed to load (${statusCode})</p>`});
+        if (this.mounted) this.setState({ html: `<p>Failed to load (${statusCode})</p>` });
         return;
       }
       if (this.mounted) {
@@ -40,8 +40,8 @@ class ConDetail extends React.Component {
   }
 
   render() {
-    return this.state.con === null? <Loading />:
-      <ConCard dangerouslySetInnerHTML={{__html: this.state.html}} />;
+    return this.state.con === null ? <Loading /> :
+      <ConCard dangerouslySetInnerHTML={{ __html: this.state.html }} />;
   }
 }
 

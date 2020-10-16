@@ -9,11 +9,11 @@ class ConData {
     this.__title = null;
     if (arg2) {
       this.__initFromCon(arg1, arg2);
-    }else{
+    } else {
       this.__parseFromJSON(arg1);
     }
   }
-  
+
   __initFromCon(id, con) {
     this.__id = id;
     this.__content = con;
@@ -33,7 +33,7 @@ class ConData {
         this.__title = map.get("title");
       }
       this.__html = this.__process(con.substr(r1[0].length));
-    }else{
+    } else {
       this.__html = this.__process(con);
       const r = /<h1[\s\S]*>([\s\S]*)<\/h1>/.exec(this.__html);
       if (r != null && r.length > 1) {
@@ -41,7 +41,7 @@ class ConData {
       }
     }
   }
-  
+
   __parseFromJSON(data) {
     if (typeof data === 'string') {
       data = JSON.parse(data);
@@ -59,7 +59,7 @@ class ConData {
   __process(source) {
     const tokenizer = new marked.Tokenizer();
     const originalCodespan = tokenizer.codespan;
-    tokenizer.codespan = function(src) {
+    tokenizer.codespan = function (src) {
       const match = src.match(/(\$+)([^$\n]+?)\1/);
       if (match) {
         return {

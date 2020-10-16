@@ -22,14 +22,14 @@ import './App.scss';
 
 const MusicPlayer = React.lazy(() => import('./components/MusicPlayer'));
 
-const toast = (text, during=Toast.LENGTH_SHORT) => {
+const toast = (text, during = Toast.LENGTH_SHORT) => {
   Toast.makeText(null, text, during).show();
 };
 
-const BackgroundCanvas = styled.canvas.attrs({className: 'bg'})`
+const BackgroundCanvas = styled.canvas.attrs({ className: 'bg' })`
   background: ${props => props.theme.AppBackground};
 `;
-BackgroundCanvas.defaultProps = {theme: {AppBackground: '#e0e0e0'}};
+BackgroundCanvas.defaultProps = { theme: { AppBackground: '#e0e0e0' } };
 
 
 class App extends React.Component {
@@ -41,7 +41,7 @@ class App extends React.Component {
     super(props);
     try {
       this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
-    } catch(e) {}
+    } catch (e) { }
     this.state = {
       isLoading: true,
       currentTheme: 0
@@ -68,7 +68,7 @@ class App extends React.Component {
     }
     if (this.loadSet.size > 0) {
       progress.inc();
-    }else{
+    } else {
       progress.done();
     }
   }
@@ -97,7 +97,7 @@ class App extends React.Component {
     if (path === this.props.location.pathname) return;
     if (path === '/') {
       this.props.history.goBack();
-    }else{
+    } else {
       this.props.history.push(path);
     }
   }
@@ -115,7 +115,7 @@ class App extends React.Component {
             <Toolbar statusBarHeight={ClientUtils.getStatusBarHeight()} onSearch={this.handleSearch} />
             <Menu>
               <React.Suspense fallback={<Loading />}>
-                {this.state.isLoading? null: <MusicPlayer />}
+                {this.state.isLoading ? null : <MusicPlayer />}
               </React.Suspense>
               <MenuList>
                 <li onClick={() => this.goTo('/')}>item1</li>
@@ -128,15 +128,15 @@ class App extends React.Component {
                 <li onClick={() => {
                   if (document.body.classList.contains("x")) {
                     document.body.classList.remove("x");
-                  }else{
+                  } else {
                     document.body.classList.add("x");
                   }
                 }}>item3</li>
                 <li onClick={() => {
                   if (this.state.currentTheme < this.themeList.length - 1) {
-                    this.setState({currentTheme: this.state.currentTheme + 1});
-                  }else{
-                    this.setState({currentTheme: 0});
+                    this.setState({ currentTheme: this.state.currentTheme + 1 });
+                  } else {
+                    this.setState({ currentTheme: 0 });
                   }
                 }}>item4</li>
                 {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
@@ -160,9 +160,9 @@ class App extends React.Component {
 
   componentDidMount() {
     if (MyCommon.isSnap) return;
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
     this.updateProgress('app');
-    
+
     //check background image load state
     (() => {
       const bgMatch = this.getTheme().AppBackground.match(/url\((['"])(.+)\1\)/);
@@ -172,7 +172,7 @@ class App extends React.Component {
       img.src = url;
       if (img.complete) {
         this.updateProgress('bg');
-      }else{
+      } else {
         img.onload = () => {
           this.updateProgress('bg');
         }

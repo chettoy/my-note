@@ -3,23 +3,29 @@
   height: 100vh;
   position: relative;
   text-align: center;
-  background: rgba(13,13,13, 0.55);
+  background: rgba(13, 13, 13, 0.55);
   box-sizing: border-box;
-  
+
   .con {
     position: absolute;
     top: 40%;
     left: 50%;
-    transform: translate(-50%,-50%);
-    color: rgba(255,255,255,0.8);
-    span {font-size: 2.718rem;}
-    i {font-size: 1.414rem;}
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.8);
+
+    span {
+      font-size: 2.718rem;
+    }
+
+    i {
+      font-size: 1.414rem;
+    }
   }
-  
+
   .bottom {
     position: absolute;
     bottom: 1rem;
     left: 50%;
-    transform: translate(-50%,0);
+    transform: translate(-50%, 0);
   }
 }

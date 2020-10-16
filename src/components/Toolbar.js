@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import Icon from '@mdi/react';
-import {mdiMenu, mdiMagnify} from '@mdi/js';
+import { mdiMenu, mdiMagnify } from '@mdi/js';
 import { c2s } from '../common/MyCommon';
 import MessageHandler from '../common/MessageHandler';
 import styles from './Toolbar.module.scss';
@@ -35,7 +35,7 @@ const ToolbarView = styled.div.attrs({
 
 const StatusBar = styled.div`
   background: ${props => props.theme.StatusBarColor};
-  display: ${props => props.statusBarHeight? 'block': 'none'};
+  display: ${props => props.statusBarHeight ? 'block' : 'none'};
   height: ${props => props.statusBarHeight}px;
   width: 100%;
   position: fixed;
@@ -43,7 +43,7 @@ const StatusBar = styled.div`
 `;
 
 StatusBar.defaultProps = {
-  theme: {StatusBarColor: "black"}
+  theme: { StatusBarColor: "black" }
 };
 
 ToolbarView.defaultProps = {
@@ -76,7 +76,7 @@ class Toolbar extends React.Component {
     if (this.state.atTop) {
       MessageHandler.log("(｡>﹏<｡)", "看不见我看不见我~");
     }
-    this.setState({showSearch: !this.state.showSearch});
+    this.setState({ showSearch: !this.state.showSearch });
   }
 
   handleSearch = e => {
@@ -93,77 +93,76 @@ class Toolbar extends React.Component {
         <StatusBar statusBarHeight={this.props.statusBarHeight} />
         <span className={styles.MenuIcon}
           onClick={this.handleMenuClick}
-          onMouseEnter={() => this.setState({menuIconHover: true})}
-          onMouseLeave={() => this.setState({menuIconHover: false})}
-          style={{backgroundColor: this.state.menuIconHover? 'rgba(85,85,85,1)': 'rgba(0,0,0,0)'}}>
-            <Icon path={mdiMenu} />
+          onMouseEnter={() => this.setState({ menuIconHover: true })}
+          onMouseLeave={() => this.setState({ menuIconHover: false })}
+          style={{ backgroundColor: this.state.menuIconHover ? 'rgba(85,85,85,1)' : 'rgba(0,0,0,0)' }}>
+          <Icon path={mdiMenu} />
         </span>
         <span className={styles.Title}><a href=".">MyNote</a></span>
         <span className={styles.SearchIcon}
           onClick={this.handleSearchClick}
-          style={{opacity: this.state.atTop? 0: 1}}>
+          style={{ opacity: this.state.atTop ? 0 : 1 }}>
           <Icon path={mdiMagnify} />
         </span>
         <div className={styles.SearchView}
-          style={{display: this.state.showSearch? 'block': 'none'}}>
+          style={{ display: this.state.showSearch ? 'block' : 'none' }}>
           <form action="#" method="get" onSubmit={this.handleSearch}>
-            <input type="search" name="search" placeholder="search..." autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true"/>
+            <input type="search" name="search" placeholder="search..." autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true" />
           </form>
         </div>
         <canvas ref={c => this.canvas.is(c)}></canvas>
       </ToolbarView>
     );
   }
-    
+
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.handleScroll);
     this.canvas.init();
     setTimeout(this.handleResize, 20);
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("scroll", this.handleScroll);
   }
-  
+
   handleResize = () => {
     this.canvas.resize();
   }
-  
+
   handleScroll = () => {
     const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
     if (this.state.atTop && scrollTop > 10) {
-      this.setState({atTop: false});
-    }else if (scrollTop < 10 && !this.state.atTop) {
-      this.setState({atTop: true});
+      this.setState({ atTop: false });
+    } else if (scrollTop < 10 && !this.state.atTop) {
+      this.setState({ atTop: true });
     }
   }
 }
 
-class ToolbarCanvas
-{
+class ToolbarCanvas {
   canvas = null;
   ctx = null;
   width = null;
   height = null;
   loop = null;
-  
+
   headerHeight = 0;
   prevScroll = 0;
   drawLoopLock = 0;
   staticTime = 0;
-  
+
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
-  
+
   is = canvas => {
     this.canvas = canvas;
   }
-  
+
   init = () => {
     this.ctx = this.canvas.getContext("2d");
   }
-  
+
   resize = () => {
     this.headerHeight = document.documentElement.clientHeight;
     if (!this.canvas) return;
@@ -178,17 +177,17 @@ class ToolbarCanvas
       this.drawLoopLock = 1;
     }
   }
-  
+
   fill = (color) => {
     this.ctx.fillStyle = color;
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.fillRect(0, 0, this.width, this.height);
   }
-  
+
   draw = () => {
     if (document.body.classList.contains("x")) {
       this.fill('#000');
-    }else{
+    } else {
       const scrollTop = this.scrollTop();
       let a = 1.0;
       if (this.headerHeight) {
@@ -199,7 +198,7 @@ class ToolbarCanvas
       this.fill(`rgba(69, 157, 245, ${a})`);
     }
   }
-  
+
   drawLoop = () => {
     const scroll = this.scrollTop();
     if (this.prevScroll === scroll) {
@@ -207,14 +206,14 @@ class ToolbarCanvas
       if (this.staticTime === 100) {
         this.fill('transparent');
       }
-    }else{
+    } else {
       this.staticTime = 0;
       this.draw();
       this.prevScroll = scroll;
     }
     this.raf(this.drawLoop);
   }
-  
+
   animate = () => {
     let frame = 0;
     this.loop = setInterval(() => {
@@ -227,7 +226,7 @@ class ToolbarCanvas
       }
     }, 30);
   }
-  
+
   scrollTop = () => {
     return document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
   }

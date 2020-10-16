@@ -68,7 +68,7 @@ export class Menu extends React.Component {
 export class MenuList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {currentIndex: 0};
+    this.state = { currentIndex: 0 };
   }
 
   getItemList = () => {

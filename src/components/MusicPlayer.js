@@ -115,7 +115,7 @@ class MusicPlayer extends React.Component {
     const nextIndex = parseInt(this.playingIndex) + 1;
     if (nextIndex < this.playlist.length) {
       this.playByIndex(nextIndex);
-    }else{
+    } else {
       this.playByIndex(0);
     }
   }
@@ -124,7 +124,7 @@ class MusicPlayer extends React.Component {
     if (!window.sessionStorage) return;
     if (this.audio.ended) {
       sessionStorage.music_currentTime = 0;
-    }else{
+    } else {
       sessionStorage.music_currentTime = this.audio.currentTime;
     }
   }
@@ -146,9 +146,9 @@ class MusicPlayer extends React.Component {
     this.status.parentNode.appendChild(span);
     const containerStyle = getComputedStyle(this.status.parentNode);
     for (span.textContent = "#";
-      this.status.parentNode.offsetWidth - 
-        (parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight))
-         > span.getBoundingClientRect().width;
+      this.status.parentNode.offsetWidth -
+      (parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight))
+      > span.getBoundingClientRect().width;
       span.textContent += "#");
     this.textSpace = span.textContent.length - 1;
     this.status.parentNode.removeChild(span);
@@ -187,11 +187,11 @@ class MusicPlayer extends React.Component {
     playPromise.then(_ => {
       MessageHandler.log("bgm", "play started");
     })
-    .catch(error => {
-      if (error.name !== "NotAllowedError") {
-        MessageHandler.log("bgm", "play interruped: " + error);
-      }
-    });
+      .catch(error => {
+        if (error.name !== "NotAllowedError") {
+          MessageHandler.log("bgm", "play interruped: " + error);
+        }
+      });
   }
 
   handleClick = () => {
@@ -200,10 +200,10 @@ class MusicPlayer extends React.Component {
         sessionStorage.music_paused = null;
       if (this.audio.src) {
         this.callPlay();
-      }else{
+      } else {
         this.playByIndex(0);
       }
-    }else{
+    } else {
       if (window.sessionStorage) {
         sessionStorage.music_paused = "paused";
       }
@@ -229,7 +229,7 @@ class MusicPlayer extends React.Component {
       console.log(this.playlist);
       if (window.sessionStorage && sessionStorage.music_playingIndex) {
         this.playByIndex(sessionStorage.music_playingIndex);
-      }else{
+      } else {
         if (Config.autoplay) this.playByIndex(0);
       }
     });
