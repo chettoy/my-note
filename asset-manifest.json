@@ -6,8 +6,8 @@
     "runtime-main.js": "/my-note/static/js/runtime-main.c347fb7a.js",
     "runtime-main.js.map": "/my-note/static/js/runtime-main.c347fb7a.js.map",
     "static/css/2.2fdf272c.chunk.css": "/my-note/static/css/2.2fdf272c.chunk.css",
-    "static/js/2.6a89df2f.chunk.js": "/my-note/static/js/2.6a89df2f.chunk.js",
-    "static/js/2.6a89df2f.chunk.js.map": "/my-note/static/js/2.6a89df2f.chunk.js.map",
+    "static/js/2.9e60e87d.chunk.js": "/my-note/static/js/2.9e60e87d.chunk.js",
+    "static/js/2.9e60e87d.chunk.js.map": "/my-note/static/js/2.9e60e87d.chunk.js.map",
     "static/css/3.e609140e.chunk.css": "/my-note/static/css/3.e609140e.chunk.css",
     "static/js/3.eebbe29f.chunk.js": "/my-note/static/js/3.eebbe29f.chunk.js",
     "static/js/3.eebbe29f.chunk.js.map": "/my-note/static/js/3.eebbe29f.chunk.js.map",
@@ -19,12 +19,12 @@
     "static/css/2.2fdf272c.chunk.css.map": "/my-note/static/css/2.2fdf272c.chunk.css.map",
     "static/css/3.e609140e.chunk.css.map": "/my-note/static/css/3.e609140e.chunk.css.map",
     "static/css/main.569f2e14.chunk.css.map": "/my-note/static/css/main.569f2e14.chunk.css.map",
-    "static/js/2.6a89df2f.chunk.js.LICENSE.txt": "/my-note/static/js/2.6a89df2f.chunk.js.LICENSE.txt"
+    "static/js/2.9e60e87d.chunk.js.LICENSE.txt": "/my-note/static/js/2.9e60e87d.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c347fb7a.js",
     "static/css/2.2fdf272c.chunk.css",
-    "static/js/2.6a89df2f.chunk.js",
+    "static/js/2.9e60e87d.chunk.js",
     "static/css/main.569f2e14.chunk.css",
     "static/js/main.b3f96dda.chunk.js"
   ]
