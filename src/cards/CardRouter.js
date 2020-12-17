@@ -14,18 +14,21 @@ const getKey = location => {
 
 class CardRouter extends React.Component {
   render() {
+    const nodeRef = React.createRef();
     return (
       <Route
         render={({ location }) => (
           <TransitionGroup className='CardWrapper'>
-            <CSSTransition key={getKey(location)} classNames='router' timeout={500}>
-              <Switch location={location}>
-                <Route exact path='/' render={ContentPage} />
-                <Route path='/id/' render={ContentPage} />
-                <Route exact path='/test' render={TestPage} />
-                <Route exact path='/404' render={() => <div>Not Found</div>} />
-                <Redirect from='*' to='/' />
-              </Switch>
+            <CSSTransition key={getKey(location)} nodeRef={nodeRef} classNames='router' timeout={500}>
+              <div ref={nodeRef}>
+                <Switch location={location}>
+                  <Route exact path='/' render={ContentPage} />
+                  <Route path='/id/' render={ContentPage} />
+                  <Route exact path='/test' render={TestPage} />
+                  <Route exact path='/404' render={() => <div>Not Found</div>} />
+                  <Redirect from='*' to='/' />
+                </Switch>
+              </div>
             </CSSTransition>
           </TransitionGroup>
         )}

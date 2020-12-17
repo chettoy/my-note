@@ -112,13 +112,14 @@ class ContentPage extends React.Component {
   }
 
   render() {
+    const nodeRef = React.createRef();
     return (
       <div ref={this.viewRef}>
         <Route
           render={({ location, match }) => (
             <TransitionGroup>
-              <CSSTransition key={location.pathname} classNames='router' timeout={500}>
-                <ConContainer>
+              <CSSTransition key={location.pathname} nodeRef={nodeRef} classNames='router' timeout={500}>
+                <ConContainer ref={nodeRef}>
                   <Switch location={location}>
                     <Route
                       path={this.routes.list.path} exact

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { withRouter } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
@@ -105,6 +105,7 @@ class App extends React.Component {
   render() {
     return (
       <>
+      <HelmetProvider>
         <Helmet>
           <meta name='google' content='notranslate' />
           <title>mynote</title>
@@ -154,6 +155,7 @@ class App extends React.Component {
             </main>
           </Framework>
         </ThemeProvider>
+      </HelmetProvider>
       </>
     );
   }

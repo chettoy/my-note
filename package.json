@@ -4,28 +4,27 @@
   "private": true,
   "homepage": "https://chettoy.github.io/my-note",
   "dependencies": {
-    "@mdi/js": "^5.7.55",
+    "@mdi/js": "^5.8.55",
     "@mdi/react": "^1.4.0",
-    "axios": "^0.20.0",
-    "dompurify": "^2.1.1",
+    "axios": "^0.21.0",
+    "dompurify": "^2.2.4",
     "katex": "^0.12.0",
-    "marked": "^1.2.0",
+    "marked": "^1.2.7",
     "node-sass": "^4.14.1",
     "normalize.css": "^8.0.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-helmet": "^6.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-helmet-async": "^1.0.7",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "4.0.1",
     "react-transition-group": "^4.4.1",
-    "styled-components": "^5.2.0",
-    "typescript": "^4.0.3",
+    "styled-components": "^5.2.1",
+    "typescript": "^4.1.3",
     "velocity-animate": "^1.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build-sw": "node ./src/sw-build.js",
-    "build": "react-scripts build && npm run build-sw",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -46,7 +45,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "gh-pages": "^3.1.0",
-    "workbox-build": "^5.1.4"
+    "gh-pages": "^3.1.0"
   }
 }

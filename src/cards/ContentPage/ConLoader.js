@@ -3,8 +3,8 @@ import ConData from './ConData';
 
 class ConLoader {
   conDataCache = null;
-  //path = /.*\//.exec(window.location.pathname) + 'content';
-  path = 'https://cdn.jsdelivr.net/gh/chettoy/my-note@gh-pages/content';
+  path = /.*\//.exec(window.location.pathname) + 'content';
+  //path = 'https://cdn.jsdelivr.net/gh/chettoy/my-note@gh-pages/content';
 
   /*
    * load a content by id
