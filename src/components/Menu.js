@@ -56,9 +56,9 @@ export class Menu extends React.Component {
         </div>
         <div className={styles.MenuContainer}>
           {this.props.children}
-        </div>
-        <div className={styles.menuFooter}>
-          <span className={styles.copyright}>&copy; me</span>
+          <div className={styles.menuFooter}>
+            <span className={styles.copyright}>&copy; me</span>
+          </div>
         </div>
       </MrMenu>
     )

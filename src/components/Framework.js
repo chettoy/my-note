@@ -40,6 +40,7 @@ class Framework extends React.Component {
   bigScreen = false;
   menuPosX = -316;
   menuTempOpen = false;
+  scrollTop = 0;
   _menuMoveMode = true ? 'transform' : 'left';
   _menuMoving = false;
 
@@ -84,7 +85,7 @@ class Framework extends React.Component {
 
     window.addEventListener('resize', this.handleResize);
     document.body.addEventListener('touchstart', this.handleTouchStart);
-    document.body.addEventListener('touchmove', this.handleTouchMove);
+    document.body.addEventListener('touchmove', this.handleTouchMove, {passive: false});
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
@@ -123,6 +124,7 @@ class Framework extends React.Component {
   menuTouchPrevX = null;
   menuPrevLoopTime = null;
   menuDragSpeed = 0;
+  preventScroll = false;
 
   touchMoveLoop = () => {
     if (this.menuTouchFromX == null) return;
@@ -151,6 +153,7 @@ class Framework extends React.Component {
     const touch = event.targetTouches[0];
     this.prevTouchMenuPosX = this.menuPosX;
     if (touch.pageX < this.prevTouchMenuPosX + this.menuWidth + 20 && touch.pageY > 50) {
+      this.preventScroll = touch.pageX > (this.prevTouchMenuPosX + this.menuWidth);
       this.menuTouchFromX = touch.pageX;
       this.menuTouchPrevX = this.menuTouchFromX;
       this.menuDOM.classList.add(styles.touching);
@@ -166,8 +169,8 @@ class Framework extends React.Component {
     TopMask.onMotionMove(event);
     const touch = event.targetTouches[0];
     if (this.menuTouchFromX != null) {
+      if (this.preventScroll) event.preventDefault();
       this.menuTouchMoveX = touch.pageX;
-      return false;
     }
   }
 
@@ -302,12 +305,10 @@ class Framework extends React.Component {
   beforeOpenMenu = () => {
     if (this.bigScreen) return;
     this.spaceDOM.style.display = 'block';
-    document.body.style.overflow = 'hidden';
   }
 
   afterCloseMenu = () => {
     this.spaceDOM.style.display = 'none';
-    document.body.style.overflow = 'unset';
   }
 
   openMenu = callback => {

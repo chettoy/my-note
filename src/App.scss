@@ -1,8 +1,8 @@
 @import 'GlobalStyle.scss';
 
 body {
-  /* Disables pull-to-refresh but allows overscroll glow effects. */
-  overscroll-behavior-y: contain;
+  /* Disables pull-to-refresh and overscroll glow effects. */
+  overscroll-behavior: contain;
 
   &.x *:not(canvas) {
     background: #000 !important;

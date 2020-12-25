@@ -7,6 +7,14 @@
   top: 0;
   left: 0;
   box-sizing: border-box;
+  overflow-y: scroll;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   @media screen and (min-width:550px) {
     width: 16rem;
@@ -22,6 +30,7 @@
     position: absolute;
     right: 0.4rem;
     width: calc(100% - 0.4rem);
+    height: calc(100vh - 12rem + 5.2rem);
   }
 
   .menuHeader {
