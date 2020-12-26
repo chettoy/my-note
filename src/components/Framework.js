@@ -40,7 +40,6 @@ class Framework extends React.Component {
   bigScreen = false;
   menuPosX = -316;
   menuTempOpen = false;
-  scrollTop = 0;
   _menuMoveMode = true ? 'transform' : 'left';
   _menuMoving = false;
 
@@ -56,7 +55,7 @@ class Framework extends React.Component {
           getDOM: dom => this.menuDOM = dom
         });
       }
-      if (child.props.className === 'content') {
+      if (child.props && child.props.className === 'content') {
         return React.cloneElement(child, {
           ref: dom => this.conDOM = dom
         });
@@ -85,7 +84,7 @@ class Framework extends React.Component {
 
     window.addEventListener('resize', this.handleResize);
     document.body.addEventListener('touchstart', this.handleTouchStart);
-    document.body.addEventListener('touchmove', this.handleTouchMove, {passive: false});
+    document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
     this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
@@ -153,7 +152,7 @@ class Framework extends React.Component {
     const touch = event.targetTouches[0];
     this.prevTouchMenuPosX = this.menuPosX;
     if (touch.pageX < this.prevTouchMenuPosX + this.menuWidth + 20 && touch.pageY > 50) {
-      this.preventScroll = touch.pageX > (this.prevTouchMenuPosX + this.menuWidth);
+      this.preventScroll = touch.pageX > (this.prevTouchMenuPosX + this.menuWidth - 1);
       this.menuTouchFromX = touch.pageX;
       this.menuTouchPrevX = this.menuTouchFromX;
       this.menuDOM.classList.add(styles.touching);
@@ -169,7 +168,6 @@ class Framework extends React.Component {
     TopMask.onMotionMove(event);
     const touch = event.targetTouches[0];
     if (this.menuTouchFromX != null) {
-      if (this.preventScroll) event.preventDefault();
       this.menuTouchMoveX = touch.pageX;
     }
   }
@@ -305,10 +303,18 @@ class Framework extends React.Component {
   beforeOpenMenu = () => {
     if (this.bigScreen) return;
     this.spaceDOM.style.display = 'block';
+    const body = document.body;
+    if (!body.classList.contains(styles.preventScroll)) {
+      body.classList.add(styles.preventScroll);
+    }
   }
 
   afterCloseMenu = () => {
     this.spaceDOM.style.display = 'none';
+    const body = document.body;
+    if (body.classList.contains(styles.preventScroll)) {
+      body.classList.remove(styles.preventScroll);
+    }
   }
 
   openMenu = callback => {

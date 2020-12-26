@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
 import MessageHandler from './common/MessageHandler';
-import MyCommon from './common/MyCommon';
 import SnackBar from './common/SnackBar';
 import Toast from './common/SuperToast';
 import Loading from './components/Loading';
@@ -161,7 +160,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (MyCommon.isSnap) return;
     this.setState({ isLoading: false });
     this.updateProgress('app');
 
