@@ -152,6 +152,7 @@ class ToolbarCanvas {
   prevScroll = 0;
   drawLoopLock = 0;
   staticTime = 0;
+  delayTime = 0;
 
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
 
@@ -193,7 +194,7 @@ class ToolbarCanvas {
       if (this.headerHeight) {
         a = scrollTop / this.headerHeight;
         a = a.toFixed(2);
-        if (a > 1.0) a = 1.0;
+        if (a > 1.0) a = 0.0;
       }
       this.fill(`rgba(69, 157, 245, ${a})`);
     }
@@ -204,12 +205,24 @@ class ToolbarCanvas {
     if (this.prevScroll === scroll) {
       this.staticTime++;
       if (this.staticTime === 100) {
-        this.fill('transparent');
+        //this.fill('transparent');
+      } else if (this.staticTime > 9999999) {
+        this.staticTime = 101;
       }
     } else {
       this.staticTime = 0;
-      this.draw();
+      if ((this.prevScroll - this.headerHeight) * (scroll - this.headerHeight) < 0) {
+        this.delayTime = 60;
+      }
+      if (this.delayTime === 0) this.draw();
       this.prevScroll = scroll;
+    }
+    if (this.delayTime > 0) {
+      this.delayTime--;
+      if (this.delayTime === 0) {
+        //this.draw(); //the first frame after delay
+        //draw it at next scrolling
+      }
     }
     this.raf(this.drawLoop);
   }

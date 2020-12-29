@@ -20,30 +20,8 @@ const ConContainer = styled(Card)`
   padding: 0;
   width: auto;
   height: auto;
-  font-size: 1rem;
-  line-height: 1.5rem;
   @media screen and (max-width:549px) {
     padding: 0 0.375rem;
-  }
-  h1 {
-    font-size: 1.5rem;
-  }
-  a.con-preview {
-    color: #2196f3;
-    font-size: 1.5rem;
-  }
-  iframe, video, img {
-    max-width: 100%;
-    height: auto;
-  }
-  blockquote {
-    margin: 0;
-    padding: 0.3rem 0.5rem;
-    border-left: 0.25rem solid #0c0;
-    background: #f5f2f0;
-  }
-  pre {
-    overflow: auto;
   }
 `;
 

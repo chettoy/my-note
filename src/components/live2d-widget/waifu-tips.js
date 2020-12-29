@@ -134,10 +134,10 @@ function loadWidget(config) {
       .then(response => response.json())
       .then(result => {
         let text = `这句一言来自 <span>「${result.from}」</span>，是 <span>${result.creator}</span> 在 hitokoto.cn 投稿的。`;
-        showMessage(result.hitokoto, 6000, 9);
+        showMessage(result.hitokoto, 12000, 9);
         setTimeout(() => {
           showMessage(text, 4000, 9);
-        }, 6000);
+        }, 12000);
       });
   }
 
