@@ -1,12 +1,4 @@
 .DrawerView {
-  .menu.animating {
-    transition: all .25s ease;
-  }
-
-  .content.animating {
-    transition: width .25s ease;
-  }
-
   .touching {
     transition-duration: 0s !important;
   }
@@ -14,7 +6,6 @@
   .menu {
     z-index: 116;
     transform: translate3d(0, 0, 0);
-    filter: blur(var(--m-motion-blur, 0px));
   }
 
   .content {

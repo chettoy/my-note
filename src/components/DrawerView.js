@@ -2,7 +2,7 @@ import React from 'react';
 import Velocity from 'velocity-animate';
 import Toolbar from './Toolbar';
 import Menu from './Menu';
-import styles from './Framework.module.scss';
+import styles from './DrawerView.module.scss';
 
 class Framework extends React.Component {
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);

@@ -7,7 +7,7 @@ import MessageHandler from './common/MessageHandler';
 import SnackBar from './common/SnackBar';
 import Toast from './common/SuperToast';
 import Loading from './components/Loading';
-import Framework from './components/Framework';
+import DrawerView from './components/DrawerView';
 import Toolbar from './components/Toolbar';
 import { Menu, MenuList } from './components/Menu';
 import FloatActionButton from './components/FloatActionButton';
@@ -32,17 +32,15 @@ BackgroundCanvas.defaultProps = { theme: { AppBackground: '#e0e0e0' } };
 
 
 class App extends React.Component {
-  view = null;
+  drawerView = null;
   themeList = [Light, Dark];
   loadSet = new Set(['app', 'bg']);
 
   constructor(props) {
     super(props);
-    try {
-      this.sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
-    } catch (e) { }
     this.state = {
       isLoading: true,
+      isViewMode: false,
       currentTheme: 0
     };
     MessageHandler.init({
@@ -51,25 +49,16 @@ class App extends React.Component {
         const text = `[${tag}] ${msg}`;
         console.log(text);
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+      },
+      changeTheme: () => {
+        this.changeTheme();
+      },
+      toggleViewMode: (isEnable, callback) => {
+        if (isEnable === true || isEnable === false) {
+          this.setState({isViewMode: isEnable}, callback);
+        }
       }
     });
-  }
-
-  getTheme = () => this.themeList[this.state.currentTheme];
-
-  updateProgress = item => {
-    if (!this.loadSet.has(item)) return;
-    this.loadSet.delete(item);
-    const progress = window.NProgress; // imported in index.html
-    if (!progress) {
-      console.log('NProgress not found');
-      return;
-    }
-    if (this.loadSet.size > 0) {
-      progress.inc();
-    } else {
-      progress.done();
-    }
   }
 
   handleSearch = str => {
@@ -92,7 +81,34 @@ class App extends React.Component {
     toast('search ' + str);
   }
 
-  goTo = path => {
+  getTheme() {
+    return this.themeList[this.state.currentTheme];
+  }
+
+  changeTheme() {
+    if (this.state.currentTheme < this.themeList.length - 1) {
+      this.setState({ currentTheme: this.state.currentTheme + 1 });
+    } else {
+      this.setState({ currentTheme: 0 });
+    }
+  }
+
+  updateProgress(item) {
+    if (!this.loadSet.has(item)) return;
+    this.loadSet.delete(item);
+    const progress = window.NProgress; // imported in index.html
+    if (!progress) {
+      console.log('NProgress not found');
+      return;
+    }
+    if (this.loadSet.size > 0) {
+      progress.inc();
+    } else {
+      progress.done();
+    }
+  }
+
+  goTo(path) {
     if (path === this.props.location.pathname) return;
     if (path === '/') {
       this.props.history.goBack();
@@ -110,9 +126,12 @@ class App extends React.Component {
           <title>mynote</title>
         </Helmet>
         <ThemeProvider theme={this.getTheme()}>
-          <Framework ref={instance => this.view = instance}>
+          <DrawerView ref={instance => this.drawerView = instance}>
             <BackgroundCanvas />
-            <Toolbar statusBarHeight={ClientUtils.getStatusBarHeight()} onSearch={this.handleSearch} />
+            <Toolbar
+              statusBarHeight={ClientUtils.getStatusBarHeight()}
+              toolbarAttach={this.state.isViewMode}
+              onSearch={this.handleSearch} />
             <Menu>
               <React.Suspense fallback={<Loading />}>
                 {this.state.isLoading ? null : <MusicPlayer />}
@@ -121,9 +140,9 @@ class App extends React.Component {
                 <li onClick={() => this.goTo('/')}>item1</li>
                 <li onClick={() => {
                   SnackBar.make(null, 'test', -1)
-                    .setOnShowed(this.view.closeMenu)
+                    .setOnShowed(this.drawerView.closeMenu)
                     .show();
-                  setTimeout(this.view.closeMenu, 2000);
+                  setTimeout(this.drawerView.closeMenu, 2000);
                 }}>item2</li>
                 <li onClick={() => {
                   if (document.body.classList.contains("x")) {
@@ -132,15 +151,9 @@ class App extends React.Component {
                     document.body.classList.add("x");
                   }
                 }}>item3</li>
-                <li onClick={() => {
-                  if (this.state.currentTheme < this.themeList.length - 1) {
-                    this.setState({ currentTheme: this.state.currentTheme + 1 });
-                  } else {
-                    this.setState({ currentTheme: 0 });
-                  }
-                }}>item4</li>
+                <li onClick={() => this.changeTheme()}>item4</li>
                 {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
-                <li onClick={() => this.view.closeMenu()}>close</li>
+                <li onClick={() => this.drawerView.closeMenu()}>close</li>
               </MenuList>
             </Menu>
             <main className='content'>
@@ -149,10 +162,10 @@ class App extends React.Component {
                 <div onClick={() => this.goTo('/test')}>2</div>
                 <div>3</div>
               </FloatActionButton>
-              <Banner />
+              {this.state.isViewMode || <Banner />}
               {this.state.isLoading || <CardRouter />}
             </main>
-          </Framework>
+          </DrawerView>
         </ThemeProvider>
       </HelmetProvider>
       </>
@@ -195,7 +208,7 @@ class App extends React.Component {
         if (sessionStorageSupported) {
           sessionStorage.show_welcome = true;
         }
-        SnackBar.make(this.view.conDOM, "Welcome", SnackBar.LENGTH_LONG).show();
+        SnackBar.make(this.drawerView.conDOM, "Welcome", SnackBar.LENGTH_LONG).show();
       }, 1500);
     }
   }

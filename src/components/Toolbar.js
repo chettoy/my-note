@@ -9,7 +9,7 @@ import styles from './Toolbar.module.scss';
 const ToolbarView = styled.div.attrs({
   className: styles.ToolbarView
 })`
-  background-color: transparent;//#2196f3;
+  position: ${props => props.toolbarAttach ? 'absolute' : 'fixed'};
   top: ${props => props.statusBarHeight}px;
   
   ${c2s(styles.MenuIcon)},
@@ -50,7 +50,9 @@ ToolbarView.defaultProps = {
   theme: {
     ToolbarIconColor: "white",
     TitleColor: "white"
-  }
+  },
+  statusBarHeight: 0,
+  toolbarAttach: false
 };
 
 class Toolbar extends React.Component {
@@ -89,7 +91,9 @@ class Toolbar extends React.Component {
 
   render() {
     return (
-      <ToolbarView statusBarHeight={this.props.statusBarHeight}>
+      <ToolbarView
+        statusBarHeight={this.props.statusBarHeight}
+        toolbarAttach={this.props.toolbarAttach}>
         <StatusBar statusBarHeight={this.props.statusBarHeight} />
         <span className={styles.MenuIcon}
           onClick={this.handleMenuClick}
@@ -101,7 +105,7 @@ class Toolbar extends React.Component {
         <span className={styles.Title}><a href=".">MyNote</a></span>
         <span className={styles.SearchIcon}
           onClick={this.handleSearchClick}
-          style={{ opacity: this.state.atTop ? 0 : 1 }}>
+          style={{ opacity: this.state.atTop && (!this.props.toolbarAttach) ? 0 : 1 }}>
           <Icon path={mdiMagnify} />
         </span>
         <div className={styles.SearchView}
@@ -117,14 +121,18 @@ class Toolbar extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
-    window.addEventListener("scroll", this.handleScroll);
+    if (!this.props.toolbarAttach) {
+      window.addEventListener("scroll", this.handleScroll);
+    }
     this.canvas.init();
     setTimeout(this.handleResize, 20);
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
-    window.removeEventListener("scroll", this.handleScroll);
+    if (!this.props.toolbarAttach) {
+      window.removeEventListener("scroll", this.handleScroll);
+    }
   }
 
   handleResize = () => {
