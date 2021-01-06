@@ -35,9 +35,9 @@ class ConData {
       this.__html = this.__process(con.substr(r1[0].length));
     } else {
       this.__html = this.__process(con);
-      const r = /<h1[\s\S]*>([\s\S]*)<\/h1>/.exec(this.__html);
-      if (r != null && r.length > 1) {
-        this.__title = r[1];
+      const r = /^\s*<h([1-3])[\s\S]*>([\s\S]*)<\/h\1>/.exec(this.__html);
+      if (r != null && r.length > 2) {
+        this.__title = r[2];
       }
     }
   }

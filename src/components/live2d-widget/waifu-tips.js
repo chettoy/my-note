@@ -6,16 +6,18 @@ const loadlive2d = window['loadlive2d'];
 function loadWidget(config) {
   let { waifuPath, apiPath, cdnPath } = config;
   let useCDN = false, modelList;
+  if (typeof apiPath === 'string') {
+    if (!apiPath.endsWith('/')) apiPath += '/';
+  }
   if (typeof cdnPath === 'string') {
     useCDN = true;
     if (!cdnPath.endsWith('/')) cdnPath += '/';
   }
-  if (!apiPath.endsWith('/')) apiPath += '/';
   localStorage.removeItem('waifu-display');
   sessionStorage.removeItem('waifu-text');
   document.body.insertAdjacentHTML('beforeend', `<div id='waifu'>
       <div id='waifu-tips'></div>
-      <canvas id='live2d' width='200' height='200'></canvas>
+      <canvas id='live2d' width='500' height='500'></canvas>
       <div id='waifu-tool'>
         <span class='fa fa-lg fa-comment'></span>
         <span class='fa fa-lg fa-paper-plane'></span>
@@ -260,18 +262,12 @@ function loadWidget(config) {
   return { showMessage };
 }
 
-function initWidget(config, apiPath = '/') {
+function initWidget(config) {
   return new Promise((resolve, reject) => {
-    if (typeof config === 'string') {
-      config = {
-        waifuPath: config,
-        apiPath
-      };
-    }
     document.body.insertAdjacentHTML('beforeend', `<div id='waifu-toggle'>
       <span>看板娘</span>
       </div>`);
-    let toggle = document.getElementById('waifu-toggle');
+    const toggle = document.getElementById('waifu-toggle');
     toggle.addEventListener('click', () => {
       toggle.classList.remove('waifu-toggle-active');
       if (toggle.getAttribute('first-time')) {
@@ -316,4 +312,4 @@ console.log(`
                   'ｰ'    !_,.:
 `);
 
-export { initWidget };
+export { initWidget, loadWidget };

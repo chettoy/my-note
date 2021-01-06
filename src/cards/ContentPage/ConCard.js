@@ -1,34 +1,30 @@
 import styled from 'styled-components/macro';
 import CardView from '../../components/CardView';
 
-const ConCard = styled(CardView)`
-  font-size: calc(10px + 2vmin);
-  line-height: 1.7em;
-  h1 {
-    font-size: 1.5rem;
-  }
-  .con-preview {
-    line-height: 1.7rem;
-  }
-  a.con-preview {
+const ConCard = styled(CardView).attrs({className: 'typo'})`
+  font-size: 1rem;
+  line-height: 1.5em;
+  
+  a.post-title-link {
     color: #2196f3;
-    font-size: 1.5rem;
+    border-bottom-color: #2196f3;
+    margin: 1rem 0;
+    display: inline-block;
   }
-  p.con-preview {
-    font-size: 1rem;
+  
+  p {
+    white-space: pre-line;
   }
-  iframe, video, img {
-    max-width: 100%;
-    height: auto;
-  }
-  blockquote {
-    margin: 0;
-    padding: 0.3rem 0.5rem;
-    border-left: 0.25rem solid #0c0;
-    background: #f5f2f0;
-  }
+  
   pre {
+    background: ${props => props.theme.PreBlockBackground};
     overflow: auto;
+  }
+  
+  strong, b,
+  h1, h2, h3, h4, h5, h6,
+  em, legend, caption {
+    color: ${props => props.theme.TextEmColor};
   }
   
   width: 40rem;
@@ -41,5 +37,12 @@ const ConCard = styled(CardView)`
     width: 70rem;
   }
 `;
+
+ConCard.defaultProps = {
+  theme: {
+    PreBlockBackground: "#f8f8f8",
+    TextEmColor: "#000"
+  }
+};
 
 export default ConCard;

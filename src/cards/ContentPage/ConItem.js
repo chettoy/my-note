@@ -16,7 +16,7 @@ class ConItem extends React.Component {
     if (title) {
       let text = DOMPurify.sanitize(data.getHtml(), { ALLOWED_TAGS: [], KEEP_CONTENT: true });
       if (text.substr(0, title.length) === title) {
-        text = text.substr(title.length, text.length);
+        text = text.substr(title.length, text.length).trim();
       }
       if (text.length > 100) {
         text = `${text.substr(0, 100)}...`;

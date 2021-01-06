@@ -2,6 +2,7 @@ const Theme = {
   AppBackground: "#282c34",
   CardColor: "rgba(32,33,36,0.92)",
   TextColor: "rgba(255,255,255,0.87)",
+  TextEmColor: "#fff",
   FabColor: "#ff4081",
   FabIconColor: "white",
   FabMenuColor: "#66ccff",
@@ -10,6 +11,7 @@ const Theme = {
   MenuTextColor: "rgba(0,0,0,0.87)",
   ItemActiveTextColor: "#2196f3",
   ItemActiveColor: "#ddd",
+  PreBlockBackground: "transparent",
   StatusBarColor: "#2196f3",
   ToolbarIconColor: "white",
   TitleColor: "white"

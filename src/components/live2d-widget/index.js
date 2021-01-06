@@ -25,7 +25,7 @@ class Live2dWidget {
   static proxy = null;
   static load = () => loadExternalResource(live2d_path + 'live2d.min.js', 'js')
     .then(() => import('./waifu-tips'))
-    .then(({ initWidget }) => initWidget({
+    .then(({ loadWidget }) => loadWidget({
       waifuPath: live2d_path + 'waifu-tips.json',
       apiPath: 'https://live2d.fghrsh.net/api/',
       //cdnPath: 'https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/'
