@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { withRouter } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
@@ -119,56 +118,48 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
-      <HelmetProvider>
-        <Helmet>
-          <meta name='google' content='notranslate' />
-          <title>mynote</title>
-        </Helmet>
-        <ThemeProvider theme={this.getTheme()}>
-          <DrawerView ref={instance => this.drawerView = instance}>
-            <BackgroundCanvas />
-            <Toolbar
-              statusBarHeight={ClientUtils.getStatusBarHeight()}
-              toolbarAttach={this.state.isViewMode}
-              onSearch={this.handleSearch} />
-            <Menu>
-              <React.Suspense fallback={<Loading />}>
-                {this.state.isLoading ? null : <MusicPlayer />}
-              </React.Suspense>
-              <MenuList>
-                <li onClick={() => this.goTo('/')}>item1</li>
-                <li onClick={() => {
-                  SnackBar.make(null, 'test', -1)
-                    .setOnShowed(this.drawerView.closeMenu)
-                    .show();
-                  setTimeout(this.drawerView.closeMenu, 2000);
-                }}>item2</li>
-                <li onClick={() => {
-                  if (document.body.classList.contains("x")) {
-                    document.body.classList.remove("x");
-                  } else {
-                    document.body.classList.add("x");
-                  }
-                }}>item3</li>
-                <li onClick={() => this.changeTheme()}>item4</li>
-                {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
-                <li onClick={() => this.drawerView.closeMenu()}>close</li>
-              </MenuList>
-            </Menu>
-            <main className='content'>
-              <FloatActionButton>
-                <div onClick={() => toast('test')}>1</div>
-                <div onClick={() => this.goTo('/test')}>2</div>
-                <div>3</div>
-              </FloatActionButton>
-              {this.state.isViewMode || <Banner />}
-              {this.state.isLoading || <CardRouter />}
-            </main>
-          </DrawerView>
-        </ThemeProvider>
-      </HelmetProvider>
-      </>
+      <ThemeProvider theme={this.getTheme()}>
+        <DrawerView ref={instance => this.drawerView = instance}>
+          <BackgroundCanvas />
+          <Toolbar
+            statusBarHeight={ClientUtils.getStatusBarHeight()}
+            toolbarAttach={this.state.isViewMode}
+            onSearch={this.handleSearch} />
+          <Menu>
+            <React.Suspense fallback={<Loading />}>
+              {this.state.isLoading ? null : <MusicPlayer />}
+            </React.Suspense>
+            <MenuList>
+              <li onClick={() => this.goTo('/')}>item1</li>
+              <li onClick={() => {
+                SnackBar.make(null, 'test', -1)
+                  .setOnShowed(this.drawerView.closeMenu)
+                  .show();
+                setTimeout(this.drawerView.closeMenu, 2000);
+              }}>item2</li>
+              <li onClick={() => {
+                if (document.body.classList.contains("x")) {
+                  document.body.classList.remove("x");
+                } else {
+                  document.body.classList.add("x");
+                }
+              }}>item3</li>
+              <li onClick={() => this.changeTheme()}>item4</li>
+              {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
+              <li onClick={() => this.drawerView.closeMenu()}>close</li>
+            </MenuList>
+          </Menu>
+          <main className='content'>
+            <FloatActionButton>
+              <div onClick={() => toast('test')}>1</div>
+              <div onClick={() => this.goTo('/test')}>2</div>
+              <div>3</div>
+            </FloatActionButton>
+            {this.state.isViewMode || <Banner />}
+            {this.state.isLoading || <CardRouter />}
+          </main>
+        </DrawerView>
+      </ThemeProvider>
     );
   }
 
@@ -198,18 +189,24 @@ class App extends React.Component {
         styleTag[0].parentNode.removeChild(styleTag[0]);
     })();
 
-    //init live2d
-    if (Config.loadLive2d) Live2dWidget.load();
+    const showWelcome = () => {
+      const sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
+      if ((!sessionStorageSupported) || sessionStorage.show_welcome === undefined) {
+        setTimeout(() => {
+          if (sessionStorageSupported) {
+            sessionStorage.show_welcome = true;
+          }
+          SnackBar.make(this.drawerView.conDOM, "Welcome", SnackBar.LENGTH_LONG).show();
+        }, 1500);
+      }
+    };
 
-    //show welcome
-    const sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
-    if ((!sessionStorageSupported) || sessionStorage.show_welcome === undefined) {
-      setTimeout(() => {
-        if (sessionStorageSupported) {
-          sessionStorage.show_welcome = true;
-        }
-        SnackBar.make(this.drawerView.conDOM, "Welcome", SnackBar.LENGTH_LONG).show();
-      }, 1500);
+    if (Config.loadLive2d) {
+      Live2dWidget.load().then(() => {
+        setTimeout(showWelcome, 1000);
+      });
+    } else {
+      showWelcome();
     }
   }
 }

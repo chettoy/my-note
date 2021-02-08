@@ -14,6 +14,13 @@ class Framework extends React.Component {
   menuTempOpen = false;
   _menuMoveMode = true ? 'transform' : 'left';
   _menuMoving = false;
+  preventScrollMode = (() => {
+    const ua = navigator.userAgent;
+    if (ua.indexOf('Gecko/') > -1 && ua.indexOf('Firefox/') > -1) {
+      return 'firefox'; //body{overflow:hidden} on mobile cause problem
+    }
+    return 'default';
+  })();
 
   getChildren =
     _ => React.Children.map(this.props.children, child => {
@@ -54,7 +61,7 @@ class Framework extends React.Component {
     this.conDOM.classList.add(styles.content);
 
     window.addEventListener('resize', this.handleResize);
-    document.body.addEventListener('touchstart', this.handleTouchStart);
+    document.body.addEventListener('touchstart', this.handleTouchStart, {passive: this.preventScrollMode != 'firefox'});
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
@@ -121,7 +128,9 @@ class Framework extends React.Component {
     const touch = event.targetTouches[0];
     this.prevTouchMenuPosX = this.menuPosX;
     if (touch.pageX < this.prevTouchMenuPosX + this.menuWidth + 20 && touch.pageY > 50) {
-      this.preventScroll = touch.pageX > (this.prevTouchMenuPosX + this.menuWidth - 1);
+      if (touch.pageX > (this.prevTouchMenuPosX + this.menuWidth - 1)) {
+        event.preventDefault();
+      }
       this.menuTouchFromX = touch.pageX;
       this.menuTouchPrevX = this.menuTouchFromX;
       this.menuDOM.classList.add(styles.touching);
@@ -272,9 +281,11 @@ class Framework extends React.Component {
     if (this.spaceDOM.style.display !== 'block') {
       this.spaceDOM.style.display = 'block';
     }
-    const body = document.body;
-    if (!body.classList.contains(styles.preventScroll)) {
-      body.classList.add(styles.preventScroll);
+    if (this.preventScrollMode != 'firefox') {
+      const body = document.body;
+      if (!body.classList.contains(styles.preventScroll)) {
+        body.classList.add(styles.preventScroll);
+      }
     }
   }
 
@@ -282,9 +293,11 @@ class Framework extends React.Component {
     if (this.spaceDOM.style.display !== 'none') {
       this.spaceDOM.style.display = 'none';
     }
-    const body = document.body;
-    if (body.classList.contains(styles.preventScroll)) {
-      body.classList.remove(styles.preventScroll);
+    if (this.preventScrollMode != 'firefox') {
+      const body = document.body;
+      if (body.classList.contains(styles.preventScroll)) {
+        body.classList.remove(styles.preventScroll);
+      }
     }
   }
 

@@ -30,7 +30,7 @@ const ConCard = styled(CardView).attrs({className: 'typo'})`
   width: 40rem;
   max-width: 100%;
   
-  @media screen and (min-width: 100rem) {
+  @media screen and (min-width: 90rem) {
     width: 50rem;
   }
   @media screen and (min-width: 120rem) {

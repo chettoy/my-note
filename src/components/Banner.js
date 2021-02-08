@@ -1,5 +1,4 @@
 import React from 'react';
-import MyCommon from '../common/MyCommon';
 import Loading from './Loading';
 import styles from './Banner.module.scss';
 
@@ -11,20 +10,25 @@ class Banner extends React.Component {
 
   render() {
     return (
-      <header className={styles.BannerView}>
-        <span className={styles.con}>
-          <span>...</span><br />
-          <i>under construction</i>
-        </span>
-        <span className={styles.bottom}>
-          {this.state.loaded || <Loading />}
-        </span>
-      </header>
+      <div className={styles.BannerWrapper}>
+        <header className={styles.BannerView}>
+          <span className={styles.con}>
+            <span>...</span><br />
+            <i>under construction</i>
+          </span>
+          <span className={styles.bottom}>
+            {this.state.loaded || <Loading />}
+          </span>
+        </header>
+      </div>
     );
   }
 
   componentDidMount() {
-    if (MyCommon.isSnap) return;
+    window.addEventListener('resize', () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
     this.setState({ loaded: true });
   }
 }

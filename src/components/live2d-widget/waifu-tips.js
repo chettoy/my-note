@@ -88,7 +88,7 @@ function loadWidget(config) {
       document.getElementById('waifu').style.bottom = '-500px';
       setTimeout(() => {
         document.getElementById('waifu').style.display = 'none';
-        document.getElementById('waifu-toggle').classList.add('waifu-toggle-active');
+        //document.getElementById('waifu-toggle').classList.add('waifu-toggle-active');
       }, 3000);
     });
     let devtools = () => {};

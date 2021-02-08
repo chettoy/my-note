@@ -160,12 +160,13 @@ class SnackBar {
         obj.view = el;
         obj.top = getComputedStyle(el)['top'];
         obj.bottom = getComputedStyle(el)['bottom'];
+        const moveUp = view.offsetHeight + parseFloat(getComputedStyle(view)['margin-bottom']);
         if (obj.bottom !== 'auto') {
-          Velocity(el, { bottom: parseInt(obj.bottom) + view.offsetHeight + 'px' });
+          Velocity(el, { bottom: parseFloat(obj.bottom) + moveUp + 'px' });
         } else if (obj.top !== 'auto') {
-          Velocity(el, { top: parseInt(obj.top) - view.offsetHeight + 'px' });
+          Velocity(el, { top: parseFloat(obj.top) - moveUp + 'px' });
         } else {
-          Velocity(el, { bottom: view.offsetHeight + 'px' });
+          Velocity(el, { bottom: moveUp + 'px' });
         }
         let has = false;
         for (const i in SnackBar.affectedFAB) {
