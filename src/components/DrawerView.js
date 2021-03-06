@@ -61,7 +61,7 @@ class Framework extends React.Component {
     this.conDOM.classList.add(styles.content);
 
     window.addEventListener('resize', this.handleResize);
-    document.body.addEventListener('touchstart', this.handleTouchStart, {passive: this.preventScrollMode != 'firefox'});
+    document.body.addEventListener('touchstart', this.handleTouchStart, {passive: this.preventScrollMode !== 'firefox'});
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
@@ -281,7 +281,7 @@ class Framework extends React.Component {
     if (this.spaceDOM.style.display !== 'block') {
       this.spaceDOM.style.display = 'block';
     }
-    if (this.preventScrollMode != 'firefox') {
+    if (this.preventScrollMode !== 'firefox') {
       const body = document.body;
       if (!body.classList.contains(styles.preventScroll)) {
         body.classList.add(styles.preventScroll);
@@ -293,7 +293,7 @@ class Framework extends React.Component {
     if (this.spaceDOM.style.display !== 'none') {
       this.spaceDOM.style.display = 'none';
     }
-    if (this.preventScrollMode != 'firefox') {
+    if (this.preventScrollMode !== 'firefox') {
       const body = document.body;
       if (body.classList.contains(styles.preventScroll)) {
         body.classList.remove(styles.preventScroll);
