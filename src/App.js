@@ -167,21 +167,19 @@ class App extends React.Component {
     this.setState({ isLoading: false });
     this.updateProgress('app');
 
-    //check background image load state
+    //check if background image loading
     (() => {
-      const bgMatch = this.getTheme().AppBackground.match(/url\((['"])(.+)\1\)/);
-      if (!bgMatch) return;
-      const url = bgMatch[2];
+      const matchBgUrl = this.getTheme().AppBackground.match(/url\((['"])(.+)\1\)/);
+      if (!matchBgUrl) return false;
+      const url = matchBgUrl[2];
       const img = new Image();
       img.src = url;
-      if (img.complete) {
+      if (img.complete) return false;
+      img.onload = () => {
         this.updateProgress('bg');
-      } else {
-        img.onload = () => {
-          this.updateProgress('bg');
-        }
       }
-    })();
+      return true;
+    })() || this.updateProgress('bg');
 
     //delete the pre-rendered style
     ((styleTag = document.querySelectorAll('style[data-styled]')) => {
