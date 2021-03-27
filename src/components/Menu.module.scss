@@ -9,19 +9,20 @@
   box-sizing: border-box;
   overflow-y: scroll;
   overscroll-behavior-y: contain;
-  scrollbar-width: none; /* firefox */
-  -ms-overflow-style: none; /* IE 10+ */
 
-  ::-webkit-scrollbar {
+  /* Hide scrollbar */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  &::-webkit-scrollbar { /* Chrome, Safari and Opera */
     display: none;
   }
 
-  @media screen and (min-width:550px) {
+  @media screen and (min-width: 550px) {
     width: 16rem;
     max-width: 50%;
   }
 
-  @media screen and (max-width:549px) {
+  @media screen and (max-width: 549px) {
     width: 70%;
     box-shadow: 0.125rem 0 1rem rgba(0, 0, 0, 0.5);
   }
@@ -39,7 +40,7 @@
     max-height: 30%;
     position: relative;
     text-align: center;
-    background: linear-gradient(to left, #0066FF, #00FFBF, #B3FF19);
+    background: linear-gradient(to left, #0066ff, #00ffbf, #b3ff19);
 
     span {
       position: absolute;
@@ -65,10 +66,10 @@
     background: transparent;
   }
 
-  ul li.active {
-    //color: #2196f3;
-    //background: #ddd;
-  }
+  // ul li.active {
+  //   color: #2196f3;
+  //   background: #ddd;
+  // }
 
   .menuFooter {
     padding: 0 0.5rem;

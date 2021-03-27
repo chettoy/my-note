@@ -1,5 +1,5 @@
-@import 'GlobalStyle.scss';
-@import 'typo.scss';
+@import "GlobalStyle.scss";
+@import "typo.scss";
 
 body {
   /* Disables pull-to-refresh and overscroll glow effects. */
@@ -40,7 +40,7 @@ canvas.bg {
     bottom: 1rem;
     font-size: 1rem;
     z-index: 103;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
 
   .CardWrapper {
@@ -58,7 +58,7 @@ canvas.bg {
 }
 
 .router-enter-active {
-  transition: all .5s;
+  transition: all 0.5s;
   opacity: 1;
 }
 
@@ -67,6 +67,6 @@ canvas.bg {
 }
 
 .router-exit-active {
-  transition: all .5s;
+  transition: all 0.5s;
   opacity: 0;
 }

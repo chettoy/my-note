@@ -54,7 +54,7 @@ class App extends React.Component {
       },
       toggleViewMode: (isEnable, callback) => {
         if (isEnable === true || isEnable === false) {
-          this.setState({isViewMode: isEnable}, callback);
+          this.setState({ isViewMode: isEnable }, callback);
         }
       }
     });
