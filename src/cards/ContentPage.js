@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import Velocity from 'velocity-animate';
-import Card from './Card';
+import PageCard from './PageCard';
 import ConLoader from './ContentPage/ConLoader';
 import ConList from './ContentPage/ConList';
 import ConDetail from './ContentPage/ConDetail';
@@ -13,7 +13,7 @@ import 'katex/contrib/copy-tex/copy-tex.js';
 import 'katex/contrib/copy-tex/copy-tex.css';
 import 'katex/contrib/mhchem/mhchem.js';
 
-const ConContainer = styled(Card)`
+const ConContainer = styled(PageCard)`
   background: transparent;
   box-shadow: none;
   margin: 0;

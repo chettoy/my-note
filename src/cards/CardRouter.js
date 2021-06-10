@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import TestPage from './TestPage';
 import ContentPage from './ContentPage';
+import Dashboard from './Dashboard/Dashboard';
 
 const getKey = location => {
   const path = location.pathname;
@@ -24,6 +25,7 @@ class CardRouter extends React.Component {
                 <Switch location={location}>
                   <Route exact path='/' render={ContentPage} />
                   <Route path='/id/' render={ContentPage} />
+                  <Route exact path='/dash' render={Dashboard} />
                   <Route exact path='/test' render={TestPage} />
                   <Route exact path='/404' render={() => <div>Not Found</div>} />
                   <Redirect from='*' to='/' />
