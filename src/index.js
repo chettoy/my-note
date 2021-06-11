@@ -7,9 +7,9 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 function loadLocaleData(locale) {
   switch (locale) {
     case 'zh':
-      return import('lang/zh.json')
+      return import('./lang/zh.json')
     default:
-      return import('lang/en.json')
+      return import('./lang/en.json')
   }
 }
 
