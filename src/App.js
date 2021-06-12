@@ -128,15 +128,13 @@ class App extends React.Component {
     if (this.state.currentLocale === 'en') {
       const messages = this.state.localeMessages;
       if (!messages['zh']) {
-        const snackbar = SnackBar.make(null, 'Load language pack...', SnackBar.LENGTH_IMMEDIATE);
+        SnackBar.make(null, 'Load language pack...', SnackBar.LENGTH_LONG).show();
         this.progress.newToLoad('lang-zh');
         import('./lang/compiled/zh.json').then(mod => {
           this.progress.loaded('lang-zh');
           messages['zh'] = mod.default;
           this.setState({ currentLocale: 'zh', localeMessages: messages });
-          snackbar.dismiss();
         });
-        snackbar.show();
       } else {
         this.setState({ currentLocale: 'zh' });
       }
