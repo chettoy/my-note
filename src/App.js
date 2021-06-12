@@ -14,6 +14,7 @@ import FloatActionButton from './components/FloatActionButton';
 import Banner from './components/Banner';
 import Live2dWidget from './components/live2d-widget';
 import CardRouter from './cards/CardRouter';
+import EnglishMessages from './lang/en.json';
 import Dark from './themes/Dark';
 import Light from './themes/Light';
 import Config from './Config';
@@ -31,17 +32,55 @@ const BackgroundCanvas = styled.canvas.attrs({ className: 'bg' })`
 BackgroundCanvas.defaultProps = { theme: { AppBackground: '#e0e0e0' } };
 
 
-class App extends React.Component {
-  drawerView = null;
-  themeList = [Light, Dark];
-  loadSet = new Set(['app', 'bg']);
+class NProgressManager {
+  constructor() {
+    this.loadSet = new Set();
+  }
 
+  getNProgress() {
+    const nprogress = window.NProgress; // imported in index.html
+    if (!nprogress) {
+      console.log('NProgress not found');
+      return undefined;
+    }
+    return nprogress;
+  }
+
+  newToLoad(item) {
+    if (this.loadSet.has(item)) return;
+    this.loadSet.add(item);
+    const progress = this.getNProgress();
+    if (!progress.isStarted()) {
+      progress.start();
+    }
+  }
+
+  loaded(item) {
+    if (!this.loadSet.has(item)) return;
+    this.loadSet.delete(item);
+    const progress = this.getNProgress();
+    if (this.loadSet.size > 0) {
+      progress.inc();
+    } else {
+      progress.done();
+    }
+  }
+}
+
+class App extends React.Component {
   constructor(props) {
     super(props);
+    this.drawerView = null;
+    this.themeList = [Light, Dark];
+    this.progress = new NProgressManager();
+    this.progress.newToLoad('app');
+    this.progress.newToLoad('background');
     this.state = {
       isLoading: true,
       isViewMode: false,
-      currentTheme: 0
+      currentLocale: 'en',
+      currentTheme: 0,
+      localeMessages: { en: EnglishMessages },
     };
     MessageHandler.init({
       context: this,
@@ -85,6 +124,27 @@ class App extends React.Component {
     return this.themeList[this.state.currentTheme];
   }
 
+  changeLocale() {
+    if (this.state.currentLocale === 'en') {
+      const messages = this.state.localeMessages;
+      if (!messages['zh']) {
+        const snackbar = SnackBar.make(null, 'Load language pack...', SnackBar.LENGTH_IMMEDIATE);
+        this.progress.newToLoad('lang-zh');
+        import('./lang/zh.json').then(data => {
+          this.progress.loaded('lang-zh');
+          messages['zh'] = data;
+          this.setState({ currentLocale: 'zh', localeMessages: messages });
+          snackbar.dismiss();
+        });
+        snackbar.show();
+      } else {
+        this.setState({ currentLocale: 'zh' });
+      }
+    } else {
+      this.setState({ currentLocale: 'en' });
+    }
+  }
+
   changeTheme() {
     if (this.state.currentTheme < this.themeList.length - 1) {
       this.setState({ currentTheme: this.state.currentTheme + 1 });
@@ -93,20 +153,7 @@ class App extends React.Component {
     }
   }
 
-  updateProgress(item) {
-    if (!this.loadSet.has(item)) return;
-    this.loadSet.delete(item);
-    const progress = window.NProgress; // imported in index.html
-    if (!progress) {
-      console.log('NProgress not found');
-      return;
-    }
-    if (this.loadSet.size > 0) {
-      progress.inc();
-    } else {
-      progress.done();
-    }
-  }
+
 
   goTo(path) {
     if (path === this.props.location.pathname) return;
@@ -120,9 +167,9 @@ class App extends React.Component {
   render() {
     return (
       <IntlProvider
-        locale={this.props.locale}
+        locale={this.state.currentLocale}
         defaultLocale="en"
-        messages={this.props.messages}>
+        messages={this.state.localeMessages[this.state.currentLocale]}>
         <ThemeProvider theme={this.getTheme()}>
           <DrawerView ref={instance => this.drawerView = instance}>
             <BackgroundCanvas />
@@ -171,21 +218,21 @@ class App extends React.Component {
 
   componentDidMount() {
     this.setState({ isLoading: false });
-    this.updateProgress('app');
+    this.progress.loaded('app');
 
-    //check if background image loading
+    //check if background image loaded
     (() => {
       const matchBgUrl = this.getTheme().AppBackground.match(/url\((['"])(.+)\1\)/);
-      if (!matchBgUrl) return false;
+      if (!matchBgUrl) return true;
       const url = matchBgUrl[2];
       const img = new Image();
       img.src = url;
-      if (img.complete) return false;
+      if (img.complete) return true;
       img.onload = () => {
-        this.updateProgress('bg');
+        this.progress.loaded('background');
       }
-      return true;
-    })() || this.updateProgress('bg');
+      return false;
+    })() && this.progress.loaded('background');
 
     //delete the pre-rendered style
     ((styleTag = document.querySelectorAll('style[data-styled]')) => {

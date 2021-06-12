@@ -4,21 +4,10 @@ import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
-function loadLocaleData(locale) {
-  switch (locale) {
-    case 'zh':
-      return import('./lang/zh.json')
-    default:
-      return import('./lang/en.json')
-  }
-}
-
-async function bootstrapApplication(locale) {
-  const messages = await loadLocaleData(locale);
   const app = (
     <React.StrictMode>
       <Router>
-        <App locale={locale} messages={messages} />
+        <App />
       </Router>
     </React.StrictMode>
   );
@@ -37,6 +26,4 @@ async function bootstrapApplication(locale) {
   // unregister() to register() below. Note this comes with some pitfalls.
   // Learn more about service workers: http://bit.ly/CRA-PWA
   serviceWorkerRegistration.register();
-}
-
-bootstrapApplication();
+  
