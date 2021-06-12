@@ -1,0 +1,44 @@
+{
+  "app.menu-item.1": [
+    {
+      "type": 0,
+      "value": "首页"
+    }
+  ],
+  "app.menu-item.2": [
+    {
+      "type": 0,
+      "value": "弹出消息"
+    }
+  ],
+  "app.menu-item.3": [
+    {
+      "type": 0,
+      "value": "查看布局"
+    }
+  ],
+  "app.menu-item.close": [
+    {
+      "type": 0,
+      "value": "关菜单"
+    }
+  ],
+  "app.menu-item.exit": [
+    {
+      "type": 0,
+      "value": "退出"
+    }
+  ],
+  "app.menu-item.locale": [
+    {
+      "type": 0,
+      "value": "切换语言"
+    }
+  ],
+  "app.menu-item.theme": [
+    {
+      "type": 0,
+      "value": "夜间模式"
+    }
+  ]
+}

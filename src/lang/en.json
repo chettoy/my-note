@@ -1,1 +1,30 @@
-{}
+{
+  "app.menu-item.1": {
+    "defaultMessage": "home",
+    "description": "menu item1"
+  },
+  "app.menu-item.2": {
+    "defaultMessage": "item2",
+    "description": "menu item2"
+  },
+  "app.menu-item.3": {
+    "defaultMessage": "item3",
+    "description": "menu item3"
+  },
+  "app.menu-item.close": {
+    "defaultMessage": "close",
+    "description": "menu item close"
+  },
+  "app.menu-item.exit": {
+    "defaultMessage": "exit",
+    "description": "menu item exit"
+  },
+  "app.menu-item.locale": {
+    "defaultMessage": "locale",
+    "description": "menu item locale"
+  },
+  "app.menu-item.theme": {
+    "defaultMessage": "theme",
+    "description": "menu item theme"
+  }
+}

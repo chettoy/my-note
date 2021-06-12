@@ -1,5 +1,5 @@
 import React from 'react';
-import { IntlProvider } from 'react-intl';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import ClientUtils from './common/ClientUtils';
@@ -14,7 +14,7 @@ import FloatActionButton from './components/FloatActionButton';
 import Banner from './components/Banner';
 import Live2dWidget from './components/live2d-widget';
 import CardRouter from './cards/CardRouter';
-import EnglishMessages from './lang/en.json';
+import EnglishMessages from './lang/compiled/en.json';
 import Dark from './themes/Dark';
 import Light from './themes/Light';
 import Config from './Config';
@@ -130,9 +130,9 @@ class App extends React.Component {
       if (!messages['zh']) {
         const snackbar = SnackBar.make(null, 'Load language pack...', SnackBar.LENGTH_IMMEDIATE);
         this.progress.newToLoad('lang-zh');
-        import('./lang/zh.json').then(data => {
+        import('./lang/compiled/zh.json').then(mod => {
           this.progress.loaded('lang-zh');
-          messages['zh'] = data;
+          messages['zh'] = mod.default;
           this.setState({ currentLocale: 'zh', localeMessages: messages });
           snackbar.dismiss();
         });
@@ -177,30 +177,71 @@ class App extends React.Component {
               statusBarHeight={ClientUtils.getStatusBarHeight()}
               toolbarAttach={this.state.isViewMode}
               onSearch={this.handleSearch} />
+
             <Menu>
               <React.Suspense fallback={<Loading />}>
                 {this.state.isLoading ? null : <MusicPlayer />}
               </React.Suspense>
               <MenuList>
-                <li onClick={() => this.goTo('/')}>item1</li>
+
+                <li onClick={() => this.goTo('/')}>
+                  <FormattedMessage id="app.menu-item.1"
+                    defaultMessage="home"
+                    description="menu item1" />
+                </li>
+
                 <li onClick={() => {
                   SnackBar.make(null, 'test', -1)
                     .setOnShowed(this.drawerView.closeMenu)
                     .show();
                   setTimeout(this.drawerView.closeMenu, 2000);
-                }}>item2</li>
+                }}>
+                  <FormattedMessage id="app.menu-item.2"
+                    defaultMessage="item2"
+                    description="menu item2" />
+                </li>
+
                 <li onClick={() => {
                   if (document.body.classList.contains("x")) {
                     document.body.classList.remove("x");
                   } else {
                     document.body.classList.add("x");
                   }
-                }}>item3</li>
-                <li onClick={() => this.changeTheme()}>item4</li>
-                {ClientUtils.isClient && <li onClick={() => ClientUtils.exit()}>Exit</li>}
-                <li onClick={() => this.drawerView.closeMenu()}>close</li>
+                }}>
+                  <FormattedMessage id="app.menu-item.3"
+                    defaultMessage="item3"
+                    description="menu item3" />
+                </li>
+
+                <li onClick={() => this.changeTheme()}>
+                  <FormattedMessage id="app.menu-item.theme"
+                    defaultMessage="theme"
+                    description="menu item theme" />
+                </li>
+
+                <li onClick={() => this.changeLocale()}>
+                  <FormattedMessage id="app.menu-item.locale"
+                    defaultMessage="locale"
+                    description="menu item locale" />
+                </li>
+
+                {ClientUtils.isClient &&
+                  <li onClick={() => ClientUtils.exit()}>
+                    <FormattedMessage id="app.menu-item.exit"
+                      defaultMessage="exit"
+                      description="menu item exit" />
+                  </li>
+                }
+
+                <li onClick={() => this.drawerView.closeMenu()}>
+                  <FormattedMessage id="app.menu-item.close"
+                    defaultMessage="close"
+                    description="menu item close" />
+                </li>
+
               </MenuList>
             </Menu>
+
             <main className='content'>
               <FloatActionButton>
                 <div onClick={() => toast('test')}>1</div>
@@ -210,6 +251,7 @@ class App extends React.Component {
               {this.state.isViewMode || <Banner />}
               {this.state.isLoading || <CardRouter />}
             </main>
+
           </DrawerView>
         </ThemeProvider>
       </IntlProvider>
