@@ -26,6 +26,10 @@
     "app.menu-item.theme": {
       "defaultMessage": "夜间模式",
       "description": "menu item theme"
+    },
+    "app.toolbar.search-placeholder": {
+      "defaultMessage": "输入要搜索的内容...",
+      "description": "placeholder text"
     }
   }
   

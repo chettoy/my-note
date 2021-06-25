@@ -26,5 +26,9 @@
   "app.menu-item.theme": {
     "defaultMessage": "theme",
     "description": "menu item theme"
+  },
+  "app.toolbar.search-placeholder": {
+    "defaultMessage": "search...",
+    "description": "placeholder text"
   }
 }

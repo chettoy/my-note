@@ -40,5 +40,11 @@
       "type": 0,
       "value": "夜间模式"
     }
+  ],
+  "app.toolbar.search-placeholder": [
+    {
+      "type": 0,
+      "value": "输入要搜索的内容..."
+    }
   ]
 }

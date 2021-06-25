@@ -1,4 +1,5 @@
 import React from 'react';
+import { injectIntl } from 'react-intl'
 import styled from 'styled-components/macro';
 import Icon from '@mdi/react';
 import { mdiMenu, mdiMagnify } from '@mdi/js';
@@ -90,6 +91,7 @@ class Toolbar extends React.Component {
   }
 
   render() {
+    const { intl } = this.props;
     return (
       <ToolbarView
         statusBarHeight={this.props.statusBarHeight}
@@ -111,7 +113,11 @@ class Toolbar extends React.Component {
         <div className={styles.SearchView}
           style={{ display: this.state.showSearch ? 'block' : 'none' }}>
           <form action="#" method="get" onSubmit={this.handleSearch}>
-            <input type="search" name="search" placeholder="search..." autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true" />
+            <input type="search" name="search" placeholder={intl.formatMessage({
+              id: 'app.toolbar.search-placeholder',
+              defaultMessage: 'search...',
+              description: 'placeholder text',
+            })} autoFocus={this.state.showSearch} autoComplete="off" x-webkit-speech="true" />
           </form>
         </div>
         <canvas ref={c => this.canvas.is(c)}></canvas>
@@ -253,4 +259,4 @@ class ToolbarCanvas {
   }
 }
 
-export default Toolbar;
+export default injectIntl(Toolbar);

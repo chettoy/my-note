@@ -40,5 +40,11 @@
       "type": 0,
       "value": "theme"
     }
+  ],
+  "app.toolbar.search-placeholder": [
+    {
+      "type": 0,
+      "value": "search..."
+    }
   ]
 }
