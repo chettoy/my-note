@@ -30,7 +30,7 @@
     "fmt:compile": "formatjs compile 'src/lang/en.json' --ast --out-file src/lang/compiled/en.json",
     "fmt:compile:zh": "formatjs compile 'src/lang/zh.json' --ast --out-file src/lang/compiled/zh.json",
     "eject": "react-scripts eject",
-    "predeploy": "react-scripts build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "babelMacros": {
