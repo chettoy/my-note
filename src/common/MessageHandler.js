@@ -9,6 +9,9 @@ class MessageHandler {
   static changeTheme() {
     MessageHandler.proxy.changeTheme();
   }
+  static goTo(path) {
+    MessageHandler.proxy.goTo(path);
+  }
   static toggleViewMode(isEnable, callback) {
     MessageHandler.proxy.toggleViewMode(isEnable, callback);
   }

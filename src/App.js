@@ -92,6 +92,9 @@ class App extends React.Component {
       changeTheme: () => {
         this.changeTheme();
       },
+      goTo: path => {
+        this.goTo(path);
+      },
       toggleViewMode: (isEnable, callback) => {
         if (isEnable === true || isEnable === false) {
           this.setState({ isViewMode: isEnable }, callback);
@@ -244,7 +247,7 @@ class App extends React.Component {
               <FloatActionButton>
                 <div onClick={() => toast('test')}>1</div>
                 <div onClick={() => this.goTo('/test')}>2</div>
-                <div>3</div>
+                <div onClick={() => this.setState({ isViewMode: !this.state.isViewMode })}>3</div>
               </FloatActionButton>
               {this.state.isViewMode || <Banner />}
               {this.state.isLoading || <CardRouter />}
