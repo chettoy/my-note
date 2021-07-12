@@ -1,4 +1,5 @@
 const Theme = {
+  isDark: true,
   AppBackground: "#282c34",
   CardColor: "rgba(32,33,36,0.92)",
   TextColor: "rgba(255,255,255,0.87)",

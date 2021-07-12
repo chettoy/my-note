@@ -6,6 +6,7 @@ import ContentPage from './ContentPage';
 import SettingsPage from './SettingsPage';
 import Dashboard from './Dashboard/Dashboard';
 import NoteList from './NotePage/NoteList';
+import Editor from './NotePage/Editor';
 import Timeline from './Timeline/Timeline';
 
 const getKey = location => {
@@ -31,6 +32,7 @@ class CardRouter extends React.Component {
                   <Route exact path='/dash' render={Dashboard} />
                   <Route exact path='/settings' render={SettingsPage} />
                   <Route exact path='/notebook' component={NoteList} />
+                  <Route exact path='/editor' component={Editor} />
                   <Route exact path='/timeline' component={Timeline} />
                   <Route exact path='/test' render={TestPage} />
                   <Route exact path='/404' render={() => <div>Not Found</div>} />
