@@ -4,23 +4,22 @@
   "private": true,
   "homepage": "https://chettoy.github.io/my-note",
   "dependencies": {
-    "@mdi/js": "^5.9.55",
+    "@mdi/js": "^6.2.95",
     "@mdi/react": "^1.5.0",
-    "axios": "^0.21.1",
-    "dompurify": "^2.2.6",
-    "katex": "^0.13.0",
-    "marked": "^2.0.0",
+    "axios": "^0.22.0",
+    "dompurify": "^2.3.3",
+    "katex": "^0.13.18",
+    "marked": "^3.0.7",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-intl": "^5.20.2",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-intl": "^5.20.12",
+    "react-router-dom": "^5.3.0",
     "react-transition-group": "^4.4.1",
-    "rich-markdown-editor": "^11.13.0",
-    "sass": "^1.35.2",
-    "styled-components": "^5.2.1",
-    "typescript": "^4.1.3",
+    "rich-markdown-editor": "^11.18.6",
+    "sass": "^1.42.1",
+    "styled-components": "^5.3.1",
+    "typescript": "^4.4.3",
     "velocity-animate": "^1.5.2"
   },
   "scripts": {
@@ -49,7 +48,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@formatjs/cli": "^4.2.20",
+    "react-scripts": "4.0.3",
+    "@formatjs/cli": "^4.3.1",
     "gh-pages": "^3.1.0"
   }
 }
