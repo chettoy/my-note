@@ -131,7 +131,6 @@ class App extends React.Component {
     if (this.state.currentLocale === 'en') {
       const messages = this.state.localeMessages;
       if (!messages['zh']) {
-        SnackBar.make(null, 'Load language pack...', SnackBar.LENGTH_LONG).show();
         this.progress.newToLoad('lang-zh');
         import('./lang/compiled/zh.json').then(mod => {
           this.progress.loaded('lang-zh');
@@ -282,6 +281,12 @@ class App extends React.Component {
       if (styleTag.length === 2 && styleTag[0].innerHTML && !styleTag[1].innerHTML)
         styleTag[0].parentNode.removeChild(styleTag[0]);
     })();
+
+    //set language
+    const lang = (navigator.language || navigator.browserLanguage).toLowerCase();
+    if (lang.indexOf('zh') >= 0 && this.state.currentLocale === 'en') {
+      this.changeLocale();
+    }
 
     const showWelcome = () => {
       const sessionStorageSupported = ('sessionStorage' in window && window['sessionStorage'] !== null);
