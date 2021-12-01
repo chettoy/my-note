@@ -1,0 +1,50 @@
+{
+  "app.menu-item.1": [
+    {
+      "type": 0,
+      "value": "home"
+    }
+  ],
+  "app.menu-item.2": [
+    {
+      "type": 0,
+      "value": "item2"
+    }
+  ],
+  "app.menu-item.3": [
+    {
+      "type": 0,
+      "value": "item3"
+    }
+  ],
+  "app.menu-item.close": [
+    {
+      "type": 0,
+      "value": "close"
+    }
+  ],
+  "app.menu-item.exit": [
+    {
+      "type": 0,
+      "value": "exit"
+    }
+  ],
+  "app.menu-item.locale": [
+    {
+      "type": 0,
+      "value": "locale"
+    }
+  ],
+  "app.menu-item.theme": [
+    {
+      "type": 0,
+      "value": "theme"
+    }
+  ],
+  "app.toolbar.search-placeholder": [
+    {
+      "type": 0,
+      "value": "search..."
+    }
+  ]
+}

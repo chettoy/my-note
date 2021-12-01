@@ -1,0 +1,33 @@
+.DrawerView {
+  .touching {
+    transition-duration: 0s !important;
+  }
+
+  .menu {
+    z-index: 116;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .content {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+  }
+}
+
+.SpaceView {
+  background: rgba(10, 10, 10, 0.5);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 115;
+  display: none;
+}
+
+.preventScroll {
+  overflow: hidden;
+}

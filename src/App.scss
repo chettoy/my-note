@@ -1,0 +1,72 @@
+@import "GlobalStyle.scss";
+@import "typo.scss";
+
+body {
+  /* Disables pull-to-refresh and overscroll glow effects. */
+  overscroll-behavior: contain;
+
+  &.x *:not(canvas) {
+    background: #000 !important;
+    color: #0f0 !important;
+    border: 1px solid red !important;
+  }
+}
+
+canvas.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  transition: height 1s, background .2s;
+
+  @media all and (orientation: portrait) {
+    background-size: auto 100%;
+  }
+}
+
+.content {
+  box-sizing: border-box;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+  .fab {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 1rem;
+    z-index: 103;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .CardWrapper {
+    position: relative;
+    min-height: 100vh;
+  }
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.router-enter {
+  opacity: 0;
+}
+
+.router-enter-active {
+  transition: all 0.5s;
+  opacity: 1;
+}
+
+.router-exit {
+  opacity: 1;
+}
+
+.router-exit-active {
+  transition: all 0.5s;
+  opacity: 0;
+}
