@@ -1,7 +1,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
-import { withRouter } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components/macro';
+import { withRouter } from './common/MyCommon';
 import ClientUtils from './common/ClientUtils';
 import MessageHandler from './common/MessageHandler';
 import SnackBar from './common/SnackBar';
@@ -159,9 +159,9 @@ class App extends React.Component {
   goTo(path) {
     if (path === this.props.location.pathname) return;
     if (path === '/') {
-      this.props.history.goBack();
+      this.props.navigate(-1);
     } else {
-      this.props.history.push(path);
+      this.props.navigate(path);
     }
   }
 

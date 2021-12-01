@@ -39,12 +39,21 @@ class ConList extends React.Component {
 
   componentWillUnmount() {
     this.mounted = false;
+    if (this.props.onSaveState)
+      this.props.onSaveState();
   }
 
   render() {
     return this.state.loading ? <Loading /> :
       this.state.conList.map((conData, i) =>
-        <ConItem key={conData.getId()} data={conData} />);
+        <ConItem
+          key={conData.getId()}
+          data={conData}
+          previewClickCallback={() => {
+            if (this.props.onClickItem)
+              this.props.onClickItem(conData.getId());
+          }}
+        />);
   }
 }
 

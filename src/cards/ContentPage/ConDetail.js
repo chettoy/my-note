@@ -1,48 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import ConLoader from './ConLoader';
 import ConCard from './ConCard';
 import Loading from '../../components/Loading';
 
-class ConDetail extends React.Component {
-  static propTypes = {
-    conLoader: PropTypes.instanceOf(ConLoader).isRequired
-  }
+function ConDetail(props) {
+  const conId = props.conId;
+  const loader = props.conLoader;
+  const [html, setHtml] = useState(null);
 
-  constructor(props) {
-    super(props);
-    this.mounted = false;
-    this.state = { html: null };
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-    const loader = this.props.conLoader;
-    loader.loadContent(this.props.match.params.id, (statusCode, conData, isFromCache) => {
+  useEffect(() => {
+    loader.loadContent(conId, (statusCode, conData, isFromCache) => {
       if (statusCode !== 200 || !conData) {
-        if (this.mounted) this.setState({ html: `<p>Failed to load (${statusCode})</p>` });
+        setHtml(`<p>Failed to load (${statusCode})</p>`);
         return;
       }
-      if (this.mounted) {
-        this.setState({
-          html: DOMPurify.sanitize(conData.getHtml(), {
-            ADD_TAGS: ['semantics', 'annotation'] // for KaTeX mathMl
-          })
-        });
-      }
+      setHtml(
+        DOMPurify.sanitize(conData.getHtml(), {
+          ADD_TAGS: ['semantics', 'annotation'] // for KaTeX mathMl
+        })
+      );
       if (!isFromCache) loader._saveCache();
     });
-  }
+    return () => {
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+    };
+  }, [conId, loader]);
 
-  render() {
-    return this.state.con === null ? <Loading /> :
-      <ConCard dangerouslySetInnerHTML={{ __html: this.state.html }} />;
-  }
+  return html === null ? <Loading /> :
+    <ConCard dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-export default ConDetail;
+ConDetail.propTypes = {
+  conLoader: PropTypes.instanceOf(ConLoader).isRequired
+};
+
+export default React.memo(ConDetail);

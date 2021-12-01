@@ -1,9 +1,9 @@
 import React from 'react';
-import { matchPath, withRouter } from 'react-router';
-import { Route, Switch } from 'react-router-dom';
+import { matchPath } from 'react-router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import Velocity from 'velocity-animate';
+import { withRouter, LocationListener } from '../common/MyCommon';
 import PageCard from './PageCard';
 import ConLoader from './ContentPage/ConLoader';
 import ConList from './ContentPage/ConList';
@@ -34,15 +34,17 @@ class ContentPage extends React.Component {
       list: { name: 'list', path: '/' },
       detail: { name: 'detail', path: '/id/:id' }
     };
-    this.currentView = (({ pathname }) => {
-      if (matchPath(pathname, { path: this.routes.detail.path })) {
+    this.matchCurrentLocation = ({ pathname }) => {
+      if (matchPath(this.routes.detail.path, pathname)) {
         return this.routes.detail.name;
-      } else if (matchPath(pathname, { path: this.routes.list.path, exact: true })) {
+      } else if (matchPath(this.routes.list.path, pathname)) {
         return this.routes.list.name;
       } else {
         return '';
       }
-    })(props.location);
+    };
+    this.currentView = this.matchCurrentLocation(props.location);
+    this.currentLocation = props.location;
   }
 
   getWrapperDOM() {
@@ -70,50 +72,61 @@ class ContentPage extends React.Component {
   componentDidMount() {
     this._scrollRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = 'manual';
-    this.unlistenHistory = this.props.history.listen((location, action) => {
-      if (matchPath(location.pathname, { path: this.routes.detail.path })) {
-        this.saveScroll();
-        this.currentView = this.routes.detail.name;
-        Velocity(this.getWrapperDOM(), 'scroll');
-      } else if (matchPath(location.pathname, { path: this.routes.list.path, exact: true })) {
-        this.currentView = this.routes.list.name;
-        this.recoverScroll();
-      }
-    });
     this.recoverScroll();
   }
 
   componentWillUnmount() {
-    this.saveScroll();
     window.history.scrollRestoration = this._scrollRestoration;
-    this.unlistenHistory();
+  }
+
+  onLocationChanged = (location) => {
+    this.currentView = this.matchCurrentLocation(location);
+    this.currentLocation = location;
+    if (this.currentView === this.routes.detail.name) {
+      Velocity(this.getWrapperDOM(), 'scroll');
+    } else if (this.currentView === this.routes.list.name) {
+      this.recoverScroll();
+    } else {
+      Velocity(this.getWrapperDOM(), 'scroll', { duration: 500 });
+    }
   }
 
   render() {
     const nodeRef = React.createRef();
+
+    let renderLocation = this.props.location;
+    let renderView = this.matchCurrentLocation(renderLocation);
+
+    // when routing to other page
+    if (renderLocation !== this.currentLocation && renderView === '') {
+      // keep renderLocation unchanged
+      renderLocation = this.currentLocation;
+      renderView = this.matchCurrentLocation(renderLocation);
+      // save scroll state
+      this.saveScroll();
+    }
+
+    const renderPathname = renderLocation.pathname;
+
     return (
       <div ref={this.viewRef}>
-        <Route
-          render={({ location, match }) => (
-            <TransitionGroup>
-              <CSSTransition key={location.pathname} nodeRef={nodeRef} classNames='router' timeout={500}>
-                <ConContainer ref={nodeRef}>
-                  <Switch location={location}>
-                    <Route
-                      path={this.routes.list.path} exact
-                      render={(props) => <ConList {...props} conLoader={this.loader} />} />
-                    <Route
-                      path={this.routes.detail.path}
-                      render={(props) => <ConDetail {...props} conLoader={this.loader} />} />
-                    <Route
-                      render={() => {
-                        console.log(`ConPage: pathname=${location.pathname}, match.url=${match.url}`);
-                      }} />
-                  </Switch>
-                </ConContainer>
-              </CSSTransition>
-            </TransitionGroup>
-          )} />
+        <LocationListener listenFunc={this.onLocationChanged} />
+        <TransitionGroup component={null}>
+          <CSSTransition key={renderPathname} nodeRef={nodeRef} classNames='router' timeout={500}>
+            <ConContainer ref={nodeRef}>
+
+              {this.routes.list.name === renderView &&
+                <ConList {...this.props}
+                  conLoader={this.loader}
+                  onClickItem={() => this.saveScroll()} />}
+              {this.routes.detail.name === renderView &&
+                <ConDetail {...this.props}
+                  conLoader={this.loader}
+                  conId={matchPath(this.routes.detail.path, renderPathname).params.id} />}
+
+            </ConContainer>
+          </CSSTransition>
+        </TransitionGroup>
       </div>
     );
   }

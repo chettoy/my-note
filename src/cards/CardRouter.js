@@ -1,7 +1,9 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { useLocation } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import TestPage from './TestPage';
+import RedirectPage from './RedirectPage';
 import ContentPage from './ContentPage';
 import SettingsPage from './SettingsPage';
 import Dashboard from './Dashboard/Dashboard';
@@ -9,42 +11,38 @@ import NoteList from './NotePage/NoteList';
 import Editor from './NotePage/Editor';
 import Timeline from './Timeline/Timeline';
 
-const getKey = location => {
-  const path = location.pathname;
-  if (path === '/' || path.startsWith('/id/')) {
+const getKey = pathname => {
+  if (pathname === '/' || pathname.startsWith('/id/')) {
     return 'con';
   }
-  return path;
+  return pathname;
 }
 
-class CardRouter extends React.Component {
-  render() {
-    const nodeRef = React.createRef();
-    return (
-      <Route
-        render={({ location }) => (
-          <TransitionGroup className='CardWrapper'>
-            <CSSTransition key={getKey(location)} nodeRef={nodeRef} classNames='router' timeout={500}>
-              <div ref={nodeRef}>
-                <Switch location={location}>
-                  <Route exact path='/' render={ContentPage} />
-                  <Route path='/id/' render={ContentPage} />
-                  <Route exact path='/dash' render={Dashboard} />
-                  <Route exact path='/settings' render={SettingsPage} />
-                  <Route exact path='/notebook' component={NoteList} />
-                  <Route exact path='/editor' component={Editor} />
-                  <Route exact path='/timeline' component={Timeline} />
-                  <Route exact path='/test' render={TestPage} />
-                  <Route exact path='/404' render={() => <div>Not Found</div>} />
-                  <Redirect from='*' to='/' />
-                </Switch>
-              </div>
-            </CSSTransition>
-          </TransitionGroup>
-        )}
-      />
-    );
-  }
+function CardRouter() {
+  const nodeRef = React.createRef();
+  const renderLocation = useLocation();
+  const key = getKey(renderLocation.pathname);
+
+  return (
+    <TransitionGroup className='CardWrapper'>
+      <CSSTransition key={key} nodeRef={nodeRef} classNames='router' timeout={500}>
+        <div ref={nodeRef}>
+          <Routes location={renderLocation}>
+            <Route path='/' element={<ContentPage />} />
+            <Route path='/id/:id' element={<ContentPage />} />
+            <Route path='/dash' element={<Dashboard />} />
+            <Route path='/settings' element={<SettingsPage />} />
+            <Route path='/notebook' element={<NoteList />} />
+            <Route path='/editor' element={<Editor />} />
+            <Route path='/timeline' element={<Timeline />} />
+            <Route path='/test' element={<TestPage />} />
+            <Route path='/404' element={<div>Not Found</div>} />
+            <Route path='*' element={<RedirectPage to='/' />} />
+          </Routes>
+        </div>
+      </CSSTransition>
+    </TransitionGroup>
+  );
 }
 
-export default CardRouter;
+export default React.memo(CardRouter);
