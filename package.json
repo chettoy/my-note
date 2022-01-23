@@ -6,7 +6,7 @@
   "dependencies": {
     "@mdi/js": "^6.5.95",
     "@mdi/react": "^1.5.0",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "dompurify": "^2.3.3",
     "katex": "^0.15.1",
     "marked": "^4.0.5",
