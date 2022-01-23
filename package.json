@@ -6,20 +6,26 @@
   "dependencies": {
     "@mdi/js": "^6.5.95",
     "@mdi/react": "^1.5.0",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "axios": "^0.25.0",
-    "dompurify": "^2.3.3",
-    "katex": "^0.15.1",
-    "marked": "^4.0.5",
+    "canvas": "^2.9.0",
+    "dompurify": "^2.3.4",
+    "katex": "^0.15.2",
+    "marked": "^4.0.10",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-intl": "^5.23.0",
-    "react-router-dom": "^6.0.2",
-    "react-transition-group": "^4.4.1",
-    "sass": "^1.44.0",
+    "react-intl": "^5.24.3",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "5.0.0",
+    "react-transition-group": "^4.4.2",
+    "sass": "^1.49.0",
     "styled-components": "^5.3.3",
-    "typescript": "^4.5.2",
-    "velocity-animate": "^1.5.2"
+    "typescript": "^4.5.5",
+    "velocity-animate": "^1.5.2",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,17 +44,30 @@
     }
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!katex)"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "@formatjs/cli": "^4.5.0",
-    "gh-pages": "^3.1.0",
-    "react-scripts": "5.0.0"
+    "gh-pages": "^3.1.0"
   }
 }

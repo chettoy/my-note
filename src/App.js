@@ -1,7 +1,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import styled, { ThemeProvider } from 'styled-components/macro';
-import { withRouter } from './common/MyCommon';
 import ClientUtils from './common/ClientUtils';
 import MessageHandler from './common/MessageHandler';
 import SnackBar from './common/SnackBar';
@@ -49,7 +49,9 @@ class NProgressManager {
   newToLoad(item) {
     if (this.loadSet.has(item)) return;
     this.loadSet.add(item);
+
     const progress = this.getNProgress();
+    if (progress === undefined) return;
     if (!progress.isStarted()) {
       progress.start();
     }
@@ -59,6 +61,7 @@ class NProgressManager {
     if (!this.loadSet.has(item)) return;
     this.loadSet.delete(item);
     const progress = this.getNProgress();
+    if (progress === undefined) return;
     if (this.loadSet.size > 0) {
       progress.inc();
     } else {
@@ -307,6 +310,15 @@ class App extends React.Component {
     } else {
       showWelcome();
     }
+  }
+}
+
+function withRouter(Child) {
+  return (props) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const params = useParams();
+    return <Child {...props} navigate={navigate} location={location} params={params} />;
   }
 }
 

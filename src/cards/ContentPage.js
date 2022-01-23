@@ -1,9 +1,8 @@
 import React from 'react';
-import { matchPath } from 'react-router';
+import { matchPath, useLocation, useNavigate, useParams } from 'react-router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components/macro';
 import Velocity from 'velocity-animate';
-import { withRouter, LocationListener } from '../common/MyCommon';
 import PageCard from './PageCard';
 import ConLoader from './ContentPage/ConLoader';
 import ConList from './ContentPage/ConList';
@@ -129,6 +128,25 @@ class ContentPage extends React.Component {
         </TransitionGroup>
       </div>
     );
+  }
+}
+
+function LocationListener(props) {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    props.listenFunc(location);
+  }, [location, props]);
+
+  return null;
+};
+
+function withRouter(Child) {
+  return (props) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const params = useParams();
+    return <Child {...props} navigate={navigate} location={location} params={params} />;
   }
 }
 

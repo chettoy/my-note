@@ -1,9 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { render, screen } from '@testing-library/react';
+import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+
+test('renders toolbar title', () => {
+  render(<Router><App /></Router>);
+  const linkElement = screen.getByText(/MyNote/i);
+  expect(linkElement).toBeInTheDocument();
 });

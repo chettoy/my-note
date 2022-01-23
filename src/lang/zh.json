@@ -1,35 +1,35 @@
 {
-    "app.menu-item.1": {
-      "defaultMessage": "首页",
-      "description": "menu item1"
-    },
-    "app.menu-item.2": {
-      "defaultMessage": "弹出消息",
-      "description": "menu item2"
-    },
-    "app.menu-item.3": {
-      "defaultMessage": "查看布局",
-      "description": "menu item3"
-    },
-    "app.menu-item.close": {
-      "defaultMessage": "关菜单",
-      "description": "menu item close"
-    },
-    "app.menu-item.exit": {
-      "defaultMessage": "退出",
-      "description": "menu item exit"
-    },
-    "app.menu-item.locale": {
-      "defaultMessage": "切换语言",
-      "description": "menu item locale"
-    },
-    "app.menu-item.theme": {
-      "defaultMessage": "夜间模式",
-      "description": "menu item theme"
-    },
-    "app.toolbar.search-placeholder": {
-      "defaultMessage": "输入要搜索的内容...",
-      "description": "placeholder text"
-    }
+  "app.menu-item.1": {
+    "defaultMessage": "首页",
+    "description": "menu item1"
+  },
+  "app.menu-item.2": {
+    "defaultMessage": "弹出消息",
+    "description": "menu item2"
+  },
+  "app.menu-item.3": {
+    "defaultMessage": "查看布局",
+    "description": "menu item3"
+  },
+  "app.menu-item.close": {
+    "defaultMessage": "关菜单",
+    "description": "menu item close"
+  },
+  "app.menu-item.exit": {
+    "defaultMessage": "退出",
+    "description": "menu item exit"
+  },
+  "app.menu-item.locale": {
+    "defaultMessage": "切换语言",
+    "description": "menu item locale"
+  },
+  "app.menu-item.theme": {
+    "defaultMessage": "夜间模式",
+    "description": "menu item theme"
+  },
+  "app.toolbar.search-placeholder": {
+    "defaultMessage": "输入要搜索的内容...",
+    "description": "placeholder text"
   }
+}
   
