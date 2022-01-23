@@ -7,9 +7,6 @@ import RedirectPage from './RedirectPage';
 import ContentPage from './ContentPage';
 import SettingsPage from './SettingsPage';
 import Dashboard from './Dashboard/Dashboard';
-import NoteList from './NotePage/NoteList';
-import Editor from './NotePage/Editor';
-import Timeline from './Timeline/Timeline';
 
 const getKey = pathname => {
   if (pathname === '/' || pathname.startsWith('/id/')) {
@@ -32,9 +29,6 @@ function CardRouter() {
             <Route path='/id/:id' element={<ContentPage />} />
             <Route path='/dash' element={<Dashboard />} />
             <Route path='/settings' element={<SettingsPage />} />
-            <Route path='/notebook' element={<NoteList />} />
-            <Route path='/editor' element={<Editor />} />
-            <Route path='/timeline' element={<Timeline />} />
             <Route path='/test' element={<TestPage />} />
             <Route path='/404' element={<div>Not Found</div>} />
             <Route path='*' element={<RedirectPage to='/' />} />
