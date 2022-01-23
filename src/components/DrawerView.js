@@ -12,6 +12,7 @@ class Framework extends React.Component {
   bigScreen = false;
   menuPosX = -316;
   menuTempOpen = false;
+  _reattachDomOnRefUpdate = false;
   _menuMoveMode = true ? 'transform' : 'left';
   _menuMoving = false;
   preventScrollMode = (() => {
@@ -31,16 +32,49 @@ class Framework extends React.Component {
       }
       if (child.type === Menu) {
         return React.cloneElement(child, {
-          getDOM: dom => this.menuDOM = dom
+          getDOM: dom => {
+            this.menuDOM = dom;
+            if (this._reattachDomOnRefUpdate) this.tryAttachChildren();
+          }
         });
       }
       if (child.props && child.props.className === 'content') {
         return React.cloneElement(child, {
-          ref: dom => this.conDOM = dom
+          ref: dom => {
+            this.conDOM = dom;
+            if (this._reattachDomOnRefUpdate) this.tryAttachChildren();
+          }
         });
       }
       return child;
     });
+
+  tryAttachChildren = () => {
+    const attachAttr = 'data-drawer';
+    const attachMark = 'drawer_attached';
+    if (this.menuDOM && !this.menuDOM.getAttribute(attachAttr)) {
+      this.menuDOM.classList.add(styles.menu);
+      this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
+      this.menuDOM.setAttribute(attachAttr, attachMark);
+    }
+    if (this.conDOM && !this.conDOM.getAttribute(attachAttr)) {
+      this.conDOM.classList.add(styles.content);
+      this.conDOM.setAttribute(attachAttr, attachMark);
+    }
+  }
+
+  unattachChildren = () => {
+    const attachAttr = 'data-drawer';
+    if (this.menuDOM && this.menuDOM.getAttribute(attachAttr)) {
+      this.menuDOM.classList.remove(styles.menu);
+      this.menuDOM.removeEventListener('mouseleave', this.onMouseLeaveMenu);
+      this.menuDOM.removeAttribute(attachAttr);
+    }
+    if (this.conDOM && this.conDOM.getAttribute(attachAttr)) {
+      this.conDOM.classList.remove(styles.content);
+      this.conDOM.removeAttribute(attachAttr);
+    }
+  }
 
   render() {
     return (
@@ -52,20 +86,21 @@ class Framework extends React.Component {
   }
 
   componentDidMount() {
-    if (this._menuMoveMode === 'transform') {
-      this.menuDOM.style.transform = `translate3d(${this.menuPosX}px,0,0)`;
-    } else {
-      this.menuDOM.style.left = this.menuPosX + 'px';
+    if (this.menuDOM) { // reset menu position
+      if (this._menuMoveMode === 'transform') {
+        this.menuDOM.style.transform = `translate3d(${this.menuPosX}px,0,0)`;
+      } else {
+        this.menuDOM.style.left = this.menuPosX + 'px';
+      }
     }
-    this.menuDOM.classList.add(styles.menu);
-    this.conDOM.classList.add(styles.content);
+
+    this.tryAttachChildren();
 
     window.addEventListener('resize', this.handleResize);
-    document.body.addEventListener('touchstart', this.handleTouchStart, {passive: this.preventScrollMode !== 'firefox'});
+    document.body.addEventListener('touchstart', this.handleTouchStart, { passive: this.preventScrollMode !== 'firefox' });
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
-    this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
 
     setTimeout(this.handleResize, 20);
   }
@@ -76,7 +111,7 @@ class Framework extends React.Component {
     document.body.removeEventListener('touchmove', this.handleTouchMove);
     document.body.removeEventListener('touchend', this.handleTouchEnd);
     document.body.removeEventListener('mousemove', this.handleMouseMove);
-    this.menuDOM.addEventListener('mouseleave', this.onMouseLeaveMenu);
+    this.unattachChildren();
   }
 
   handleResize = resizeEvent => {
