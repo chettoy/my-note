@@ -3,21 +3,26 @@ import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 import Velocity from 'velocity-animate';
 import styled from 'styled-components/macro';
-import { c2s } from '../common/MyCommon';
 import styles from './FloatActionButton.module.scss';
 
-const FabWrapper = styled.div.attrs({
-  className: styles.FabWrapper
-})`
-  ${c2s(styles.fabView)} {
-    background: ${props => props.theme.FabColor};
+const FabWrapper = styled.div.attrs({ className: styles.FabWrapper })`
+  //nop
+`;
+
+const FabMenu = styled.div.attrs({ className: styles.fabMenu })`
+  div {
+    background: ${props => props.theme.FabMenuColor};
   }
-  ${c2s(styles.iconWrapper)} svg {
+`;
+
+const FabButton = styled.div.attrs({ className: styles.fabView })`
+  background: ${props => props.theme.FabColor};
+`;
+
+const IconWrapper = styled.div.attrs({ className: styles.iconWrapper })`
+  svg {
     fill: ${props => props.theme.FabIconColor};
   }
-  ${c2s(styles.fabMenu)} div {
-    background: ${props => props.theme.FabMenuColor};
-   }
 `;
 
 FabWrapper.defaultProps = {
@@ -50,14 +55,14 @@ class FloatActionButton extends React.Component {
   render() {
     return (
       <FabWrapper className='fab'>
-        <div className={styles.fabView} onClick={this.onClickHandler}>
-          <div className={styles.iconWrapper}>
+        <FabButton onClick={this.onClickHandler}>
+          <IconWrapper>
             <Icon path={mdiClose} rotate={this.state.isOpen ? 360 : 315} />
-          </div>
-        </div>
-        <div className={styles.fabMenu} ref={el => this.menuDOM = el}>
+          </IconWrapper>
+        </FabButton>
+        <FabMenu ref={el => this.menuDOM = el}>
           {this.props.children}
-        </div>
+        </FabMenu>
       </FabWrapper>
     );
   }

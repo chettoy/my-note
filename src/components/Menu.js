@@ -1,16 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { c2s } from '../common/MyCommon';
 import styles from './Menu.module.scss';
+
 
 const MrMenu = styled.div.attrs({
   className: styles.MrMenu
 })`
   background: ${props => props.theme.MenuBackground};
-  
-  ${c2s(styles.menuHeader)} span {
-    color: ${props => props.theme.MenuHeaderTextColor};
-  }
   
   ul li {
     color: ${props => props.theme.MenuTextColor};
@@ -20,18 +16,31 @@ const MrMenu = styled.div.attrs({
     color: ${props => props.theme.ItemActiveTextColor};
     background: ${props => props.theme.ItemActiveColor};
   }
-  
-  ${c2s(styles.menuFooter)} {
-    a:link{color:rgba(0,0,0,0.54);}
-    a:visited{color:rgba(0,0,0,0.54);}
-    a:hover{color:#0a0;}
-    a:active{color:#0a0;}
+`;
+
+
+const MenuHeader = styled.div.attrs({
+  className: styles.menuHeader
+})`
+  span {
+    color: ${props => props.theme.MenuHeaderTextColor};
   }
+`;
+
+
+const MenuFooter = styled.div.attrs({
+  className: styles.menuFooter
+})`
+  a:link{color:rgba(0,0,0,0.54);}
+  a:visited{color:rgba(0,0,0,0.54);}
+  a:hover{color:#0a0;}
+  a:active{color:#0a0;}
   
-  ${c2s(styles.copyright)} {
+  span {
     color: ${props => props.theme.MenuTextColor};
   }
 `;
+
 
 MrMenu.defaultProps = {
   theme: {
@@ -43,6 +52,7 @@ MrMenu.defaultProps = {
   }
 };
 
+
 export class Menu extends React.Component {
   render() {
     return (
@@ -51,14 +61,14 @@ export class Menu extends React.Component {
           if (this.props.getDOM)
             this.props.getDOM(element);
         }}>
-        <div className={styles.menuHeader}>
+        <MenuHeader>
           <span>menu</span>
-        </div>
+        </MenuHeader>
         <div className={styles.MenuContainer}>
           {this.props.children}
-          <div className={styles.menuFooter}>
+          <MenuFooter>
             <span className={styles.copyright}>&copy; me</span>
-          </div>
+          </MenuFooter>
         </div>
       </MrMenu>
     )
