@@ -130,7 +130,9 @@ class Toolbar extends React.Component {
     if (!this.props.toolbarAttach) {
       window.addEventListener("scroll", this.handleScroll);
     }
-    this.canvas.init();
+    this.canvas.init({
+      enableCustomProgressBar: !this.props.toolbarAttach
+    });
     setTimeout(this.handleResize, 20);
   }
 
@@ -163,10 +165,11 @@ class ToolbarCanvas {
   loop = null;
 
   headerHeight = 0;
-  prevScroll = 0;
+  prevScrollTop = 0;
   drawLoopLock = 0;
   staticTime = 0;
   delayTime = 0;
+  enableCustomProgressBar = false;
 
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
 
@@ -174,7 +177,10 @@ class ToolbarCanvas {
     this.canvas = canvas;
   }
 
-  init = () => {
+  init = (config) => {
+    if (config) {
+      this.enableCustomProgressBar = config.enableCustomProgressBar ?? this.enableCustomProgressBar;
+    }
     this.ctx = this.canvas.getContext("2d");
   }
 
@@ -200,23 +206,56 @@ class ToolbarCanvas {
   }
 
   draw = () => {
-    if (document.body.classList.contains("x")) {
-      this.fill('#000');
-    } else {
-      const scrollTop = this.scrollTop();
-      let a = 1.0;
-      if (this.headerHeight) {
-        a = scrollTop / this.headerHeight;
-        a = a.toFixed(2);
-        if (a > 1.0) a = 0.0;
+    const scrollTop = this.scrollTop();
+    let drawProgressBar = false;
+    let a = 1.0;
+    if (this.headerHeight) {
+      a = scrollTop / this.headerHeight;
+      a = a.toFixed(2);
+    }
+    if (a > 1.0) {
+      a = 0.0; //transparent in content page
+      if (this.enableCustomProgressBar) {
+        drawProgressBar = true;
       }
-      this.fill(`rgba(69, 157, 245, ${a})`);
+    }
+
+    this.fill(`rgba(69, 157, 245, ${a})`);
+
+    if (drawProgressBar) {
+      const viewportHeight = this.headerHeight;
+      let maxScrollTop = 0;
+
+      // Detect the scroll height of new content
+      const mutingContent = document.querySelector('.router-enter-active');
+      if (mutingContent) {
+        const newConScrollHeight = mutingContent.scrollHeight;
+        // Use new height only when content is scrollable
+        // Insufficient height will not draw scrollbars and will result in no transition animation
+        if (newConScrollHeight > viewportHeight) {
+          maxScrollTop = newConScrollHeight;
+        }
+      }
+      // or use scroll height of current document
+      if (maxScrollTop === 0) {
+        maxScrollTop = document.documentElement.scrollHeight - viewportHeight;
+      }
+
+      const contentScrollTop = scrollTop - viewportHeight;
+      const maxContentScroll = maxScrollTop - viewportHeight;
+      if (maxContentScroll <= 0) return;
+      const scrollProgress = (contentScrollTop / maxContentScroll);
+      const drawWidth = this.width * scrollProgress;
+      const fade = contentScrollTop < (viewportHeight / 2) ? (contentScrollTop / (viewportHeight / 2)) : 1;
+      const drawHeight = this.height * (1.0 - 0.8 * fade);
+      this.ctx.fillStyle = `rgba(69, 157, 245, ${1.0 - 0.25 * fade})`;
+      this.ctx.fillRect(drawWidth, 0, this.width, drawHeight);
     }
   }
 
   drawLoop = () => {
-    const scroll = this.scrollTop();
-    if (this.prevScroll === scroll) {
+    const currScrollTop = this.scrollTop();
+    if (this.prevScrollTop === currScrollTop) {
       this.staticTime++;
       if (this.staticTime === 100) {
         //this.fill('transparent');
@@ -225,11 +264,11 @@ class ToolbarCanvas {
       }
     } else {
       this.staticTime = 0;
-      if ((this.prevScroll - this.headerHeight) * (scroll - this.headerHeight) < 0) {
-        this.delayTime = 60;
+      if ((this.prevScrollTop - this.headerHeight) * (currScrollTop - this.headerHeight) < 0) {
+        if (!this.enableCustomProgressBar) this.delayTime = 60;
       }
       if (this.delayTime === 0) this.draw();
-      this.prevScroll = scroll;
+      this.prevScrollTop = currScrollTop;
     }
     if (this.delayTime > 0) {
       this.delayTime--;
