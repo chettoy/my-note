@@ -14,7 +14,7 @@ const app = (
 );
 
 const rootElement = document.getElementById('root');
-if (rootElement.hasChildNodes()) {
+if (rootElement && rootElement.hasChildNodes()) {
   ReactDOM.hydrate(app, rootElement);
 } else {
   ReactDOM.render(app, rootElement);

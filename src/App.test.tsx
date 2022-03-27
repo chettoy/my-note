@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
