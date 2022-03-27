@@ -6,6 +6,7 @@ import ClientUtils from './common/ClientUtils';
 import MessageHandler from './common/MessageHandler';
 import SnackBar from './common/SnackBar';
 import Toast from './common/SuperToast';
+import NProgressManager from './common/NProgressManager';
 import Loading from './components/Loading';
 import DrawerView from './components/DrawerView';
 import Toolbar from './components/Toolbar';
@@ -31,44 +32,6 @@ const BackgroundCanvas = styled.canvas.attrs({ className: 'bg' })`
 `;
 BackgroundCanvas.defaultProps = { theme: { AppBackground: '#e0e0e0' } };
 
-
-class NProgressManager {
-  constructor() {
-    this.loadSet = new Set();
-  }
-
-  getNProgress() {
-    const nprogress = window.NProgress; // imported in index.html
-    if (!nprogress) {
-      console.log('NProgress not found');
-      return undefined;
-    }
-    return nprogress;
-  }
-
-  newToLoad(item) {
-    if (this.loadSet.has(item)) return;
-    this.loadSet.add(item);
-
-    const progress = this.getNProgress();
-    if (progress === undefined) return;
-    if (!progress.isStarted()) {
-      progress.start();
-    }
-  }
-
-  loaded(item) {
-    if (!this.loadSet.has(item)) return;
-    this.loadSet.delete(item);
-    const progress = this.getNProgress();
-    if (progress === undefined) return;
-    if (this.loadSet.size > 0) {
-      progress.inc();
-    } else {
-      progress.done();
-    }
-  }
-}
 
 class App extends React.Component {
   constructor(props) {
