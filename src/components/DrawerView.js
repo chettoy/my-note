@@ -7,7 +7,7 @@ import styles from './DrawerView.module.scss';
 class Framework extends React.Component {
   raf = (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame).bind(window);
   menuDOM = null;
-  spaceDOM = null;
+  maskDOM = null;
   conDOM = null;
   bigScreen = false;
   menuPosX = -316;
@@ -23,7 +23,8 @@ class Framework extends React.Component {
     return 'default';
   })();
 
-  getChildren =
+
+  cloneChildren =
     _ => React.Children.map(this.props.children, child => {
       if (child.type === Toolbar) {
         return React.cloneElement(child, {
@@ -49,6 +50,7 @@ class Framework extends React.Component {
       return child;
     });
 
+
   tryAttachChildren = () => {
     const attachAttr = 'data-drawer';
     const attachMark = 'drawer_attached';
@@ -63,6 +65,7 @@ class Framework extends React.Component {
     }
   }
 
+
   unattachChildren = () => {
     const attachAttr = 'data-drawer';
     if (this.menuDOM && this.menuDOM.getAttribute(attachAttr)) {
@@ -76,17 +79,23 @@ class Framework extends React.Component {
     }
   }
 
+
   render() {
     return (
       <div className={styles.DrawerView}>
-        {this.getChildren()}
-        <div className={styles.SpaceView} ref={dom => this.spaceDOM = dom} onTouchStart={() => this.closeMenu()}></div>
+        {this.cloneChildren()}
+        <div className={styles.MaskView}
+          ref={dom => this.maskDOM = dom}
+          onTouchStart={() => this.closeMenu()}></div>
       </div>
     )
   }
 
+
   componentDidMount() {
-    if (this.menuDOM) { // reset menu position
+
+    /* reset position of menu dom */
+    if (this.menuDOM) {
       if (this._menuMoveMode === 'transform') {
         this.menuDOM.style.transform = `translate3d(${this.menuPosX}px,0,0)`;
       } else {
@@ -94,16 +103,20 @@ class Framework extends React.Component {
       }
     }
 
+    /* attach listeners and styles to child */
     this.tryAttachChildren();
 
+    /* register global events */
     window.addEventListener('resize', this.handleResize);
     document.body.addEventListener('touchstart', this.handleTouchStart, { passive: this.preventScrollMode !== 'firefox' });
     document.body.addEventListener('touchmove', this.handleTouchMove);
     document.body.addEventListener('touchend', this.handleTouchEnd);
     document.body.addEventListener('mousemove', this.handleMouseMove);
 
+    /* caculate and set view state */
     setTimeout(this.handleResize, 20);
   }
+
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
@@ -113,6 +126,7 @@ class Framework extends React.Component {
     document.body.removeEventListener('mousemove', this.handleMouseMove);
     this.unattachChildren();
   }
+
 
   handleResize = resizeEvent => {
     const windowWidth = document.documentElement.clientWidth;
@@ -129,6 +143,7 @@ class Framework extends React.Component {
     }
   }
 
+
   prevTouchMenuPosX = null;
   menuTouchFromX = null;
   menuTouchMoveX = null;
@@ -136,6 +151,7 @@ class Framework extends React.Component {
   menuPrevLoopTime = null;
   menuDragSpeed = 0;
   preventScroll = false;
+
 
   touchMoveLoop = () => {
     if (this.menuTouchFromX == null) return;
@@ -159,6 +175,7 @@ class Framework extends React.Component {
     this.raf(this.touchMoveLoop);
   }
 
+
   handleTouchStart = event => {
     const touch = event.targetTouches[0];
     this.prevTouchMenuPosX = this.menuPosX;
@@ -169,13 +186,14 @@ class Framework extends React.Component {
       this.menuTouchFromX = touch.pageX;
       this.menuTouchPrevX = this.menuTouchFromX;
       this.menuDOM.classList.add(styles.touching);
-      this.spaceDOM.classList.add(styles.touching);
+      this.maskDOM.classList.add(styles.touching);
       this.conDOM.classList.add(styles.touching);
       this.beforeOpenMenu();
       this.menuPrevLoopTime = Date.now();
       this.raf(this.touchMoveLoop);
     }
   }
+
 
   handleTouchMove = event => {
     const touch = event.targetTouches[0];
@@ -184,6 +202,7 @@ class Framework extends React.Component {
     }
   }
 
+
   handleTouchEnd = event => {
     if (this.menuTouchFromX != null) {
       this.menuTouchFromX = null;
@@ -191,7 +210,7 @@ class Framework extends React.Component {
       this.menuTouchPrevX = null;
       this.prevTouchMenuX = null;
       this.menuDOM.classList.remove(styles.touching);
-      this.spaceDOM.classList.remove(styles.touching);
+      this.maskDOM.classList.remove(styles.touching);
       this.conDOM.classList.remove(styles.touching);
       //console.log("drag speed: " + this.menuDragSpeed);
       if (Math.abs(this.menuDragSpeed) > 0.5) {
@@ -209,6 +228,7 @@ class Framework extends React.Component {
     }
   }
 
+
   handleMouseMove = event => {
     if (event.pageX === 0) {
       if (this.menuPosX !== 0 && !this._menuMoving) {
@@ -218,12 +238,14 @@ class Framework extends React.Component {
     }
   }
 
+
   onMouseLeaveMenu = event => {
     if (this.menuTempOpen && this._menuMoving !== 'close') {
       this.closeMenu();
       this.menuTempOpen = false;
     }
   }
+
 
   /**
    * arg1: posX from -this.menuWidth to 0
@@ -237,7 +259,7 @@ class Framework extends React.Component {
     } else {
       this.menuDOM.style.left = posX + 'px';
     }
-    this.spaceDOM.style.opacity = `${posX / this.menuWidth + 1}`;
+    this.maskDOM.style.opacity = `${posX / this.menuWidth + 1}`;
     if (this.bigScreen) {
       this.conDOM.style.width = document.body.offsetWidth - (posX + this.menuWidth) + 1 + 'px';
     }
@@ -270,8 +292,8 @@ class Framework extends React.Component {
     const prevPosX = this.menuPosX;
     const distance = posX - prevPosX;
     this._menuMoving = target;
-    Velocity(this.spaceDOM, "stop", true);
-    Velocity(this.spaceDOM, {
+    Velocity(this.maskDOM, "stop", true);
+    Velocity(this.maskDOM, {
       tween: [0, 1]
     }, {
       duration,
@@ -289,7 +311,7 @@ class Framework extends React.Component {
         const stepPosX = prevPosX + distance * (1 - tweenValue);
         this.stepTo(stepPosX);
         if (this.menuTouchFromX) {
-          Velocity(this.spaceDOM, "stop", true);
+          Velocity(this.maskDOM, "stop", true);
           _complete(false);
         }
       },
@@ -299,6 +321,7 @@ class Framework extends React.Component {
     });
   }
 
+
   moveBack = callback => {
     if (this.menuPosX > -this.menuWidth * 1 / 2) {
       this.openMenu(callback);
@@ -307,15 +330,21 @@ class Framework extends React.Component {
     }
   }
 
+
   isMenuOpen = () => {
     return this.menuPosX === 0;
   }
 
+
   beforeOpenMenu = () => {
     if (this.bigScreen) return;
-    if (this.spaceDOM.style.display !== 'block') {
-      this.spaceDOM.style.display = 'block';
+
+    // show mask dom
+    if (this.maskDOM.style.display !== 'block') {
+      this.maskDOM.style.display = 'block';
     }
+
+    // prevent scroll on menu
     if (this.preventScrollMode !== 'firefox') {
       const body = document.body;
       if (!body.classList.contains(styles.preventScroll)) {
@@ -324,9 +353,10 @@ class Framework extends React.Component {
     }
   }
 
+
   afterCloseMenu = () => {
-    if (this.spaceDOM.style.display !== 'none') {
-      this.spaceDOM.style.display = 'none';
+    if (this.maskDOM.style.display !== 'none') {
+      this.maskDOM.style.display = 'none';
     }
     if (this.preventScrollMode !== 'firefox') {
       const body = document.body;
@@ -336,10 +366,12 @@ class Framework extends React.Component {
     }
   }
 
+
   openMenu = callback => {
     this.beforeOpenMenu();
     this.animateTo('open', callback);
   }
+
 
   closeMenu = callback => {
     this.animateTo('close', isReach => {
@@ -347,6 +379,7 @@ class Framework extends React.Component {
       if (callback) callback(isReach);
     });
   }
+
 
   toggleMenu = () => {
     if (this.isMenuOpen()) {
