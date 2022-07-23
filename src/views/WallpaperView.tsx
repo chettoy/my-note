@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import Velocity from 'velocity-animate';
 
 const Container = styled.div`
   width: 100vw;

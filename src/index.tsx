@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -15,9 +16,18 @@ const app = (
 
 const rootElement = document.getElementById('root');
 if (rootElement && rootElement.hasChildNodes()) {
-  ReactDOM.hydrate(app, rootElement);
+  // React 17
+  // ReactDOM.hydrate(app, rootElement);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const root = hydrateRoot(rootElement, app);
+
 } else {
-  ReactDOM.render(app, rootElement);
+  // React 17
+  // ReactDOM.render(app, rootElement);
+  
+  const root = createRoot(rootElement!);
+  root.render(app);
 
   //use concurrent mode
   //ReactDOM.unstable_createRoot(rootElement).render(app);
