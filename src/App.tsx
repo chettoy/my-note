@@ -125,9 +125,13 @@ class App extends React.Component<any, IState> implements IAppContext {
 
 
   toggleWallpaperMode = () => {
-    if (this.state.isWallpaperMode) {
+    if (!this.state.isWallpaperMode) {
       if (!document.fullscreenElement) {
-        document.body.requestFullscreen();
+        document.body.requestFullscreen().then(() => {
+          console.log('enter fullscreen mode');
+        }).catch(e => {
+          console.error(e);
+        });
       }
     } else {
       if (document.fullscreenElement) {
