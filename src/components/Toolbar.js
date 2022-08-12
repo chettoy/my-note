@@ -165,6 +165,7 @@ class ToolbarCanvas {
   loop = null;
 
   headerHeight = 0;
+  contentTop = 0;
   prevScrollTop = 0;
   drawLoopLock = 0;
   staticTime = 0;
@@ -185,7 +186,21 @@ class ToolbarCanvas {
   }
 
   resize = () => {
-    this.headerHeight = document.documentElement.clientHeight;
+    // this.headerHeight = document.documentElement.clientHeight;
+    this.headerHeight = window.innerHeight;
+    // clientHeight == 100vh - browserToolbarHeight
+    // innerHeight == 100vh or 100vh - browserToolbarHeight
+    // on firefox mobile
+    this.contentTop = (() => { // content->positionTop relative to the document
+      const elCardWrapper = document.querySelector('.CardWrapper');
+      if (elCardWrapper) {
+        return this.scrollTop() + elCardWrapper.getBoundingClientRect().top;
+      } else {
+        return window.innerHeight;
+      }
+    })();
+
+
     if (!this.canvas) return;
     const rect = this.canvas.getBoundingClientRect();
     this.width = rect.width;
@@ -224,12 +239,13 @@ class ToolbarCanvas {
 
     if (drawProgressBar) {
       const viewportHeight = this.headerHeight;
+      const contentTop = this.contentTop;
       let maxScrollTop = 0;
 
       // Detect the scroll height of new content
       const mutingContent = document.querySelector('.router-enter-active');
       if (mutingContent) {
-        const newConScrollHeight = mutingContent.scrollHeight;
+        const newConScrollHeight = contentTop + mutingContent.scrollHeight - viewportHeight;
         // Use new height only when content is scrollable
         // Insufficient height will not draw scrollbars and will result in no transition animation
         if (newConScrollHeight > viewportHeight) {
@@ -241,13 +257,13 @@ class ToolbarCanvas {
         maxScrollTop = document.documentElement.scrollHeight - viewportHeight;
       }
 
-      const contentScrollTop = scrollTop - viewportHeight;
+      const contentScrollTop = scrollTop - contentTop;
       const maxContentScroll = maxScrollTop - viewportHeight;
       if (maxContentScroll <= 0) return;
       const scrollProgress = (contentScrollTop / maxContentScroll);
       const drawWidth = this.width * scrollProgress;
-      const fade = contentScrollTop < (viewportHeight / 2) ? (contentScrollTop / (viewportHeight / 2)) : 1;
-      const drawHeight = this.height * (1.0 - 0.8 * fade);
+      const fade = contentScrollTop < (viewportHeight * (1 - 0.618)) ? (contentScrollTop / (viewportHeight * (1 - 0.618))) : 1;
+      const drawHeight = this.height * (1.0 - 0.85 * fade);
       this.ctx.fillStyle = `rgba(69, 157, 245, ${1.0 - 0.25 * fade})`;
       this.ctx.fillRect(drawWidth, 0, this.width, drawHeight);
     }
